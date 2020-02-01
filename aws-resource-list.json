@@ -1,0 +1,444 @@
+{
+ "cfn": {
+  "autoScalingAutoScalingGroup": [
+   "test-test1-asg-test-gitlab-runner",
+   "EC2ContainerService-sk-gray-EcsInstanceAsg-1PPM21MIFH3ZW"
+  ],
+  "autoScalingLaunchConfiguration": [
+   "EC2ContainerService-sk-gray-EcsInstanceLc-1HOD8LIECKN7D"
+  ],
+  "autoScalingScheduledAction": [
+   "SC-60-AutoS-S0MXSX7UQNGX",
+   "SC-60-AutoS-123Y4KOAC09GB"
+  ],
+  "cloudWatchAlarm": [
+   "CIS-KMS Key Disabled or Scheduled for Deletion",
+   "CIS-Console Login Failures",
+   "CIS-Console Signin Without MFA",
+   "CIS-IAM Root Activity",
+   "CIS-Unauthorized Activity Attempt"
+  ],
+  "configConfigRule": [
+   "ent-s3-bucket-public-read-prohibited",
+   "ent-encrypted-volumes",
+   "ent-s3-bucket-default-encryption-enabled",
+   "CIS-RotateAccessKeys",
+   "CIS-AwsSupportRoleExists",
+   "CIS-CloudTrailMustBeActive",
+   "CIS-CloudTrailBucketMustBeSecure",
+   "CIS-EvaluateFullAdminPrivilegesPolicies",
+   "CIS-UsersMustHaveMfaEnabled",
+   "CIS-SecurityGroupsMustDisallowTcpTraffic",
+   "CIS-SecurityGroupsMustRestrictSshTraffic",
+   "CIS-RotateUserPasswords",
+   "CIS-UsersMustNotHaveAssociatedPolicies",
+   "CIS-IamPasswordPolicyMustMeetRequirements"
+  ],
+  "configConfigurationRecorder": [
+   "conf-rec-2019-02-01-14-14-56"
+  ],
+  "configDeliveryChannel": [
+   "conf-rec-2019-02-01-14-14-56"
+  ],
+  "configRemediationConfiguration": [
+   "ent-s3-bucket-default-encryption-enabled"
+  ],
+  "ec2LaunchTemplate": [
+   "lt-0ba05a04d4fc35458"
+  ],
+  "ec2SecurityGroup": [
+   "sg-0661745613fb22bf0"
+  ],
+  "eventsRule": [
+   "SC-609522589561-pp-jnelvp2ueqqtk-EventRuleTrigger-PWW38PQ09WF6",
+   "CIS-DetectCloudTrailChanges",
+   "CIS-DetectConfigRulesComplianceChanges",
+   "CIS-DetectS3BucketPolicyChanges",
+   "CIS-DetectIamPolicyChanges",
+   "CIS-DetectNetworkChangeEvents"
+  ],
+  "iamInstanceProfile": [
+   "test-test1-iam-test-gitlab-runner"
+  ],
+  "iamPolicy": [
+   "SC-60-Role-TGAW4MV5211V",
+   "SC-60-IAMP-1QL9IAW0BXB0J"
+  ],
+  "iamRole": [
+   "test-test1-iam-test-gitlab-runner",
+   "tui_iam_role_lambda_start_stop_ec2",
+   "account-admin",
+   "poweruser",
+   "readonly",
+   "CloudabilityRole",
+   "StackSet-ent-additional-config-ru-MasterConfigRole-H0U43Q1T4TK1",
+   "StackSet-ent-aws-cis-foundations-MasterConfigRole-2CSL112YL6L0",
+   "StackSet-ent-aws-cis-found-RoleForCloudWatchEvents-2KYNYDN2ULS3",
+   "StackSet-ent-aws-cis-foundations-benchm-ConfigRole-1D4KWJJSTOR28",
+   "StackSet-ent-aws-cis-foundatio-ConfigSanitiserRole-1LEKWF9ZAZJHX"
+  ],
+  "iamRolePolicy": [
+   "arn:aws:iam::609522589561:policy/ent_account_admin_role_policy",
+   "arn:aws:iam::609522589561:policy/serviceuser_default_boundary"
+  ],
+  "iamServiceLinkedRole": [
+   "AWSServiceRoleForAutoScaling_test-test1-test-gitlab-runner"
+  ],
+  "kmsAlias": [
+   "alias/test-test1-kms-test-gitlab-runner"
+  ],
+  "kmsKey": [
+   "bf89f03e-0f27-420d-9424-537a131fefe2"
+  ],
+  "lambdaFunction": [
+   "lz_ec2_instance_start_stop_automation",
+   "ent-EvaluateS3DefaultBucketEncryption",
+   "CIS-RotateAccessKeys",
+   "CIS-EvaluateSupportRoleExists",
+   "CIS-EvaluateCISBenchmarkPreconditions",
+   "CIS-EvaluateCloudTrail",
+   "CIS-EvaluateCloudTrailBucket",
+   "CIS-EvaluateFullAdminPolicyPermissions",
+   "CIS-EvaluateUserMfaUsage",
+   "CIS-RotateUserPasswords",
+   "CIS-EvaluateUserPolicyAssociations",
+   "CIS-FormatCloudWatchEvent",
+   "CIS-GetCloudTrailCloudWatchLog",
+   "StackSet-ent-aws-cis-foun-ConfigurationRecorderSan-1OXTSGXVK1G0K"
+  ],
+  "lambdaPermission": [
+   "SC-609522589561-pp-jnelvp2ueqqtk-PermissionForEventsToInvokeLambda-RUUXIP7FS6CI",
+   "StackSet-ent-additional-config-rules-3daaeb-EvaluateS3DefaultBucketEncryptionPermissio-DB5Z73P97ZUO",
+   "StackSet-ent-aws-cis-foundations-benchmark-e8-EvaluateAccessKeysLambdaInvokePermission-MWJS0G5BL3BK",
+   "StackSet-ent-aws-cis-foundations-benchmark-EvaluateAwsSupportAccessPolicyLambdaInvoke-17EPMHLVK6RSM",
+   "StackSet-ent-aws-cis-foundations-benchmark-EvaluateCloudTrailEnabledIntegratedLambdaI-1ONCFJSYR45D1",
+   "StackSet-ent-aws-cis-foundations-benchmark-EvaluateCloudTrailS3AccessLoggingLambdaInv-1U9EFPNSVJSSM",
+   "StackSet-ent-aws-cis-foundations-benchmark-EvaluateFullAdminPrivilegesPoliciesLambdaI-10QXC1C3BLH11",
+   "StackSet-ent-aws-cis-foundations-benchmark-e-EvaluateMFAAllUsersLambdaInvokePermission-13CGFE9607YG",
+   "StackSet-ent-aws-cis-foundations-benchmark-EvaluateUnusedCredentialsLambdaInvokePermi-1A8G9EPFJ63KX",
+   "StackSet-ent-aws-cis-foundations-benchmark-EvaluateUserPolicyAssociationLambdaInvokeP-J04SFA1EPY0D",
+   "StackSet-ent-aws-cis-foundations-benchmark-LambdaPermissionForCloudTrailCloudWatchEve-1LG7VQA7VNZ27"
+  ],
+  "logsMetricFilter": [
+   "StackSet-ent-aws-cis-foundations-benchmark-e836a6d5-209b-4ea3-b63e-7-CISBenchmarkStack-1L1WOG2KQ2WFA-NoMfaConsoleLoginsFilter-1JMPHF9MV594N",
+   "StackSet-ent-aws-cis-foundations-benchmark-e836a6d5-209b-4ea3-b63e-7-CISBenchmarkStack-1L1WOG2KQ2WFA-RootAccountLoginsFilter-41EXJK0DJCF2",
+   "StackSet-ent-aws-cis-foundations-benchmark-e836a6d5-209b-4ea3-b63e-7-CISBenchmarkStack-1L1WOG2KQ2WFA-UnauthorizedApiCallsFilter-3WONEVFJWZAR"
+  ],
+  "s3Bucket": [
+   "stackset-ent-aws-cis-foundations-b-configs3bucket-16d59hluerduu"
+  ],
+  "secretsManagerSecret": [
+   "arn:aws:secretsmanager:eu-central-1:609522589561:secret:test-test1-secret-test-gitlab-runner-j9u1XG"
+  ],
+  "snsTopic": [
+   "arn:aws:sns:eu-central-1:609522589561:CIS-NotificationTopic"
+  ]
+ },
+ "real": {
+  "ec2CapacityReservation": null,
+  "ec2ClientVpnEndpoint": null,
+  "ec2CustomerGateway": [
+   "cgw-0ffa3d61d3ec4ead1",
+   "cgw-0ebd94b848b06b949"
+  ],
+  "ec2DHCPOptions": [
+   "dopt-e4e1db8f",
+   "dopt-073d64edc8d7cb1f9"
+  ],
+  "ec2EC2Fleet": null,
+  "ec2EIP": [
+   "eipalloc-05935b71d1d65b8bb",
+   "eipalloc-0606e89a186b221d4",
+   "eipalloc-0218e10d2a675c9ad",
+   "eipalloc-0724dd8c1681b838b",
+   "eipalloc-04453dfdbf7e04a6a"
+  ],
+  "ec2EIPAssociation": [
+   "eipassoc-0afba2a4e9e46a982",
+   "eipassoc-b8e37775",
+   "eipassoc-9a7bd040",
+   "eipassoc-38518fe2",
+   "eipassoc-2978b1d5"
+  ],
+  "ec2EgressOnlyInternetGateway": null,
+  "ec2FlowLog": [
+   "fl-0050c789b34e8af72",
+   "fl-0663b7eb9717292ac"
+  ],
+  "ec2Host": null,
+  "ec2Instance": [
+   "i-03a4775925c6f08ad",
+   "i-0e2e4209e8cd4befb",
+   "i-079dcf396ffd87c13",
+   "i-01f8254b5d648ed35",
+   "i-03fb606c29b52669c",
+   "i-079d35bc30e6c3c0f"
+  ],
+  "ec2InternetGateway": [
+   "igw-0d258299f832e27a0",
+   "igw-0f0acd9ba04a0e91b",
+   "igw-5209303a"
+  ],
+  "ec2LaunchTemplate": [
+   "lt-0ba05a04d4fc35458"
+  ],
+  "ec2NatGateway": [
+   "nat-0a68fc0cb4c5c20d8",
+   "nat-0c946a2b310da29a7",
+   "nat-03d5a6d537e41680e",
+   "nat-00089658c31b682b7"
+  ],
+  "ec2NetworkACL": [
+   "acl-06ddb2dbbd8d7e41a",
+   "acl-09c4733abaab67cb6",
+   "acl-0da443e59af9fd5a5",
+   "acl-db07d0b1"
+  ],
+  "ec2NetworkACLSubnetAssociation": [
+   "aclassoc-02b8ea89201e1c075",
+   "aclassoc-0137e791be9af9df3",
+   "aclassoc-0929ba5cc323bfa12",
+   "aclassoc-0f773c30b231ac4e6",
+   "aclassoc-0180d2f88ee939385",
+   "aclassoc-020926701d9256a6f",
+   "aclassoc-0fbde30954d7708c2",
+   "aclassoc-0218b584f2d5e8919",
+   "aclassoc-0b2b202bb60644d52",
+   "aclassoc-02f148b1c359c42b0",
+   "aclassoc-06b8d6c6b9970165c",
+   "aclassoc-03f13bdde6eea5f07",
+   "aclassoc-0ff67f5f01b88a598",
+   "aclassoc-05b8fe8153d671041",
+   "aclassoc-5b71a035",
+   "aclassoc-5871a036",
+   "aclassoc-5a71a034"
+  ],
+  "ec2NetworkInterface": [
+   "eni-065bd69ffec901d0b",
+   "eni-0b403e75516b2f955",
+   "eni-09620501527d9ac65",
+   "eni-05b073d7a9af30dd4",
+   "eni-06e1da331cfad80e1",
+   "eni-081a3ca5ca7e47f73",
+   "eni-0af5c6fbe16361e55",
+   "eni-0e7d3f9e5ea1ef9ac",
+   "eni-07b421d73c7aad42c",
+   "eni-0f723a00674e329cd",
+   "eni-0445965abe91cd323",
+   "eni-079af20e902315a8c"
+  ],
+  "ec2NetworkInterfaceAttachment": [
+   "ela-attach-671a0b49",
+   "ela-attach-61ec645c",
+   "eni-attach-06ebb7bd2eafd0a7c",
+   "eni-attach-04bc8f184b598699a",
+   "eni-attach-0ff18f6c193c23baa",
+   "ela-attach-5ff8a271",
+   "ela-attach-a2f89785",
+   "ela-attach-ed998fd7",
+   "eni-attach-0c74ee2f8c9393c35",
+   "eni-attach-0b2cb3afe9be64406",
+   "ela-attach-c9ca97f3",
+   "eni-attach-02443f26031cf8c30"
+  ],
+  "ec2NetworkInterfacePermission": null,
+  "ec2PlacementGroup": null,
+  "ec2RouteTable": [
+   "rtb-031326fc7d1db6eec",
+   "rtb-03dd893d28d0a0a4e",
+   "rtb-07c8db52e0c3d9642",
+   "rtb-fd4cf097",
+   "rtb-06bc405f3d37c1664",
+   "rtb-062de734c49976cfb",
+   "rtb-07c4fe6f27a2d2c05",
+   "rtb-0b8d81d57eedfbe14",
+   "rtb-0e2035d97bc24c2dc",
+   "rtb-0b3d48b8baa7b5166",
+   "rtb-0c8bef33378ff5280",
+   "rtb-0becbb80e3cfbca2b",
+   "rtb-03e2fecd971ad9e77"
+  ],
+  "ec2RouteTableSubnetAssociation": [
+   "rtbassoc-0c43e9b848d413e32",
+   "rtbassoc-0f5dbeecde12e0c69",
+   "rtbassoc-003c53b222a77157b",
+   "rtbassoc-01cc88b4a50b81dd1",
+   "rtbassoc-0adacf5005e16cc43",
+   "rtbassoc-bb7af5d6",
+   "rtbassoc-06c33957ec9302c49",
+   "rtbassoc-017ed0607e39ee321",
+   "rtbassoc-04444b44b2256c580",
+   "rtbassoc-0c8509e8bd01e64aa",
+   "rtbassoc-01da0d09cecf69608",
+   "rtbassoc-00513a978f3b6b7ce",
+   "rtbassoc-064a8c1515b09805b",
+   "rtbassoc-08307d241fab21c85",
+   "rtbassoc-04702d8d7c0c84e20",
+   "rtbassoc-0ba9cb3b756c0924b"
+  ],
+  "ec2SecurityGroup": [
+   "sg-000d010774b8cb96d",
+   "sg-009325cd46551c5bb",
+   "sg-01c0d6a2e10e22fac",
+   "sg-01d435d0ef3a3068e",
+   "sg-01e7dd8d98c011e53",
+   "sg-0213ce8960e71236a",
+   "sg-021a55d5100b6ce6b",
+   "sg-02a11b07575a274de",
+   "sg-036c57164e2304f42",
+   "sg-03b8d0c5c054f3348",
+   "sg-03eb722d8cdea9fc4",
+   "sg-0650b2709e8fab675",
+   "sg-0661745613fb22bf0",
+   "sg-067aa0b23730e2635",
+   "sg-06b92c5bcdec02a84",
+   "sg-075c1ae02c830611e",
+   "sg-07818b330ed17b5db",
+   "sg-0978b7632909f1e61",
+   "sg-09a61c23cc37234c1",
+   "sg-09ac8e030272eb42c",
+   "sg-09b4738995a9eda14",
+   "sg-09c9907063bc63f9d",
+   "sg-0a228e41ca7e2aa86",
+   "sg-0b075dbe202a4e723",
+   "sg-0bd97e93cfcfbffee",
+   "sg-0c19e7ba332beabea",
+   "sg-0c295ff28bc6129a1",
+   "sg-0c6b8393998af41db",
+   "sg-0ce029fa52e6c3711",
+   "sg-0d96ae75fd1f5944f",
+   "sg-0dd408674d7280c3e",
+   "sg-0e3e33ef2793f42da",
+   "sg-0e5dadcdead55bb5f",
+   "sg-0ef9e6c9ed99263a9",
+   "sg-0f5ca70d3a6e0a085",
+   "sg-0f75cc8fe5d497753",
+   "sg-0f92312f2c66cde72",
+   "sg-a2ff67cc"
+  ],
+  "ec2SpotFleet": null,
+  "ec2Subnet": [
+   "subnet-0f1914f8c96ccbad2",
+   "subnet-052507c2ec45ae002",
+   "subnet-0f870e7c07af392eb",
+   "subnet-040fa49e05bdb609a",
+   "subnet-a87496c2",
+   "subnet-0d4f3902cef523b7b",
+   "subnet-0e2c1fd5d811f2ea9",
+   "subnet-0da846ffda5b03e95",
+   "subnet-0536889e83dfeab04",
+   "subnet-0780d9dc9f8206e24",
+   "subnet-f66b44bb",
+   "subnet-0608e2a7d8d920208",
+   "subnet-04e17cbedbfe4a1b2",
+   "subnet-c63b63bb",
+   "subnet-0ec07f2567d923c14",
+   "subnet-03a162005de3c14fc",
+   "subnet-0d1b4f415567cb761"
+  ],
+  "ec2TrafficMirrorFilter": null,
+  "ec2TrafficMirrorFilterRule": null,
+  "ec2TrafficMirrorSession": null,
+  "ec2TrafficMirrorTarget": null,
+  "ec2TransitGateway": null,
+  "ec2TransitGatewayAttachment": null,
+  "ec2TransitGatewayRouteTable": null,
+  "ec2VPC": [
+   "vpc-0ccaac1713ef44d5a",
+   "vpc-4513292e",
+   "vpc-0087df95ce026fa48",
+   "vpc-05b641f8971f45f67"
+  ],
+  "ec2VPCCidrBlock": [
+   "vpc-cidr-assoc-06f05dedcf5e76093",
+   "vpc-cidr-assoc-d8ccc6b0",
+   "vpc-cidr-assoc-02c2e5e5407b5d6e6",
+   "vpc-cidr-assoc-02d7bd5c67338372f"
+  ],
+  "ec2VPCEndpoint": [
+   "vpce-005bb8033ddbeddb3",
+   "vpce-05753d898e7ce5939",
+   "vpce-09feb88d29b125041",
+   "vpce-0e17107974192af18"
+  ],
+  "ec2VPCEndpointConnectionNotification": null,
+  "ec2VPCEndpointService": [
+   "vpce-svc-0bfa2349d6f92ca51",
+   "vpce-svc-0f86322894bc3d438",
+   "vpce-svc-0ddff3b5042edb6b0",
+   "vpce-svc-0e795e7be1e2824dd",
+   "vpce-svc-021a1a7c48c5bbb29",
+   "vpce-svc-078feeebb5de9fcce",
+   "vpce-svc-0577c27a042ff0c48",
+   "vpce-svc-0a36bb9f5ed411594",
+   "vpce-svc-0c5c1b181110630b0",
+   "vpce-svc-06943f1cf82065ebc",
+   "vpce-svc-00656f2622224d88f",
+   "vpce-svc-01d636835e307b752",
+   "vpce-svc-064e0ab6525ee9ba0",
+   "vpce-svc-0fe28ee08b795b986",
+   "vpce-svc-0d250cc75e00d322d",
+   "vpce-svc-079b93e1256c605a7",
+   "vpce-svc-00cb03df059a20eb5",
+   "vpce-svc-0f4f9871e09b3152d",
+   "vpce-svc-0fc385a542bddcb4b",
+   "vpce-svc-0e1b0669f5ad63831",
+   "vpce-svc-0ee6723c76642b3d8",
+   "vpce-svc-0f70e5d200f09304f",
+   "vpce-svc-091515ddbd6dd34fa",
+   "vpce-svc-025f902c4fb318b52",
+   "vpce-svc-0d2a06faf28c735a2",
+   "vpce-svc-070832f65b5eb2f6a",
+   "vpce-svc-05eec58ba76ae96d6",
+   "vpce-svc-0c2ee5f4b6dca2ccf",
+   "vpce-svc-0159426ac82746ff2",
+   "vpce-svc-06860ffd4729bf39f",
+   "vpce-svc-0d6df048d5fe542fb",
+   "vpce-svc-063d8966963ef56fb",
+   "vpce-svc-01fedad8f6ddc0953",
+   "vpce-svc-08c5567b1dc6c30a1",
+   "vpce-svc-0ac3dfa39c40ad448",
+   "vpce-svc-00a6a85bcdfee7555",
+   "vpce-svc-0d5a80071ef55aecc",
+   "vpce-svc-034685d949c327e75",
+   "vpce-svc-0d29b4f06b706d782",
+   "vpce-svc-00b8e5ad848535a43",
+   "vpce-svc-0d96bc6634f44132b",
+   "vpce-svc-07167a1eb699a4e41",
+   "vpce-svc-0c0cd1e82631feddc",
+   "vpce-svc-05818e656b8b6e124",
+   "vpce-svc-0d6c7b4401c48fcd6",
+   "vpce-svc-022a0dd89a41e09be",
+   "vpce-svc-09e117e5e1c220d69",
+   "vpce-svc-00dd986804d5ba20e",
+   "vpce-svc-0eaa1804e8ab051e5",
+   "vpce-svc-017dc8cdbd0868311",
+   "vpce-svc-0039038d504694533",
+   "vpce-svc-065c3fd561c1b17c3",
+   "vpce-svc-093321370f41d0635",
+   "vpce-svc-07bb8b549c3e9e587",
+   "vpce-svc-0b0c483076039c9ea",
+   "vpce-svc-01657036368b951f6",
+   "vpce-svc-0f30fefd96bff0cb4",
+   "vpce-svc-02a611371ac08915a"
+  ],
+  "ec2VPCPeeringConnection": null,
+  "ec2VPNConnection": [
+   "vpn-040c2612a6470fed1"
+  ],
+  "ec2VPNGateway": [
+   "vgw-04d343aefee0bd464"
+  ],
+  "ec2Volume": [
+   "vol-00047f7d1473c7034",
+   "vol-0c774642e632293b5",
+   "vol-0a5531994bb8a9d64",
+   "vol-005bc3bdbfaa30a0b",
+   "vol-0b4837f8996689718",
+   "vol-0e39ac875cf593347",
+   "vol-0b9879c6b428699b5",
+   "vol-00cbe3d2814c75ded",
+   "vol-02bb14bcad1e48f43"
+  ]
+ }
+}
