@@ -11,7 +11,7 @@ import (
 var accountID = ""
 
 // Start is the entrypoint in the application
-func Start() {
+func Start(gitTag string, gitCommit string) {
 	setGlobalLogLevel()
 
 	logInfo("Startup")
@@ -64,6 +64,8 @@ func Start() {
 		}
 	case "compare":
 		state.filter(cfn, real).print()
+	case "version":
+		fmt.Println(gitTag, "@", gitCommit)
 	default:
 		fmt.Println("Refresh aws resources: aws-resource-list refresh [cfn/real]")
 		fmt.Println("Print resources: aws-resource-list print [cfn/real]")
