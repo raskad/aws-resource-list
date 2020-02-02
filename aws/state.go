@@ -278,7 +278,6 @@ const (
 	elastiCacheParameterGroup                  resourceType = "elastiCacheParameterGroup"
 	elastiCacheReplicationGroup                resourceType = "elastiCacheReplicationGroup"
 	elastiCacheSecurityGroup                   resourceType = "elastiCacheSecurityGroup"
-	elastiCacheSecurityGroupIngress            resourceType = "elastiCacheSecurityGroupIngress"
 	elastiCacheSubnetGroup                     resourceType = "elastiCacheSubnetGroup"
 	elasticsearchDomain                        resourceType = "elasticsearchDomain"
 	elasticBeanstalkApplication                resourceType = "elasticBeanstalkApplication"
@@ -684,7 +683,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::ElastiCache::ParameterGroup":                  elastiCacheParameterGroup,
 		"AWS::ElastiCache::ReplicationGroup":                elastiCacheReplicationGroup,
 		"AWS::ElastiCache::SecurityGroup":                   elastiCacheSecurityGroup,
-		"AWS::ElastiCache::SecurityGroupIngress":            elastiCacheSecurityGroupIngress,
 		"AWS::ElastiCache::SubnetGroup":                     elastiCacheSubnetGroup,
 		"AWS::Elasticsearch::Domain":                        elasticsearchDomain,
 		"AWS::ElasticBeanstalk::Application":                elasticBeanstalkApplication,
