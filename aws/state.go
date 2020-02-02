@@ -306,15 +306,12 @@ const (
 	gameLiftMatchmakingConfiguration           resourceType = "gameLiftMatchmakingConfiguration"
 	gameLiftMatchmakingRuleSet                 resourceType = "gameLiftMatchmakingRuleSet"
 	gameLiftScript                             resourceType = "gameLiftScript"
-	glueClassifier                             resourceType = "glueClassifier"
 	glueConnection                             resourceType = "glueConnection"
 	glueCrawler                                resourceType = "glueCrawler"
 	glueDatabase                               resourceType = "glueDatabase"
-	glueDataCatalogEncryptionSettings          resourceType = "glueDataCatalogEncryptionSettings"
 	glueDevEndpoint                            resourceType = "glueDevEndpoint"
 	glueJob                                    resourceType = "glueJob"
 	glueMLTransform                            resourceType = "glueMLTransform"
-	gluePartition                              resourceType = "gluePartition"
 	glueSecurityConfiguration                  resourceType = "glueSecurityConfiguration"
 	glueTable                                  resourceType = "glueTable"
 	glueTrigger                                resourceType = "glueTrigger"
@@ -711,15 +708,12 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::GameLift::MatchmakingConfiguration":           gameLiftMatchmakingConfiguration,
 		"AWS::GameLift::MatchmakingRuleSet":                 gameLiftMatchmakingRuleSet,
 		"AWS::GameLift::Script":                             gameLiftScript,
-		"AWS::Glue::Classifier":                             glueClassifier,
 		"AWS::Glue::Connection":                             glueConnection,
 		"AWS::Glue::Crawler":                                glueCrawler,
 		"AWS::Glue::Database":                               glueDatabase,
-		"AWS::Glue::DataCatalogEncryptionSettings":          glueDataCatalogEncryptionSettings,
 		"AWS::Glue::DevEndpoint":                            glueDevEndpoint,
 		"AWS::Glue::Job":                                    glueJob,
 		"AWS::Glue::MLTransform":                            glueMLTransform,
-		"AWS::Glue::Partition":                              gluePartition,
 		"AWS::Glue::SecurityConfiguration":                  glueSecurityConfiguration,
 		"AWS::Glue::Table":                                  glueTable,
 		"AWS::Glue::Trigger":                                glueTrigger,

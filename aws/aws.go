@@ -112,6 +112,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getElasticLoadBalancingV2(session),
 		getFirehose(session),
 		getFsx(session),
+		getGlue(session),
 		getIam(session),
 		getKinesis(session),
 		getKinesisAnalytics(session),
