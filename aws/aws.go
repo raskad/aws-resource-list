@@ -97,6 +97,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getAutoScalingPlans(session),
 		getBackup(session),
 		getCloudfront(session),
+		getCloudTrail(session),
 		getCloudWatch(session),
 		getCloudWatchEvents(session),
 		getConfig(session),
