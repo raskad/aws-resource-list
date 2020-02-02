@@ -278,7 +278,6 @@ const (
 	elastiCacheParameterGroup                  resourceType = "elastiCacheParameterGroup"
 	elastiCacheReplicationGroup                resourceType = "elastiCacheReplicationGroup"
 	elastiCacheSecurityGroup                   resourceType = "elastiCacheSecurityGroup"
-	elastiCacheSecurityGroupIngress            resourceType = "elastiCacheSecurityGroupIngress"
 	elastiCacheSubnetGroup                     resourceType = "elastiCacheSubnetGroup"
 	elasticsearchDomain                        resourceType = "elasticsearchDomain"
 	elasticBeanstalkApplication                resourceType = "elasticBeanstalkApplication"
@@ -307,25 +306,17 @@ const (
 	gameLiftMatchmakingConfiguration           resourceType = "gameLiftMatchmakingConfiguration"
 	gameLiftMatchmakingRuleSet                 resourceType = "gameLiftMatchmakingRuleSet"
 	gameLiftScript                             resourceType = "gameLiftScript"
-	glueClassifier                             resourceType = "glueClassifier"
 	glueConnection                             resourceType = "glueConnection"
 	glueCrawler                                resourceType = "glueCrawler"
 	glueDatabase                               resourceType = "glueDatabase"
-	glueDataCatalogEncryptionSettings          resourceType = "glueDataCatalogEncryptionSettings"
 	glueDevEndpoint                            resourceType = "glueDevEndpoint"
 	glueJob                                    resourceType = "glueJob"
 	glueMLTransform                            resourceType = "glueMLTransform"
-	gluePartition                              resourceType = "gluePartition"
 	glueSecurityConfiguration                  resourceType = "glueSecurityConfiguration"
 	glueTable                                  resourceType = "glueTable"
 	glueTrigger                                resourceType = "glueTrigger"
 	glueWorkflow                               resourceType = "glueWorkflow"
 	guardDutyDetector                          resourceType = "guardDutyDetector"
-	guardDutyFilter                            resourceType = "guardDutyFilter"
-	guardDutyIPSet                             resourceType = "guardDutyIPSet"
-	guardDutyMaster                            resourceType = "guardDutyMaster"
-	guardDutyMember                            resourceType = "guardDutyMember"
-	guardDutyThreatIntelSet                    resourceType = "guardDutyThreatIntelSet"
 	iamAccessKey                               resourceType = "iamAccessKey"
 	iamGroup                                   resourceType = "iamGroup"
 	iamInstanceProfile                         resourceType = "iamInstanceProfile"
@@ -336,7 +327,6 @@ const (
 	iamUser                                    resourceType = "iamUser"
 	inspectorAssessmentTarget                  resourceType = "inspectorAssessmentTarget"
 	inspectorAssessmentTemplate                resourceType = "inspectorAssessmentTemplate"
-	inspectorResourceGroup                     resourceType = "inspectorResourceGroup"
 	ioTCertificate                             resourceType = "ioTCertificate"
 	ioTPolicy                                  resourceType = "ioTPolicy"
 	ioTPolicyPrincipalAttachment               resourceType = "ioTPolicyPrincipalAttachment"
@@ -376,8 +366,6 @@ const (
 	kinesisFirehoseDeliveryStream              resourceType = "kinesisFirehoseDeliveryStream"
 	kmsAlias                                   resourceType = "kmsAlias"
 	kmsKey                                     resourceType = "kmsKey"
-	lakeFormationDataLakeSettings              resourceType = "lakeFormationDataLakeSettings"
-	lakeFormationPermissions                   resourceType = "lakeFormationPermissions"
 	lakeFormationResource                      resourceType = "lakeFormationResource"
 	lambdaAlias                                resourceType = "lambdaAlias"
 	lambdaFunction                             resourceType = "lambdaFunction"
@@ -684,7 +672,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::ElastiCache::ParameterGroup":                  elastiCacheParameterGroup,
 		"AWS::ElastiCache::ReplicationGroup":                elastiCacheReplicationGroup,
 		"AWS::ElastiCache::SecurityGroup":                   elastiCacheSecurityGroup,
-		"AWS::ElastiCache::SecurityGroupIngress":            elastiCacheSecurityGroupIngress,
 		"AWS::ElastiCache::SubnetGroup":                     elastiCacheSubnetGroup,
 		"AWS::Elasticsearch::Domain":                        elasticsearchDomain,
 		"AWS::ElasticBeanstalk::Application":                elasticBeanstalkApplication,
@@ -713,25 +700,17 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::GameLift::MatchmakingConfiguration":           gameLiftMatchmakingConfiguration,
 		"AWS::GameLift::MatchmakingRuleSet":                 gameLiftMatchmakingRuleSet,
 		"AWS::GameLift::Script":                             gameLiftScript,
-		"AWS::Glue::Classifier":                             glueClassifier,
 		"AWS::Glue::Connection":                             glueConnection,
 		"AWS::Glue::Crawler":                                glueCrawler,
 		"AWS::Glue::Database":                               glueDatabase,
-		"AWS::Glue::DataCatalogEncryptionSettings":          glueDataCatalogEncryptionSettings,
 		"AWS::Glue::DevEndpoint":                            glueDevEndpoint,
 		"AWS::Glue::Job":                                    glueJob,
 		"AWS::Glue::MLTransform":                            glueMLTransform,
-		"AWS::Glue::Partition":                              gluePartition,
 		"AWS::Glue::SecurityConfiguration":                  glueSecurityConfiguration,
 		"AWS::Glue::Table":                                  glueTable,
 		"AWS::Glue::Trigger":                                glueTrigger,
 		"AWS::Glue::Workflow":                               glueWorkflow,
 		"AWS::GuardDuty::Detector":                          guardDutyDetector,
-		"AWS::GuardDuty::Filter":                            guardDutyFilter,
-		"AWS::GuardDuty::IPSet":                             guardDutyIPSet,
-		"AWS::GuardDuty::Master":                            guardDutyMaster,
-		"AWS::GuardDuty::Member":                            guardDutyMember,
-		"AWS::GuardDuty::ThreatIntelSet":                    guardDutyThreatIntelSet,
 		"AWS::IAM::AccessKey":                               iamAccessKey,
 		"AWS::IAM::Group":                                   iamGroup,
 		"AWS::IAM::InstanceProfile":                         iamInstanceProfile,
@@ -742,7 +721,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::IAM::User":                                    iamUser,
 		"AWS::Inspector::AssessmentTarget":                  inspectorAssessmentTarget,
 		"AWS::Inspector::AssessmentTemplate":                inspectorAssessmentTemplate,
-		"AWS::Inspector::ResourceGroup":                     inspectorResourceGroup,
 		"AWS::IoT::Certificate":                             ioTCertificate,
 		"AWS::IoT::Policy":                                  ioTPolicy,
 		"AWS::IoT::PolicyPrincipalAttachment":               ioTPolicyPrincipalAttachment,
@@ -782,8 +760,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::KinesisFirehose::DeliveryStream":              kinesisFirehoseDeliveryStream,
 		"AWS::KMS::Alias":                                   kmsAlias,
 		"AWS::KMS::Key":                                     kmsKey,
-		"AWS::LakeFormation::DataLakeSettings":              lakeFormationDataLakeSettings,
-		"AWS::LakeFormation::Permissions":                   lakeFormationPermissions,
 		"AWS::LakeFormation::Resource":                      lakeFormationResource,
 		"AWS::Lambda::Alias":                                lambdaAlias,
 		"AWS::Lambda::Function":                             lambdaFunction,
