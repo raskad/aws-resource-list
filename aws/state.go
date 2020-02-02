@@ -366,8 +366,6 @@ const (
 	kinesisFirehoseDeliveryStream              resourceType = "kinesisFirehoseDeliveryStream"
 	kmsAlias                                   resourceType = "kmsAlias"
 	kmsKey                                     resourceType = "kmsKey"
-	lakeFormationDataLakeSettings              resourceType = "lakeFormationDataLakeSettings"
-	lakeFormationPermissions                   resourceType = "lakeFormationPermissions"
 	lakeFormationResource                      resourceType = "lakeFormationResource"
 	lambdaAlias                                resourceType = "lambdaAlias"
 	lambdaFunction                             resourceType = "lambdaFunction"
@@ -762,8 +760,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::KinesisFirehose::DeliveryStream":              kinesisFirehoseDeliveryStream,
 		"AWS::KMS::Alias":                                   kmsAlias,
 		"AWS::KMS::Key":                                     kmsKey,
-		"AWS::LakeFormation::DataLakeSettings":              lakeFormationDataLakeSettings,
-		"AWS::LakeFormation::Permissions":                   lakeFormationPermissions,
 		"AWS::LakeFormation::Resource":                      lakeFormationResource,
 		"AWS::Lambda::Alias":                                lambdaAlias,
 		"AWS::Lambda::Function":                             lambdaFunction,

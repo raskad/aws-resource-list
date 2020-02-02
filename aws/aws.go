@@ -120,6 +120,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getKinesisAnalytics(session),
 		getKinesisAnalyticsV2(session),
 		getKms(session),
+		getLakeFormation(session),
 		getLambda(session),
 		getCloudwatchLogs(session),
 		getMsk(session),
