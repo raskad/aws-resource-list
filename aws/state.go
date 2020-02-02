@@ -327,7 +327,6 @@ const (
 	iamUser                                    resourceType = "iamUser"
 	inspectorAssessmentTarget                  resourceType = "inspectorAssessmentTarget"
 	inspectorAssessmentTemplate                resourceType = "inspectorAssessmentTemplate"
-	inspectorResourceGroup                     resourceType = "inspectorResourceGroup"
 	ioTCertificate                             resourceType = "ioTCertificate"
 	ioTPolicy                                  resourceType = "ioTPolicy"
 	ioTPolicyPrincipalAttachment               resourceType = "ioTPolicyPrincipalAttachment"
@@ -724,7 +723,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::IAM::User":                                    iamUser,
 		"AWS::Inspector::AssessmentTarget":                  inspectorAssessmentTarget,
 		"AWS::Inspector::AssessmentTemplate":                inspectorAssessmentTemplate,
-		"AWS::Inspector::ResourceGroup":                     inspectorResourceGroup,
 		"AWS::IoT::Certificate":                             ioTCertificate,
 		"AWS::IoT::Policy":                                  ioTPolicy,
 		"AWS::IoT::PolicyPrincipalAttachment":               ioTPolicyPrincipalAttachment,

@@ -115,6 +115,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getGlue(session),
 		getGuardDuty(session),
 		getIam(session),
+		getInspector(session),
 		getKinesis(session),
 		getKinesisAnalytics(session),
 		getKinesisAnalyticsV2(session),
