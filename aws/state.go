@@ -317,11 +317,6 @@ const (
 	glueTrigger                                resourceType = "glueTrigger"
 	glueWorkflow                               resourceType = "glueWorkflow"
 	guardDutyDetector                          resourceType = "guardDutyDetector"
-	guardDutyFilter                            resourceType = "guardDutyFilter"
-	guardDutyIPSet                             resourceType = "guardDutyIPSet"
-	guardDutyMaster                            resourceType = "guardDutyMaster"
-	guardDutyMember                            resourceType = "guardDutyMember"
-	guardDutyThreatIntelSet                    resourceType = "guardDutyThreatIntelSet"
 	iamAccessKey                               resourceType = "iamAccessKey"
 	iamGroup                                   resourceType = "iamGroup"
 	iamInstanceProfile                         resourceType = "iamInstanceProfile"
@@ -719,11 +714,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Glue::Trigger":                                glueTrigger,
 		"AWS::Glue::Workflow":                               glueWorkflow,
 		"AWS::GuardDuty::Detector":                          guardDutyDetector,
-		"AWS::GuardDuty::Filter":                            guardDutyFilter,
-		"AWS::GuardDuty::IPSet":                             guardDutyIPSet,
-		"AWS::GuardDuty::Master":                            guardDutyMaster,
-		"AWS::GuardDuty::Member":                            guardDutyMember,
-		"AWS::GuardDuty::ThreatIntelSet":                    guardDutyThreatIntelSet,
 		"AWS::IAM::AccessKey":                               iamAccessKey,
 		"AWS::IAM::Group":                                   iamGroup,
 		"AWS::IAM::InstanceProfile":                         iamInstanceProfile,
