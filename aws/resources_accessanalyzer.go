@@ -18,8 +18,8 @@ func getAccessAnalyzerAnalyzer(client *accessanalyzer.AccessAnalyzer) (r resourc
 	r.err = client.ListAnalyzersPages(&accessanalyzer.ListAnalyzersInput{}, func(page *accessanalyzer.ListAnalyzersOutput, lastPage bool) bool {
 		logDebug("List accessAnalyzerAnalyzer resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Analyzers {
-			logDebug("Got accessAnalyzerAnalyzer resource with PhysicalResourceId", *resource.Arn)
-			r.resources = append(r.resources, *resource.Arn)
+			logDebug("Got accessAnalyzerAnalyzer resource with PhysicalResourceId", *resource.Name)
+			r.resources = append(r.resources, *resource.Name)
 		}
 		return true
 	})

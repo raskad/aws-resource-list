@@ -11,9 +11,6 @@ func getRoute53(session *session.Session) (resources resourceMap) {
 		route53HealthCheck: getRoute53HealthCheck(client),
 		route53HostedZone:  getRoute53HostedZone(client),
 		route53RecordSet:   getRoute53RecordSet(client),
-		//route53ResolverResolverEndpoint: getRoute53ResolverResolverEndpoint(client),
-		//route53ResolverResolverRule: getRoute53ResolverResolverRule(client),
-		//route53ResolverResolverRuleAssociation: getRoute53ResolverResolverRuleAssociation(client),
 	}
 	resources = resourcesSliceErrorMap.unwrap()
 	return

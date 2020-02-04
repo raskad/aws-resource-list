@@ -1,0 +1,48 @@
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out aws-cloudformation-resource-types
+      uses: actions/checkout@v2
+      with:
+        repository: raskad/aws-cloudformation-resource-types
+    - name: Check out this repository
+      uses: actions/checkout@v2
+      with:
+        path: this
+    - name: Get all current CloudFormation resources
+      run: go run main.go > resources
+    - name: Filter out resources in scope
+      run: |
+        while read cfnResource; do
+            if grep -q $cfnResource "this/resources.yaml"; then
+                echo [OK] $cfnResource
+            else
+                if grep -q $cfnResource "this/resourcesBlacklistCloudFormation.yaml"; then
+                    echo [OK] $cfnResource
+                else
+                    echo [MISS] $cfnResource
+                    echo $cfnResource >> missing
+                fi
+            fi
+        done <resources
+    - name: Create issue with all missing resources
+      uses: actions/github-script@0.4.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          var fs = require('fs');
+          if (fs.existsSync('missing')) {
+            missing = fs.readFileSync('missing', 'utf8');
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Missing CloudFormation resources',
+              body: missing
+            })
+          }
