@@ -1,0 +1,147 @@
+resources:
+  - name: AWS::AutoScaling::LifecycleHook
+    reason: No physical identifier found
+  - name: AWS::CloudFormation::CustomResource
+    reason: CloudFormation resources are checked against
+  - name: AWS::CloudFormation::Macro
+    reason: CloudFormation resources are checked against
+  - name: AWS::CloudFormation::Stack
+    reason: CloudFormation resources are checked against
+  - name: AWS::CloudFormation::WaitCondition
+    reason: CloudFormation resources are checked against
+  - name: AWS::CloudFormation::WaitConditionHandle
+    reason: CloudFormation resources are checked against
+  - name: AWS::CloudWatch::AnomalyDetector
+    reason: CloudFormation resources are checked against
+  - name: AWS::Events::EventBusPolicy
+    reason: No physical identifier found
+  - name: AWS::EC2::ClientVpnAuthorizationRule
+    reason: No physical identifier found
+  - name: AWS::EC2::ClientVpnRoute
+    reason: No physical identifier found
+  - name: AWS::EC2::ClientVpnTargetNetworkAssociation
+    reason: No physical identifier found
+  - name: AWS::EC2::GatewayRouteTableAssociation
+    reason: No physical identifier found
+  - name: AWS::EC2::NetworkAclEntry
+    reason: No physical identifier found
+  - name: AWS::EC2::SecurityGroupEgress
+    reason: No physical identifier found
+  - name: AWS::EC2::SecurityGroupIngress
+    reason: No physical identifier found
+  - name: AWS::EC2::SubnetCidrBlock
+    reason: No physical identifier found
+  - name: AWS::EC2::TransitGatewayRouteTableAssociation
+    reason: No physical identifier found
+  - name: AWS::EC2::TransitGatewayRouteTablePropagation
+    reason: No physical identifier found
+  - name: AWS::EC2::VolumeAttachment
+    reason: No physical identifier found
+  - name: AWS::EC2::VPCDHCPOptionsAssociation
+    reason: No physical identifier found
+  - name: AWS::EC2::VPCEndpointServicePermissions
+    reason: No physical identifier found
+  - name: AWS::EC2::VPCGatewayAttachment
+    reason: No physical identifier found
+  - name: AWS::EC2::VPNConnectionRoute
+    reason: No physical identifier found
+  - name: AWS::EC2::VPNGatewayRoutePropagation
+    reason: No physical identifier found
+  - name: AWS::ECS::PrimaryTaskSet
+    reason: No physical identifier found
+  - name: AWS::ECS::TaskSet
+    reason: No physical identifier found
+  - name: AWS::ElastiCache::SecurityGroupIngress
+    reason: No physical identifier found
+  - name: AWS::Glue::Classifier
+    reason: No physical identifier found
+  - name: AWS::Glue::DataCatalogEncryptionSettings
+    reason: No physical identifier found
+  - name: AWS::Glue::Partition
+    reason: No physical identifier found
+  - name: AWS::GuardDuty::Filter
+    reason: No physical identifier found
+  - name: AWS::GuardDuty::IPSet
+    reason: No physical identifier found
+  - name: AWS::GuardDuty::Master
+    reason: No physical identifier found
+  - name: AWS::GuardDuty::Member
+    reason: No physical identifier found
+  - name: AWS::GuardDuty::ThreatIntelSet
+    reason: No physical identifier found
+  - name: AWS::IAM::UserToGroupAddition
+    reason: No physical identifier found
+  - name: AWS::Inspector::ResourceGroup
+    reason: No physical identifier found
+  - name: AWS::KinesisAnalytics::ApplicationOutput
+    reason: No physical identifier found
+  - name: AWS::KinesisAnalytics::ApplicationReferenceDataSource
+    reason: No physical identifier found
+  - name: AWS::KinesisAnalyticsV2::ApplicationCloudWatchLoggingOption
+    reason: No physical identifier found
+  - name: AWS::KinesisAnalyticsV2::ApplicationOutput
+    reason: No physical identifier found
+  - name: AWS::KinesisAnalyticsV2::ApplicationReferenceDataSource
+    reason: No physical identifier found
+  - name: AWS::LakeFormation::DataLakeSettings
+    reason: No physical identifier found
+  - name: AWS::LakeFormation::Permissions
+    reason: No physical identifier found
+  - name: AWS::Lambda::EventInvokeConfig
+    reason: No physical identifier found
+  - name: AWS::Lambda::EventSourceMapping
+    reason: No physical identifier found
+  - name: AWS::Lambda::LayerVersionPermission
+    reason: No physical identifier found
+  - name: AWS::Lambda::Version
+    reason: No physical identifier found
+  - name: AWS::RDS::DBSecurityGroupIngress
+    reason: No physical identifier found
+  - name: AWS::Redshift::ClusterSecurityGroupIngress
+    reason: No physical identifier found
+  - name: AWS::Route53::RecordSetGroup
+    reason: No physical identifier found
+  - name: AWS::SecretsManager::ResourcePolicy
+    reason: No physical identifier found
+  - name: AWS::SecretsManager::RotationSchedule
+    reason: No physical identifier found
+  - name: AWS::SecretsManager::SecretTargetAttachment
+    reason: No physical identifier found
+  - name: AWS::ServiceCatalog::AcceptedPortfolioShare
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::CloudFormationProduct
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::CloudFormationProvisionedProduct
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::LaunchNotificationConstraint
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::LaunchRoleConstraint
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::LaunchTemplateConstraint
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::Portfolio
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::PortfolioPrincipalAssociation
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::PortfolioProductAssociation
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::PortfolioShare
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::ResourceUpdateConstraint
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::StackSetConstraint
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::TagOption
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::ServiceCatalog::TagOptionAssociation
+    reason: ServiceCatalog is most likely not in scope of this application
+  - name: AWS::SES::ConfigurationSetEventDestination
+    reason: No physical identifier found
+  - name: AWS::SNS::TopicPolicy
+    reason: No physical identifier found
+  - name: AWS::SQS::QueuePolicy
+    reason: No physical identifier found
+  - name: AWS::SSM::ResourceDataSync
+    reason: No physical identifier found
+  - name: AWS::WAFRegional::WebACLAssociation
+    reason: No physical identifier found

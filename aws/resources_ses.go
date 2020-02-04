@@ -11,6 +11,7 @@ func getSes(session *session.Session) (resources resourceMap) {
 		sesConfigurationSet: getSesConfigurationSet(client),
 		sesReceiptFilter:    getSesReceiptFilter(client),
 		sesReceiptRuleSet:   getSesReceiptRuleSet(client),
+		sesTemplate:         getSesTemplate(client),
 	}
 	resources = resourcesSliceErrorMap.unwrap()
 	return

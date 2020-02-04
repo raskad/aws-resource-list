@@ -259,7 +259,6 @@ const (
 	ec2Volume                                  resourceType = "ec2Volume"
 	ec2VPC                                     resourceType = "ec2VPC"
 	ec2VPCCidrBlock                            resourceType = "ec2VPCCidrBlock"
-	ec2VPCDHCPOptionsAssociation               resourceType = "ec2VPCDHCPOptionsAssociation"
 	ec2VPCEndpoint                             resourceType = "ec2VPCEndpoint"
 	ec2VPCEndpointConnectionNotification       resourceType = "ec2VPCEndpointConnectionNotification"
 	ec2VPCEndpointService                      resourceType = "ec2VPCEndpointService"
