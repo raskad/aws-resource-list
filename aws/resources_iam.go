@@ -1,10 +1,11 @@
 package aws
 
 import (
+	"strings"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/iam"
-	"strings"
 )
 
 func getIam(session *session.Session) (resources resourceMap) {
