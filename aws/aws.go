@@ -133,6 +133,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getSecretsManager(session),
 		getSes(session),
 		getSns(session),
+		getSns(session),
 		getSqs(session),
 		getSsm(session),
 		getWaf(session),
