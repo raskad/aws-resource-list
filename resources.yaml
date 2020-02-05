@@ -1519,8 +1519,8 @@ sesTemplate:
   identifier: Name
   cloudformation: AWS::SES::Template
 sdbDomain:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SDB::Domain
 snsSubscription:
   implemented: true
