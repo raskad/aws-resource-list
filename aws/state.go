@@ -83,6 +83,7 @@ type resourceType string
 
 const (
 	accessAnalyzerAnalyzer                     resourceType = "accessAnalyzerAnalyzer"
+	acmpcaCertificateAuthority                 resourceType = "acmpcaCertificateAuthority"
 	alexaAskSkill                              resourceType = "alexaAskSkill"
 	amazonMQBroker                             resourceType = "amazonMQBroker"
 	amazonMQConfiguration                      resourceType = "amazonMQConfiguration"
@@ -477,6 +478,7 @@ const (
 func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 	cfn := map[string]resourceType{
 		"AWS::AccessAnalyzer::Analyzer":                     accessAnalyzerAnalyzer,
+		"AWS::ACMPCA::CertificateAuthority":                 acmpcaCertificateAuthority,
 		"Alexa::ASK::Skill":                                 alexaAskSkill,
 		"AWS::AmazonMQ::Broker":                             amazonMQBroker,
 		"AWS::AmazonMQ::Configuration":                      amazonMQConfiguration,
