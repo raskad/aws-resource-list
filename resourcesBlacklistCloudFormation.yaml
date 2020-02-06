@@ -1,4 +1,8 @@
 resources:
+  - name: AWS::ACMPCA::Certificate
+    reason: No way to list all certificates at the moment https://github.com/aws/aws-cli/issues/3243
+  - name: AWS::ACMPCA::CertificateAuthorityActivation
+    reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
     reason: No physical identifier found
   - name: AWS::CloudFormation::CustomResource

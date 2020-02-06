@@ -2,6 +2,10 @@ accessAnalyzerAnalyzer:
   implemented: true
   identifier: Name
   cloudformation: AWS::AccessAnalyzer::Analyzer
+acmpcaCertificateAuthority:
+  implemented: true
+  identifier: Arn
+  cloudformation: AWS::ACMPCA::CertificateAuthority
 alexaAskSkill:
   implemented: false
   identifier: null
