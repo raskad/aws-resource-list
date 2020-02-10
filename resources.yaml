@@ -1626,6 +1626,10 @@ wafv2WebACL:
   implemented: true
   identifier: Id
   cloudformation: AWS::WAFv2::WebACL
+wafv2WebACLAssociation:
+  implemented: false
+  identifier: null
+  cloudformation: AWS::WAFv2::WebACLAssociation
 wafRegionalByteMatchSet:
   implemented: true
   identifier: Id
