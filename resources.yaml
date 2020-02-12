@@ -407,8 +407,8 @@ codeBuildSourceCredential:
   identifier: Arn
   cloudformation: AWS::CodeBuild::SourceCredential
 codeCommitRepository:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::CodeCommit::Repository
 codeDeployApplication:
   implemented: false
