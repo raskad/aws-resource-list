@@ -423,21 +423,13 @@ codeDeployDeploymentGroup:
   identifier: Name
   cloudformation: AWS::CodeDeploy::DeploymentGroup
 codePipelinePipeline:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodePipeline::Pipeline
 codePipelineWebhook:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Arn
   cloudformation: AWS::CodePipeline::Webhook
-codeStarGitHubRepository:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::CodeStar::GitHubRepository
-codeStarNotificationsNotificationRule:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::CodeStarNotifications::NotificationRule
 cognitoIdentityPool:
   implemented: false
   identifier: null
