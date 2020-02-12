@@ -811,20 +811,20 @@ elasticsearchDomain:
   identifier: Name
   cloudformation: AWS::Elasticsearch::Domain
 elasticBeanstalkApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ElasticBeanstalk::Application
 elasticBeanstalkApplicationVersion:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: VersionLabel
   cloudformation: AWS::ElasticBeanstalk::ApplicationVersion
 elasticBeanstalkConfigurationTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ElasticBeanstalk::ConfigurationTemplate
 elasticBeanstalkEnvironment:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ElasticBeanstalk::Environment
 elasticLoadBalancingLoadBalancer:
   implemented: false
