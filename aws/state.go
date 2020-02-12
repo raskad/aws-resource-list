@@ -183,7 +183,6 @@ const (
 	codeDeployApplication                      resourceType = "codeDeployApplication"
 	codeDeployDeploymentConfig                 resourceType = "codeDeployDeploymentConfig"
 	codeDeployDeploymentGroup                  resourceType = "codeDeployDeploymentGroup"
-	codePipelineCustomActionType               resourceType = "codePipelineCustomActionType"
 	codePipelinePipeline                       resourceType = "codePipelinePipeline"
 	codePipelineWebhook                        resourceType = "codePipelineWebhook"
 	codeStarGitHubRepository                   resourceType = "codeStarGitHubRepository"
@@ -578,7 +577,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::CodeDeploy::Application":                      codeDeployApplication,
 		"AWS::CodeDeploy::DeploymentConfig":                 codeDeployDeploymentConfig,
 		"AWS::CodeDeploy::DeploymentGroup":                  codeDeployDeploymentGroup,
-		"AWS::CodePipeline::CustomActionType":               codePipelineCustomActionType,
 		"AWS::CodePipeline::Pipeline":                       codePipelinePipeline,
 		"AWS::CodePipeline::Webhook":                        codePipelineWebhook,
 		"AWS::CodeStar::GitHubRepository":                   codeStarGitHubRepository,

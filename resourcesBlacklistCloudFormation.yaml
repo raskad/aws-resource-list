@@ -5,6 +5,12 @@ resources:
     reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
     reason: No physical identifier found
+  - name: AWS::CodePipeline::CustomActionType
+    reason: No physical identifier found
+  - name: AWS::CodeStar::GitHubRepository
+    reason: No physical identifier found
+  - name: AWS::CodeStarNotifications::NotificationRule
+    reason: No physical identifier found
   - name: AWS::CloudFormation::CustomResource
     reason: CloudFormation resources are checked against
   - name: AWS::CloudFormation::Macro

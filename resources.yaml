@@ -395,53 +395,41 @@ eventsRule:
   identifier: Name
   cloudformation: AWS::Events::Rule
 codeBuildProject:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeBuild::Project
 codeBuildReportGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Arn
   cloudformation: AWS::CodeBuild::ReportGroup
 codeBuildSourceCredential:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Arn
   cloudformation: AWS::CodeBuild::SourceCredential
 codeCommitRepository:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::CodeCommit::Repository
 codeDeployApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeDeploy::Application
 codeDeployDeploymentConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeDeploy::DeploymentConfig
 codeDeployDeploymentGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeDeploy::DeploymentGroup
-codePipelineCustomActionType:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::CodePipeline::CustomActionType
 codePipelinePipeline:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodePipeline::Pipeline
 codePipelineWebhook:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Arn
   cloudformation: AWS::CodePipeline::Webhook
-codeStarGitHubRepository:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::CodeStar::GitHubRepository
-codeStarNotificationsNotificationRule:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::CodeStarNotifications::NotificationRule
 cognitoIdentityPool:
   implemented: false
   identifier: null
@@ -811,20 +799,20 @@ elasticsearchDomain:
   identifier: Name
   cloudformation: AWS::Elasticsearch::Domain
 elasticBeanstalkApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ElasticBeanstalk::Application
 elasticBeanstalkApplicationVersion:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: VersionLabel
   cloudformation: AWS::ElasticBeanstalk::ApplicationVersion
 elasticBeanstalkConfigurationTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ElasticBeanstalk::ConfigurationTemplate
 elasticBeanstalkEnvironment:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ElasticBeanstalk::Environment
 elasticLoadBalancingLoadBalancer:
   implemented: false
