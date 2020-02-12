@@ -422,10 +422,6 @@ codeDeployDeploymentGroup:
   implemented: true
   identifier: Name
   cloudformation: AWS::CodeDeploy::DeploymentGroup
-codePipelineCustomActionType:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::CodePipeline::CustomActionType
 codePipelinePipeline:
   implemented: false
   identifier: null
