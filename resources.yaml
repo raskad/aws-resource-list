@@ -411,16 +411,16 @@ codeCommitRepository:
   identifier: Id
   cloudformation: AWS::CodeCommit::Repository
 codeDeployApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeDeploy::Application
 codeDeployDeploymentConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeDeploy::DeploymentConfig
 codeDeployDeploymentGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeDeploy::DeploymentGroup
 codePipelineCustomActionType:
   implemented: false

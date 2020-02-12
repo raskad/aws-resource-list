@@ -103,6 +103,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getCloudWatchEvents(session),
 		getCodeBuild(session),
 		getCodeCommit(session),
+		getCodeDeploy(session),
 		getConfig(session),
 		getDynamoDB(session),
 		getEc2(session),
