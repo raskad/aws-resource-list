@@ -101,6 +101,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getCloudTrail(session),
 		getCloudWatch(session),
 		getCloudWatchEvents(session),
+		getCodeBuild(session),
 		getConfig(session),
 		getDynamoDB(session),
 		getEc2(session),

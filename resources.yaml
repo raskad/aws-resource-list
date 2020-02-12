@@ -395,16 +395,16 @@ eventsRule:
   identifier: Name
   cloudformation: AWS::Events::Rule
 codeBuildProject:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::CodeBuild::Project
 codeBuildReportGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Arn
   cloudformation: AWS::CodeBuild::ReportGroup
 codeBuildSourceCredential:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Arn
   cloudformation: AWS::CodeBuild::SourceCredential
 codeCommitRepository:
   implemented: false
