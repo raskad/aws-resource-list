@@ -33,6 +33,10 @@ resources:
     reason: No physical identifier found
   - name: AWS::EC2::GatewayRouteTableAssociation
     reason: No physical identifier found
+  - name: AWS::EC2::LocalGatewayRoute
+    reason: No physical identifier found
+  - name: AWS::EC2::LocalGatewayRouteTableVPCAssociation
+    reason: No physical identifier found
   - name: AWS::EC2::NetworkAclEntry
     reason: No physical identifier found
   - name: AWS::EC2::SecurityGroupEgress

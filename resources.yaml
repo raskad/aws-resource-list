@@ -494,6 +494,10 @@ configConfigurationRecorder:
   implemented: true
   identifier: Name
   cloudformation: AWS::Config::ConfigurationRecorder
+configConformancePack:
+  implemented: false
+  identifier: null
+  cloudformation: AWS::Config::ConformancePack
 configDeliveryChannel:
   implemented: true
   identifier: Name
@@ -502,6 +506,10 @@ configOrganizationConfigRule:
   implemented: true
   identifier: Name
   cloudformation: AWS::Config::OrganizationConfigRule
+configOrganizationConformancePack:
+  implemented: false
+  identifier: null
+  cloudformation: AWS::Config::OrganizationConformancePack
 configRemediationConfiguration:
   implemented: true
   identifier: Arn
@@ -870,6 +878,14 @@ eventSchemasSchema:
   implemented: false
   identifier: null
   cloudformation: AWS::EventSchemas::Schema
+fmsNotificationChannel:
+  implemented: false
+  identifier: null
+  cloudformation: AWS::FMS::NotificationChannel
+fmsPolicy:
+  implemented: false
+  identifier: null
+  cloudformation: AWS::FMS::Policy
 fsxFileSystem:
   implemented: true
   identifier: Id
