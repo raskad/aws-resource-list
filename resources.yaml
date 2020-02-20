@@ -331,24 +331,24 @@ cloudFrontStreamingDistribution:
   identifier: Id
   cloudformation: AWS::CloudFront::StreamingDistribution
 serviceDiscoveryHTTPNamespace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::HttpNamespace
 serviceDiscoveryInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ServiceDiscovery::Instance
 serviceDiscoveryPrivateDNSNamespace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::PrivateDnsNamespace
 serviceDiscoveryPublicDNSNamespace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::PublicDnsNamespace
 serviceDiscoveryService:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::Service
 cloudTrailTrail:
   implemented: true

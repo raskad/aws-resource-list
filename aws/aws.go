@@ -138,6 +138,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getS3Control(session),
 		getSdb(session),
 		getSecretsManager(session),
+		getServiceDiscovery(session),
 		getSes(session),
 		getSns(session),
 		getSns(session),
