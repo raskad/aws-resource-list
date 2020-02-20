@@ -11,6 +11,16 @@ resources:
     reason: No physical identifier found
   - name: AWS::CodeStarNotifications::NotificationRule
     reason: No physical identifier found
+  - name: AWS::Cognito::IdentityPoolRoleAttachment
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolDomain
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolRiskConfigurationAttachment
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolUICustomizationAttachment
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolUserToGroupAttachment
+    reason: No physical identifier found
   - name: AWS::CloudFormation::CustomResource
     reason: CloudFormation resources are checked against
   - name: AWS::CloudFormation::Macro

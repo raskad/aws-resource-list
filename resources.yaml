@@ -431,53 +431,33 @@ codePipelineWebhook:
   identifier: Arn
   cloudformation: AWS::CodePipeline::Webhook
 cognitoIdentityPool:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::IdentityPool
-cognitoIdentityPoolRoleAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::IdentityPoolRoleAttachment
 cognitoUserPool:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPool
 cognitoUserPoolClient:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolClient
-cognitoUserPoolDomain:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolDomain
 cognitoUserPoolGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolGroup
 cognitoUserPoolIdentityProvider:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolIdentityProvider
 cognitoUserPoolResourceServer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolResourceServer
-cognitoUserPoolRiskConfigurationAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolRiskConfigurationAttachment
-cognitoUserPoolUICustomizationAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolUICustomizationAttachment
 cognitoUserPoolUser:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolUser
-cognitoUserPoolUserToGroupAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolUserToGroupAttachment
 configAggregationAuthorization:
   implemented: true
   identifier: Arn
