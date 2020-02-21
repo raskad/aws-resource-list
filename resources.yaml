@@ -523,44 +523,44 @@ dlmLifecyclePolicy:
   identifier: null
   cloudformation: AWS::DLM::LifecyclePolicy
 dmsCertificate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DMS::Certificate
 dmsEndpoint:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::Endpoint
 dmsEventSubscription:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::EventSubscription
 dmsReplicationInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::ReplicationInstance
 dmsReplicationSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::ReplicationSubnetGroup
 dmsReplicationTask:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DMS::ReplicationTask
 docDBDBCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBCluster
 docDBDBClusterParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBClusterParameterGroup
 docDBDBInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBInstance
 docDBDBSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBSubnetGroup
 dynamoDBTable:
   implemented: true

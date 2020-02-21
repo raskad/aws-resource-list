@@ -108,6 +108,8 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getCognitoIdentity(session),
 		getCognitoIdentityProvider(session),
 		getConfig(session),
+		getDms(session),
+		getDocDB(session),
 		getDynamoDB(session),
 		getEc2(session),
 		getEcr(session),
