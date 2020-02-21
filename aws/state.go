@@ -91,36 +91,14 @@ const (
 	amplifyApp                                resourceType = "amplifyApp"
 	amplifyBranch                             resourceType = "amplifyBranch"
 	amplifyDomain                             resourceType = "amplifyDomain"
-	apiGatewayAccount                         resourceType = "apiGatewayAccount"
 	apiGatewayAPIKey                          resourceType = "apiGatewayAPIKey"
-	apiGatewayAuthorizer                      resourceType = "apiGatewayAuthorizer"
-	apiGatewayBasePathMapping                 resourceType = "apiGatewayBasePathMapping"
 	apiGatewayClientCertificate               resourceType = "apiGatewayClientCertificate"
-	apiGatewayDeployment                      resourceType = "apiGatewayDeployment"
-	apiGatewayDocumentationPart               resourceType = "apiGatewayDocumentationPart"
-	apiGatewayDocumentationVersion            resourceType = "apiGatewayDocumentationVersion"
 	apiGatewayDomainName                      resourceType = "apiGatewayDomainName"
-	apiGatewayGatewayResponse                 resourceType = "apiGatewayGatewayResponse"
-	apiGatewayMethod                          resourceType = "apiGatewayMethod"
-	apiGatewayModel                           resourceType = "apiGatewayModel"
-	apiGatewayRequestValidator                resourceType = "apiGatewayRequestValidator"
-	apiGatewayResource                        resourceType = "apiGatewayResource"
 	apiGatewayRestAPI                         resourceType = "apiGatewayRestAPI"
-	apiGatewayStage                           resourceType = "apiGatewayStage"
 	apiGatewayUsagePlan                       resourceType = "apiGatewayUsagePlan"
-	apiGatewayUsagePlanKey                    resourceType = "apiGatewayUsagePlanKey"
 	apiGatewayVpcLink                         resourceType = "apiGatewayVpcLink"
 	apiGatewayV2Api                           resourceType = "apiGatewayV2Api"
-	apiGatewayV2ApiMapping                    resourceType = "apiGatewayV2ApiMapping"
-	apiGatewayV2Authorizer                    resourceType = "apiGatewayV2Authorizer"
-	apiGatewayV2Deployment                    resourceType = "apiGatewayV2Deployment"
 	apiGatewayV2DomainName                    resourceType = "apiGatewayV2DomainName"
-	apiGatewayV2Integration                   resourceType = "apiGatewayV2Integration"
-	apiGatewayV2IntegrationResponse           resourceType = "apiGatewayV2IntegrationResponse"
-	apiGatewayV2Model                         resourceType = "apiGatewayV2Model"
-	apiGatewayV2Route                         resourceType = "apiGatewayV2Route"
-	apiGatewayV2RouteResponse                 resourceType = "apiGatewayV2RouteResponse"
-	apiGatewayV2Stage                         resourceType = "apiGatewayV2Stage"
 	applicationAutoScalingScalableTarget      resourceType = "applicationAutoScalingScalableTarget"
 	applicationAutoScalingScalingPolicy       resourceType = "applicationAutoScalingScalingPolicy"
 	appMeshMesh                               resourceType = "appMeshMesh"
@@ -480,36 +458,14 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Amplify::App":                                amplifyApp,
 		"AWS::Amplify::Branch":                             amplifyBranch,
 		"AWS::Amplify::Domain":                             amplifyDomain,
-		"AWS::ApiGateway::Account":                         apiGatewayAccount,
 		"AWS::ApiGateway::ApiKey":                          apiGatewayAPIKey,
-		"AWS::ApiGateway::Authorizer":                      apiGatewayAuthorizer,
-		"AWS::ApiGateway::BasePathMapping":                 apiGatewayBasePathMapping,
 		"AWS::ApiGateway::ClientCertificate":               apiGatewayClientCertificate,
-		"AWS::ApiGateway::Deployment":                      apiGatewayDeployment,
-		"AWS::ApiGateway::DocumentationPart":               apiGatewayDocumentationPart,
-		"AWS::ApiGateway::DocumentationVersion":            apiGatewayDocumentationVersion,
 		"AWS::ApiGateway::DomainName":                      apiGatewayDomainName,
-		"AWS::ApiGateway::GatewayResponse":                 apiGatewayGatewayResponse,
-		"AWS::ApiGateway::Method":                          apiGatewayMethod,
-		"AWS::ApiGateway::Model":                           apiGatewayModel,
-		"AWS::ApiGateway::RequestValidator":                apiGatewayRequestValidator,
-		"AWS::ApiGateway::Resource":                        apiGatewayResource,
 		"AWS::ApiGateway::RestApi":                         apiGatewayRestAPI,
-		"AWS::ApiGateway::Stage":                           apiGatewayStage,
 		"AWS::ApiGateway::UsagePlan":                       apiGatewayUsagePlan,
-		"AWS::ApiGateway::UsagePlanKey":                    apiGatewayUsagePlanKey,
 		"AWS::ApiGateway::VpcLink":                         apiGatewayVpcLink,
 		"AWS::ApiGatewayV2::Api":                           apiGatewayV2Api,
-		"AWS::ApiGatewayV2::ApiMapping":                    apiGatewayV2ApiMapping,
-		"AWS::ApiGatewayV2::Authorizer":                    apiGatewayV2Authorizer,
-		"AWS::ApiGatewayV2::Deployment":                    apiGatewayV2Deployment,
 		"AWS::ApiGatewayV2::DomainName":                    apiGatewayV2DomainName,
-		"AWS::ApiGatewayV2::Integration":                   apiGatewayV2Integration,
-		"AWS::ApiGatewayV2::IntegrationResponse":           apiGatewayV2IntegrationResponse,
-		"AWS::ApiGatewayV2::Model":                         apiGatewayV2Model,
-		"AWS::ApiGatewayV2::Route":                         apiGatewayV2Route,
-		"AWS::ApiGatewayV2::RouteResponse":                 apiGatewayV2RouteResponse,
-		"AWS::ApiGatewayV2::Stage":                         apiGatewayV2Stage,
 		"AWS::ApplicationAutoScaling::ScalableTarget":      applicationAutoScalingScalableTarget,
 		"AWS::ApplicationAutoScaling::ScalingPolicy":       applicationAutoScalingScalingPolicy,
 		"AWS::AppMesh::Mesh":                               appMeshMesh,

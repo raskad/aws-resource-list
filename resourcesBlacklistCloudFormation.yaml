@@ -3,6 +3,50 @@ resources:
     reason: No way to list all certificates at the moment https://github.com/aws/aws-cli/issues/3243
   - name: AWS::ACMPCA::CertificateAuthorityActivation
     reason: No physical identifier found
+  - name: AWS::ApiGateway::Account
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::BasePathMapping
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::GatewayResponse
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Method
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Authorizer
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Deployment
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::DocumentationPart
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::DocumentationVersion
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Model
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::RequestValidator
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Resource
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::UsagePlanKey
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Stage
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::ApiMapping
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Authorizer
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Deployment
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Integration
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::IntegrationResponse
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Model
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Route
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::RouteResponse
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Stage
+    reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
     reason: No physical identifier found
   - name: AWS::CodePipeline::CustomActionType

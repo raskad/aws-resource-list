@@ -92,8 +92,10 @@ func getAccountID(session *session.Session) (err error) {
 func getRealState(session *session.Session) (resources resourceMap) {
 	resources = reduce(
 		getAccessAnalyzer(session),
-		getAcmpca(session),
 		getAcm(session),
+		getAcmpca(session),
+		getAPIGateway(session),
+		getAPIGatewayV2(session),
 		getAutoScaling(session),
 		getAutoScalingPlans(session),
 		getBackup(session),

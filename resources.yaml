@@ -34,126 +34,38 @@ amplifyDomain:
   implemented: false
   identifier: null
   cloudformation: AWS::Amplify::Domain
-apiGatewayAccount:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Account
 apiGatewayAPIKey:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::ApiKey
-apiGatewayAuthorizer:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Authorizer
-apiGatewayBasePathMapping:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::BasePathMapping
 apiGatewayClientCertificate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ApiGateway::ClientCertificate
-apiGatewayDeployment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Deployment
-apiGatewayDocumentationPart:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::DocumentationPart
-apiGatewayDocumentationVersion:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::DocumentationVersion
 apiGatewayDomainName:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::DomainName
-apiGatewayGatewayResponse:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::GatewayResponse
-apiGatewayMethod:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Method
-apiGatewayModel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Model
-apiGatewayRequestValidator:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::RequestValidator
-apiGatewayResource:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Resource
 apiGatewayRestAPI:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::RestApi
-apiGatewayStage:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Stage
 apiGatewayUsagePlan:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::UsagePlan
-apiGatewayUsagePlanKey:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::UsagePlanKey
 apiGatewayVpcLink:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::VpcLink
 apiGatewayV2Api:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ApiGatewayV2::Api
-apiGatewayV2ApiMapping:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::ApiMapping
-apiGatewayV2Authorizer:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Authorizer
-apiGatewayV2Deployment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Deployment
 apiGatewayV2DomainName:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGatewayV2::DomainName
-apiGatewayV2Integration:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Integration
-apiGatewayV2IntegrationResponse:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::IntegrationResponse
-apiGatewayV2Model:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Model
-apiGatewayV2Route:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Route
-apiGatewayV2RouteResponse:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::RouteResponse
-apiGatewayV2Stage:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Stage
 appConfigApplication:
   implemented: false
   identifier: null
