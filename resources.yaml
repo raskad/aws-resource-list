@@ -1307,29 +1307,21 @@ redshiftClusterSubnetGroup:
   identifier: Name
   cloudformation: AWS::Redshift::ClusterSubnetGroup
 roboMakerFleet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::Fleet
 roboMakerRobot:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::Robot
 roboMakerRobotApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::RobotApplication
-roboMakerRobotApplicationVersion:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::RoboMaker::RobotApplicationVersion
 roboMakerSimulationApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::SimulationApplication
-roboMakerSimulationApplicationVersion:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::RoboMaker::SimulationApplicationVersion
 route53HealthCheck:
   implemented: true
   identifier: Id
@@ -1367,32 +1359,32 @@ s3BucketPolicy:
   identifier: Name
   cloudformation: AWS::S3::BucketPolicy
 sageMakerCodeRepository:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::CodeRepository
 sageMakerEndpoint:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::Endpoint
 sageMakerEndpointConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::EndpointConfig
 sageMakerModel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::Model
 sageMakerNotebookInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::NotebookInstance
 sageMakerNotebookInstanceLifecycleConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::NotebookInstanceLifecycleConfig
 sageMakerWorkteam:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::Workteam
 secretsManagerSecret:
   implemented: true

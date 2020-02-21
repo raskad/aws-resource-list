@@ -383,9 +383,7 @@ const (
 	roboMakerFleet                            resourceType = "roboMakerFleet"
 	roboMakerRobot                            resourceType = "roboMakerRobot"
 	roboMakerRobotApplication                 resourceType = "roboMakerRobotApplication"
-	roboMakerRobotApplicationVersion          resourceType = "roboMakerRobotApplicationVersion"
 	roboMakerSimulationApplication            resourceType = "roboMakerSimulationApplication"
-	roboMakerSimulationApplicationVersion     resourceType = "roboMakerSimulationApplicationVersion"
 	route53HealthCheck                        resourceType = "route53HealthCheck"
 	route53HostedZone                         resourceType = "route53HostedZone"
 	route53RecordSet                          resourceType = "route53RecordSet"
@@ -750,9 +748,7 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::RoboMaker::Fleet":                            roboMakerFleet,
 		"AWS::RoboMaker::Robot":                            roboMakerRobot,
 		"AWS::RoboMaker::RobotApplication":                 roboMakerRobotApplication,
-		"AWS::RoboMaker::RobotApplicationVersion":          roboMakerRobotApplicationVersion,
 		"AWS::RoboMaker::SimulationApplication":            roboMakerSimulationApplication,
-		"AWS::RoboMaker::SimulationApplicationVersion":     roboMakerSimulationApplicationVersion,
 		"AWS::Route53::HealthCheck":                        route53HealthCheck,
 		"AWS::Route53::HostedZone":                         route53HostedZone,
 		"AWS::Route53::RecordSet":                          route53RecordSet,

@@ -167,6 +167,10 @@ resources:
     reason: No physical identifier found
   - name: AWS::Redshift::ClusterSecurityGroupIngress
     reason: No physical identifier found
+  - name: AWS::RoboMaker::RobotApplicationVersion
+    reason: No physical identifier found
+  - name: AWS::RoboMaker::SimulationApplicationVersion
+    reason: No physical identifier found
   - name: AWS::Route53::RecordSetGroup
     reason: No physical identifier found
   - name: AWS::SecretsManager::ResourcePolicy
