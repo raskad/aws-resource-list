@@ -103,13 +103,7 @@ const (
 	appStreamFleet                            resourceType = "appStreamFleet"
 	appStreamImageBuilder                     resourceType = "appStreamImageBuilder"
 	appStreamStack                            resourceType = "appStreamStack"
-	appSyncAPICache                           resourceType = "appSyncAPICache"
-	appSyncAPIKey                             resourceType = "appSyncAPIKey"
-	appSyncDataSource                         resourceType = "appSyncDataSource"
-	appSyncFunctionConfiguration              resourceType = "appSyncFunctionConfiguration"
 	appSyncGraphQLApi                         resourceType = "appSyncGraphQLApi"
-	appSyncGraphQLSchema                      resourceType = "appSyncGraphQLSchema"
-	appSyncResolver                           resourceType = "appSyncResolver"
 	athenaNamedQuery                          resourceType = "athenaNamedQuery"
 	autoScalingPlansScalingPlan               resourceType = "autoScalingPlansScalingPlan"
 	autoScalingAutoScalingGroup               resourceType = "autoScalingAutoScalingGroup"
@@ -460,13 +454,7 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::AppStream::Fleet":                            appStreamFleet,
 		"AWS::AppStream::ImageBuilder":                     appStreamImageBuilder,
 		"AWS::AppStream::Stack":                            appStreamStack,
-		"AWS::AppSync::ApiCache":                           appSyncAPICache,
-		"AWS::AppSync::ApiKey":                             appSyncAPIKey,
-		"AWS::AppSync::DataSource":                         appSyncDataSource,
-		"AWS::AppSync::FunctionConfiguration":              appSyncFunctionConfiguration,
 		"AWS::AppSync::GraphQLApi":                         appSyncGraphQLApi,
-		"AWS::AppSync::GraphQLSchema":                      appSyncGraphQLSchema,
-		"AWS::AppSync::Resolver":                           appSyncResolver,
 		"AWS::Athena::NamedQuery":                          athenaNamedQuery,
 		"AWS::AutoScalingPlans::ScalingPlan":               autoScalingPlansScalingPlan,
 		"AWS::AutoScaling::AutoScalingGroup":               autoScalingAutoScalingGroup,

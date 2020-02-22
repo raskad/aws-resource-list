@@ -101,6 +101,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getAppConfig(session),
 		getAppMesh(session),
 		getAppStream(session),
+		getAppSync(session),
 		getAutoScaling(session),
 		getAutoScalingPlans(session),
 		getBackup(session),

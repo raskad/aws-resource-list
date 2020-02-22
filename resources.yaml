@@ -82,34 +82,10 @@ appStreamStack:
   implemented: true
   identifier: Name
   cloudformation: AWS::AppStream::Stack
-appSyncAPICache:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::ApiCache
-appSyncAPIKey:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::ApiKey
-appSyncDataSource:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::DataSource
-appSyncFunctionConfiguration:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::FunctionConfiguration
 appSyncGraphQLApi:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppSync::GraphQLApi
-appSyncGraphQLSchema:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::GraphQLSchema
-appSyncResolver:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::Resolver
 athenaNamedQuery:
   implemented: false
   identifier: null
