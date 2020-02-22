@@ -91,6 +91,8 @@ resources:
     reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
     reason: No physical identifier found
+  - name: AWS::Budgets::Budget
+    reason: No physical identifier found
   - name: AWS::CodePipeline::CustomActionType
     reason: No physical identifier found
   - name: AWS::CodeStar::GitHubRepository

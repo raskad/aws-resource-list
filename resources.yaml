@@ -134,17 +134,13 @@ batchJobQueue:
   implemented: true
   identifier: Name
   cloudformation: AWS::Batch::JobQueue
-budgetsBudget:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Budgets::Budget
 certificateManagerCertificate:
   implemented: true
   identifier: Arn
   cloudformation: AWS::CertificateManager::Certificate
 cloud9EnvironmentEC2:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Cloud9::EnvironmentEC2
 cloudFrontCloudFrontOriginAccessIdentity:
   implemented: true
