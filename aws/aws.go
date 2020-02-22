@@ -121,6 +121,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getConfig(session),
 		getDataPipeline(session),
 		getDAX(session),
+		getDirectoryService(session),
 		getDms(session),
 		getDocDB(session),
 		getDynamoDB(session),

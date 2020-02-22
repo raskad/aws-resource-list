@@ -335,12 +335,12 @@ daxSubnetGroup:
   identifier: Name
   cloudformation: AWS::DAX::SubnetGroup
 directoryServiceMicrosoftAD:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DirectoryService::MicrosoftAD
 directoryServiceSimpleAD:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DirectoryService::SimpleAD
 dlmLifecyclePolicy:
   implemented: false
