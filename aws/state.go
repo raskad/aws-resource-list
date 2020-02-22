@@ -281,12 +281,10 @@ const (
 	inspectorAssessmentTemplate               resourceType = "inspectorAssessmentTemplate"
 	ioTCertificate                            resourceType = "ioTCertificate"
 	ioTPolicy                                 resourceType = "ioTPolicy"
-	ioTPolicyPrincipalAttachment              resourceType = "ioTPolicyPrincipalAttachment"
 	ioTThing                                  resourceType = "ioTThing"
 	ioTThingPrincipalAttachment               resourceType = "ioTThingPrincipalAttachment"
 	ioTTopicRule                              resourceType = "ioTTopicRule"
 	ioT1ClickDevice                           resourceType = "ioT1ClickDevice"
-	ioT1ClickPlacement                        resourceType = "ioT1ClickPlacement"
 	ioT1ClickProject                          resourceType = "ioT1ClickProject"
 	ioTAnalyticsChannel                       resourceType = "ioTAnalyticsChannel"
 	ioTAnalyticsDataset                       resourceType = "ioTAnalyticsDataset"
@@ -624,12 +622,10 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Inspector::AssessmentTemplate":               inspectorAssessmentTemplate,
 		"AWS::IoT::Certificate":                            ioTCertificate,
 		"AWS::IoT::Policy":                                 ioTPolicy,
-		"AWS::IoT::PolicyPrincipalAttachment":              ioTPolicyPrincipalAttachment,
 		"AWS::IoT::Thing":                                  ioTThing,
 		"AWS::IoT::ThingPrincipalAttachment":               ioTThingPrincipalAttachment,
 		"AWS::IoT::TopicRule":                              ioTTopicRule,
 		"AWS::IoT1Click::Device":                           ioT1ClickDevice,
-		"AWS::IoT1Click::Placement":                        ioT1ClickPlacement,
 		"AWS::IoT1Click::Project":                          ioT1ClickProject,
 		"AWS::IoTAnalytics::Channel":                       ioTAnalyticsChannel,
 		"AWS::IoTAnalytics::Dataset":                       ioTAnalyticsDataset,

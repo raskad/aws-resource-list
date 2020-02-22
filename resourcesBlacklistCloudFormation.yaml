@@ -191,6 +191,14 @@ resources:
     reason: No physical identifier found
   - name: AWS::Inspector::ResourceGroup
     reason: No physical identifier found
+  - name: AWS::IoT::PolicyPrincipalAttachment
+    reason: No physical identifier found
+  - name: AWS::IoT::ThingPrincipalAttachment
+    reason: No physical identifier found
+  - name: AWS::IoTThingsGraph::FlowTemplate
+    reason: No physical identifier found
+  - name: AWS::IoT1Click::Placement
+    reason: No physical identifier found
   - name: AWS::KinesisAnalytics::ApplicationOutput
     reason: No physical identifier found
   - name: AWS::KinesisAnalytics::ApplicationReferenceDataSource

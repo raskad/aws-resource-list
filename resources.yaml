@@ -783,64 +783,52 @@ inspectorAssessmentTemplate:
   identifier: Arn
   cloudformation: AWS::Inspector::AssessmentTemplate
 ioTCertificate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::IoT::Certificate
 ioTPolicy:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT::Policy
-ioTPolicyPrincipalAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoT::PolicyPrincipalAttachment
 ioTThing:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT::Thing
-ioTThingPrincipalAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoT::ThingPrincipalAttachment
 ioTTopicRule:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT::TopicRule
 ioT1ClickDevice:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::IoT1Click::Device
-ioT1ClickPlacement:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoT1Click::Placement
 ioT1ClickProject:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT1Click::Project
 ioTAnalyticsChannel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Channel
 ioTAnalyticsDataset:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Dataset
 ioTAnalyticsDatastore:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Datastore
 ioTAnalyticsPipeline:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Pipeline
 ioTEventsDetectorModel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTEvents::DetectorModel
 ioTEventsInput:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTEvents::Input
 greengrassConnectorDefinition:
   implemented: true
@@ -906,10 +894,6 @@ greengrassSubscriptionDefinitionVersion:
   implemented: true
   identifier: Id
   cloudformation: AWS::Greengrass::SubscriptionDefinitionVersion
-ioTThingsGraphFlowTemplate:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoTThingsGraph::FlowTemplate
 kinesisStream:
   implemented: true
   identifier: Name
@@ -983,8 +967,8 @@ mediaLiveInputSecurityGroup:
   identifier: Id
   cloudformation: AWS::MediaLive::InputSecurityGroup
 mediaStoreContainer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaStore::Container
 mskCluster:
   implemented: true
