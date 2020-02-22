@@ -1011,24 +1011,24 @@ mskCluster:
   identifier: Name
   cloudformation: AWS::MSK::Cluster
 neptuneDBCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Neptune::DBCluster
 neptuneDBClusterParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Neptune::DBClusterParameterGroup
 neptuneDBInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Neptune::DBInstance
 neptuneDBParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Neptune::DBParameterGroup
 neptuneDBSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Neptune::DBSubnetGroup
 opsWorksApp:
   implemented: true
