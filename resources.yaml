@@ -651,25 +651,13 @@ elasticLoadBalancingV2TargetGroup:
   identifier: Name
   cloudformation: AWS::ElasticLoadBalancingV2::TargetGroup
 emrCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::EMR::Cluster
-emrInstanceFleetConfig:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EMR::InstanceFleetConfig
-emrInstanceGroupConfig:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EMR::InstanceGroupConfig
 emrSecurityConfiguration:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::EMR::SecurityConfiguration
-emrStep:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EMR::Step
 eventSchemasDiscoverer:
   implemented: false
   identifier: null

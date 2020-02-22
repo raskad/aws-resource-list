@@ -247,10 +247,7 @@ const (
 	elasticLoadBalancingV2LoadBalancer        resourceType = "elasticLoadBalancingV2LoadBalancer"
 	elasticLoadBalancingV2TargetGroup         resourceType = "elasticLoadBalancingV2TargetGroup"
 	emrCluster                                resourceType = "emrCluster"
-	emrInstanceFleetConfig                    resourceType = "emrInstanceFleetConfig"
-	emrInstanceGroupConfig                    resourceType = "emrInstanceGroupConfig"
 	emrSecurityConfiguration                  resourceType = "emrSecurityConfiguration"
-	emrStep                                   resourceType = "emrStep"
 	eventSchemasDiscoverer                    resourceType = "eventSchemasDiscoverer"
 	eventSchemasRegistry                      resourceType = "eventSchemasRegistry"
 	eventSchemasSchema                        resourceType = "eventSchemasSchema"
@@ -598,10 +595,7 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::ElasticLoadBalancingV2::LoadBalancer":        elasticLoadBalancingV2LoadBalancer,
 		"AWS::ElasticLoadBalancingV2::TargetGroup":         elasticLoadBalancingV2TargetGroup,
 		"AWS::EMR::Cluster":                                emrCluster,
-		"AWS::EMR::InstanceFleetConfig":                    emrInstanceFleetConfig,
-		"AWS::EMR::InstanceGroupConfig":                    emrInstanceGroupConfig,
 		"AWS::EMR::SecurityConfiguration":                  emrSecurityConfiguration,
-		"AWS::EMR::Step":                                   emrStep,
 		"AWS::EventSchemas::Discoverer":                    eventSchemasDiscoverer,
 		"AWS::EventSchemas::Registry":                      eventSchemasRegistry,
 		"AWS::EventSchemas::Schema":                        eventSchemasSchema,

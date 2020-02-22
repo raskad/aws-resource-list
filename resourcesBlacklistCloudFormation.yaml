@@ -165,6 +165,12 @@ resources:
     reason: No physical identifier found
   - name: AWS::ElastiCache::SecurityGroupIngress
     reason: No physical identifier found
+  - name: AWS::EMR::InstanceFleetConfig
+    reason: No physical identifier found
+  - name: AWS::EMR::InstanceGroupConfig
+    reason: No physical identifier found
+  - name: AWS::EMR::Step
+    reason: No physical identifier found
   - name: AWS::Glue::Classifier
     reason: No physical identifier found
   - name: AWS::Glue::DataCatalogEncryptionSettings
