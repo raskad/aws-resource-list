@@ -384,7 +384,6 @@ const (
 	sageMakerNotebookInstanceLifecycleConfig  resourceType = "sageMakerNotebookInstanceLifecycleConfig"
 	sageMakerWorkteam                         resourceType = "sageMakerWorkteam"
 	secretsManagerSecret                      resourceType = "secretsManagerSecret"
-	securityHubHub                            resourceType = "securityHubHub"
 	sesConfigurationSet                       resourceType = "sesConfigurationSet"
 	sesReceiptFilter                          resourceType = "sesReceiptFilter"
 	sesReceiptRuleSet                         resourceType = "sesReceiptRuleSet"
@@ -731,7 +730,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::SageMaker::NotebookInstanceLifecycleConfig":  sageMakerNotebookInstanceLifecycleConfig,
 		"AWS::SageMaker::Workteam":                         sageMakerWorkteam,
 		"AWS::SecretsManager::Secret":                      secretsManagerSecret,
-		"AWS::SecurityHub::Hub":                            securityHubHub,
 		"AWS::SES::ConfigurationSet":                       sesConfigurationSet,
 		"AWS::SES::ReceiptFilter":                          sesReceiptFilter,
 		"AWS::SES::ReceiptRuleSet":                         sesReceiptRuleSet,

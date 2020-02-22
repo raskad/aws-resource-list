@@ -269,6 +269,8 @@ resources:
     reason: No physical identifier found
   - name: AWS::SecretsManager::SecretTargetAttachment
     reason: No physical identifier found
+  - name: AWS::SecurityHub::Hub
+    reason: No physical identifier found
   - name: AWS::ServiceCatalog::AcceptedPortfolioShare
     reason: ServiceCatalog is most likely not in scope of this application
   - name: AWS::ServiceCatalog::CloudFormationProduct

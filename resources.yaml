@@ -1210,10 +1210,6 @@ secretsManagerSecret:
   implemented: true
   identifier: Name
   cloudformation: AWS::SecretsManager::Secret
-securityHubHub:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::SecurityHub::Hub
 sesConfigurationSet:
   implemented: true
   identifier: Name
@@ -1283,8 +1279,8 @@ ssmPatchBaseline:
   identifier: Id
   cloudformation: AWS::SSM::PatchBaseline
 transferServer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Transfer::Server
 wafByteMatchSet:
   implemented: true
