@@ -136,6 +136,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getLambda(session),
 		getCloudwatchLogs(session),
 		getMsk(session),
+		getPinpoint(session),
 		getRds(session),
 		getRedshift(session),
 		getRoboMaker(session),

@@ -163,6 +163,42 @@ resources:
     reason: No physical identifier found
   - name: AWS::Lambda::Version
     reason: No physical identifier found
+  - name: AWS::Pinpoint::ADMChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSSandboxChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSVoipChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSVoipSandboxChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::ApplicationSettings
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::BaiduChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::Campaign
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::EmailChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::EventStream
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::GCMChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::Segment
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::SMSChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::VoiceChannel
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::ConfigurationSet
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::ConfigurationSetEventDestination
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::DedicatedIpPool
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::Identity
+    reason: No physical identifier found
   - name: AWS::RDS::DBSecurityGroupIngress
     reason: No physical identifier found
   - name: AWS::Redshift::ClusterSecurityGroupIngress

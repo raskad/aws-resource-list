@@ -1162,94 +1162,22 @@ opsWorksCMServer:
   implemented: false
   identifier: null
   cloudformation: AWS::OpsWorksCM::Server
-pinpointADMChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::ADMChannel
-pinpointAPNSChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSChannel
-pinpointAPNSSandboxChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSSandboxChannel
-pinpointAPNSVoipChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSVoipChannel
-pinpointAPNSVoipSandboxChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSVoipSandboxChannel
 pinpointApp:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Pinpoint::App
-pinpointApplicationSettings:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::ApplicationSettings
-pinpointBaiduChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::BaiduChannel
-pinpointCampaign:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::Campaign
-pinpointEmailChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::EmailChannel
 pinpointEmailTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Pinpoint::EmailTemplate
-pinpointEventStream:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::EventStream
-pinpointGCMChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::GCMChannel
 pinpointPushTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Pinpoint::PushTemplate
-pinpointSegment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::Segment
-pinpointSMSChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::SMSChannel
 pinpointSmsTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Pinpoint::SmsTemplate
-pinpointVoiceChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::VoiceChannel
-pinpointEmailConfigurationSet:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::ConfigurationSet
-pinpointEmailConfigurationSetEventDestination:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::ConfigurationSetEventDestination
-pinpointEmailDedicatedIpPool:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::DedicatedIpPool
-pinpointEmailIdentity:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::Identity
 qLDBLedger:
   implemented: false
   identifier: null

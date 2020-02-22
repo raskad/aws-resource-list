@@ -353,6 +353,10 @@ const (
 	mediaLiveInputSecurityGroup               resourceType = "mediaLiveInputSecurityGroup"
 	mediaStoreContainer                       resourceType = "mediaStoreContainer"
 	mskCluster                                resourceType = "mskCluster"
+	pinpointApp                               resourceType = "pinpointApp"
+	pinpointEmailTemplate                     resourceType = "pinpointEmailTemplate"
+	pinpointPushTemplate                      resourceType = "pinpointPushTemplate"
+	pinpointSmsTemplate                       resourceType = "pinpointSmsTemplate"
 	neptuneDBCluster                          resourceType = "neptuneDBCluster"
 	neptuneDBClusterParameterGroup            resourceType = "neptuneDBClusterParameterGroup"
 	neptuneDBInstance                         resourceType = "neptuneDBInstance"
@@ -718,6 +722,10 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::MediaLive::InputSecurityGroup":               mediaLiveInputSecurityGroup,
 		"AWS::MediaStore::Container":                       mediaStoreContainer,
 		"AWS::MSK::Cluster":                                mskCluster,
+		"AWS::Pinpoint::App":                               pinpointApp,
+		"AWS::Pinpoint::EmailTemplate":                     pinpointEmailTemplate,
+		"AWS::Pinpoint::PushTemplate":                      pinpointPushTemplate,
+		"AWS::Pinpoint::SmsTemplate":                       pinpointSmsTemplate,
 		"AWS::Neptune::DBCluster":                          neptuneDBCluster,
 		"AWS::Neptune::DBClusterParameterGroup":            neptuneDBClusterParameterGroup,
 		"AWS::Neptune::DBInstance":                         neptuneDBInstance,
