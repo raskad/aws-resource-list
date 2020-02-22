@@ -323,16 +323,16 @@ dataPipelinePipeline:
   identifier: Id
   cloudformation: AWS::DataPipeline::Pipeline
 daxCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DAX::Cluster
 daxParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DAX::ParameterGroup
 daxSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DAX::SubnetGroup
 directoryServiceMicrosoftAD:
   implemented: false
