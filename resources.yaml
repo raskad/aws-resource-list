@@ -87,8 +87,8 @@ appSyncGraphQLApi:
   identifier: Name
   cloudformation: AWS::AppSync::GraphQLApi
 athenaNamedQuery:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Athena::NamedQuery
 autoScalingPlansScalingPlan:
   implemented: true
@@ -123,16 +123,16 @@ backupBackupVault:
   identifier: Name
   cloudformation: AWS::Backup::BackupVault
 batchComputeEnvironment:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Batch::ComputeEnvironment
 batchJobDefinition:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Batch::JobDefinition
 batchJobQueue:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Batch::JobQueue
 budgetsBudget:
   implemented: false
