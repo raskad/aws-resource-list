@@ -971,16 +971,16 @@ mediaConvertQueue:
   identifier: Name
   cloudformation: AWS::MediaConvert::Queue
 mediaLiveChannel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaLive::Channel
 mediaLiveInput:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaLive::Input
 mediaLiveInputSecurityGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::MediaLive::InputSecurityGroup
 mediaStoreContainer:
   implemented: false
