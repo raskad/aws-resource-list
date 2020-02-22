@@ -163,6 +163,10 @@ resources:
     reason: No physical identifier found
   - name: AWS::Lambda::Version
     reason: No physical identifier found
+  - name: AWS::OpsWorks::ElasticLoadBalancerAttachment
+    reason: No physical identifier found
+  - name: AWS::OpsWorksCM::Server
+    reason: No physical identifier found
   - name: AWS::Pinpoint::ADMChannel
     reason: No physical identifier found
   - name: AWS::Pinpoint::APNSChannel

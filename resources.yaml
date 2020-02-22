@@ -1131,37 +1131,29 @@ neptuneDBSubnetGroup:
   identifier: null
   cloudformation: AWS::Neptune::DBSubnetGroup
 opsWorksApp:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::OpsWorks::App
-opsWorksElasticLoadBalancerAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::OpsWorks::ElasticLoadBalancerAttachment
 opsWorksInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Instance
 opsWorksLayer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Layer
 opsWorksStack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Stack
 opsWorksUserProfile:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::OpsWorks::UserProfile
 opsWorksVolume:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Volume
-opsWorksCMServer:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::OpsWorksCM::Server
 pinpointApp:
   implemented: true
   identifier: Id

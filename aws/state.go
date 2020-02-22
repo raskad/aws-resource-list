@@ -363,13 +363,11 @@ const (
 	neptuneDBParameterGroup                   resourceType = "neptuneDBParameterGroup"
 	neptuneDBSubnetGroup                      resourceType = "neptuneDBSubnetGroup"
 	opsWorksApp                               resourceType = "opsWorksApp"
-	opsWorksElasticLoadBalancerAttachment     resourceType = "opsWorksElasticLoadBalancerAttachment"
 	opsWorksInstance                          resourceType = "opsWorksInstance"
 	opsWorksLayer                             resourceType = "opsWorksLayer"
 	opsWorksStack                             resourceType = "opsWorksStack"
 	opsWorksUserProfile                       resourceType = "opsWorksUserProfile"
 	opsWorksVolume                            resourceType = "opsWorksVolume"
-	opsWorksCMServer                          resourceType = "opsWorksCMServer"
 	qLDBLedger                                resourceType = "qLDBLedger"
 	ramResourceShare                          resourceType = "ramResourceShare"
 	rdsDBCluster                              resourceType = "rdsDBCluster"
@@ -732,13 +730,11 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Neptune::DBParameterGroup":                   neptuneDBParameterGroup,
 		"AWS::Neptune::DBSubnetGroup":                      neptuneDBSubnetGroup,
 		"AWS::OpsWorks::App":                               opsWorksApp,
-		"AWS::OpsWorks::ElasticLoadBalancerAttachment":     opsWorksElasticLoadBalancerAttachment,
 		"AWS::OpsWorks::Instance":                          opsWorksInstance,
 		"AWS::OpsWorks::Layer":                             opsWorksLayer,
 		"AWS::OpsWorks::Stack":                             opsWorksStack,
 		"AWS::OpsWorks::UserProfile":                       opsWorksUserProfile,
 		"AWS::OpsWorks::Volume":                            opsWorksVolume,
-		"AWS::OpsWorksCM::Server":                          opsWorksCMServer,
 		"AWS::QLDB::Ledger":                                qLDBLedger,
 		"AWS::RAM::ResourceShare":                          ramResourceShare,
 		"AWS::RDS::DBCluster":                              rdsDBCluster,
