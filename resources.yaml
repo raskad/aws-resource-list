@@ -958,14 +958,6 @@ lambdaPermission:
   implemented: false
   identifier: null
   cloudformation: AWS::Lambda::Permission
-managedBlockchainMember:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ManagedBlockchain::Member
-managedBlockchainNode:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ManagedBlockchain::Node
 mediaConvertJobTemplate:
   implemented: false
   identifier: null

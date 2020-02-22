@@ -213,6 +213,10 @@ resources:
     reason: No physical identifier found
   - name: AWS::Lambda::Version
     reason: No physical identifier found
+  - name: AWS::ManagedBlockchain::Member
+    reason: No physical identifier found
+  - name: AWS::ManagedBlockchain::Node
+    reason: No physical identifier found
   - name: AWS::OpsWorks::ElasticLoadBalancerAttachment
     reason: No physical identifier found
   - name: AWS::OpsWorksCM::Server

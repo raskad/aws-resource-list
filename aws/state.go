@@ -323,8 +323,6 @@ const (
 	lambdaFunction                            resourceType = "lambdaFunction"
 	lambdaLayerVersion                        resourceType = "lambdaLayerVersion"
 	lambdaPermission                          resourceType = "lambdaPermission"
-	managedBlockchainMember                   resourceType = "managedBlockchainMember"
-	managedBlockchainNode                     resourceType = "managedBlockchainNode"
 	mediaConvertJobTemplate                   resourceType = "mediaConvertJobTemplate"
 	mediaConvertPreset                        resourceType = "mediaConvertPreset"
 	mediaConvertQueue                         resourceType = "mediaConvertQueue"
@@ -668,8 +666,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Lambda::Function":                            lambdaFunction,
 		"AWS::Lambda::LayerVersion":                        lambdaLayerVersion,
 		"AWS::Lambda::Permission":                          lambdaPermission,
-		"AWS::ManagedBlockchain::Member":                   managedBlockchainMember,
-		"AWS::ManagedBlockchain::Node":                     managedBlockchainNode,
 		"AWS::MediaConvert::JobTemplate":                   mediaConvertJobTemplate,
 		"AWS::MediaConvert::Preset":                        mediaConvertPreset,
 		"AWS::MediaConvert::Queue":                         mediaConvertQueue,
