@@ -7,8 +7,8 @@ acmpcaCertificateAuthority:
   identifier: Arn
   cloudformation: AWS::ACMPCA::CertificateAuthority
 alexaAskSkill:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: Alexa::ASK::Skill
 amazonMQBroker:
   implemented: false
@@ -23,17 +23,9 @@ amazonMQConfigurationAssociation:
   identifier: null
   cloudformation: AWS::AmazonMQ::ConfigurationAssociation
 amplifyApp:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Amplify::App
-amplifyBranch:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Amplify::Branch
-amplifyDomain:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Amplify::Domain
 apiGatewayAPIKey:
   implemented: true
   identifier: Name

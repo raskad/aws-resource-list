@@ -89,8 +89,6 @@ const (
 	amazonMQConfiguration                     resourceType = "amazonMQConfiguration"
 	amazonMQConfigurationAssociation          resourceType = "amazonMQConfigurationAssociation"
 	amplifyApp                                resourceType = "amplifyApp"
-	amplifyBranch                             resourceType = "amplifyBranch"
-	amplifyDomain                             resourceType = "amplifyDomain"
 	apiGatewayAPIKey                          resourceType = "apiGatewayAPIKey"
 	apiGatewayClientCertificate               resourceType = "apiGatewayClientCertificate"
 	apiGatewayDomainName                      resourceType = "apiGatewayDomainName"
@@ -456,8 +454,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::AmazonMQ::Configuration":                     amazonMQConfiguration,
 		"AWS::AmazonMQ::ConfigurationAssociation":          amazonMQConfigurationAssociation,
 		"AWS::Amplify::App":                                amplifyApp,
-		"AWS::Amplify::Branch":                             amplifyBranch,
-		"AWS::Amplify::Domain":                             amplifyDomain,
 		"AWS::ApiGateway::ApiKey":                          apiGatewayAPIKey,
 		"AWS::ApiGateway::ClientCertificate":               apiGatewayClientCertificate,
 		"AWS::ApiGateway::DomainName":                      apiGatewayDomainName,

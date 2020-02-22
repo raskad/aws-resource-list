@@ -94,6 +94,8 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getAccessAnalyzer(session),
 		getAcm(session),
 		getAcmpca(session),
+		getAlexaForBusiness(session),
+		getAmplify(session),
 		getAPIGateway(session),
 		getAPIGatewayV2(session),
 		getAutoScaling(session),
