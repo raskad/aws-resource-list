@@ -343,8 +343,8 @@ directoryServiceSimpleAD:
   identifier: Id
   cloudformation: AWS::DirectoryService::SimpleAD
 dlmLifecyclePolicy:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DLM::LifecyclePolicy
 dmsCertificate:
   implemented: true
