@@ -53,6 +53,12 @@ resources:
     reason: No physical identifier found
   - name: AWS::ApiGatewayV2::Stage
     reason: No physical identifier found
+  - name: AWS::AppConfig::ConfigurationProfile
+    reason: No physical identifier found
+  - name: AWS::AppConfig::Deployment
+    reason: No physical identifier found
+  - name: AWS::AppConfig::Environment
+    reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
     reason: No physical identifier found
   - name: AWS::CodePipeline::CustomActionType

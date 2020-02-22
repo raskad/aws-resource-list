@@ -55,25 +55,13 @@ apiGatewayV2DomainName:
   identifier: Name
   cloudformation: AWS::ApiGatewayV2::DomainName
 appConfigApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppConfig::Application
-appConfigConfigurationProfile:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppConfig::ConfigurationProfile
-appConfigDeployment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppConfig::Deployment
 appConfigDeploymentStrategy:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppConfig::DeploymentStrategy
-appConfigEnvironment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppConfig::Environment
 applicationAutoScalingScalableTarget:
   implemented: false
   identifier: null

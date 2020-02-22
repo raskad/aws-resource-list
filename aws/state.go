@@ -96,6 +96,8 @@ const (
 	apiGatewayVpcLink                         resourceType = "apiGatewayVpcLink"
 	apiGatewayV2Api                           resourceType = "apiGatewayV2Api"
 	apiGatewayV2DomainName                    resourceType = "apiGatewayV2DomainName"
+	appConfigApplication                      resourceType = "appConfigApplication"
+	appConfigDeploymentStrategy               resourceType = "appConfigDeploymentStrategy"
 	applicationAutoScalingScalableTarget      resourceType = "applicationAutoScalingScalableTarget"
 	applicationAutoScalingScalingPolicy       resourceType = "applicationAutoScalingScalingPolicy"
 	appMeshMesh                               resourceType = "appMeshMesh"
@@ -460,6 +462,8 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::ApiGateway::VpcLink":                         apiGatewayVpcLink,
 		"AWS::ApiGatewayV2::Api":                           apiGatewayV2Api,
 		"AWS::ApiGatewayV2::DomainName":                    apiGatewayV2DomainName,
+		"AWS::AppConfig::Application":                      appConfigApplication,
+		"AWS::AppConfig::DeploymentStrategy":               appConfigDeploymentStrategy,
 		"AWS::ApplicationAutoScaling::ScalableTarget":      applicationAutoScalingScalableTarget,
 		"AWS::ApplicationAutoScaling::ScalingPolicy":       applicationAutoScalingScalingPolicy,
 		"AWS::AppMesh::Mesh":                               appMeshMesh,
