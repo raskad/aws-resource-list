@@ -156,6 +156,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getNeptune(session),
 		getOpsWorks(session),
 		getPinpoint(session),
+		getQLDB(session),
 		getRds(session),
 		getRedshift(session),
 		getRoboMaker(session),

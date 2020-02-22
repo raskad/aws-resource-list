@@ -1059,8 +1059,8 @@ pinpointSmsTemplate:
   identifier: Name
   cloudformation: AWS::Pinpoint::SmsTemplate
 qLDBLedger:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::QLDB::Ledger
 ramResourceShare:
   implemented: false
