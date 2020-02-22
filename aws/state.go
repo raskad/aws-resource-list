@@ -99,10 +99,6 @@ const (
 	appConfigApplication                      resourceType = "appConfigApplication"
 	appConfigDeploymentStrategy               resourceType = "appConfigDeploymentStrategy"
 	appMeshMesh                               resourceType = "appMeshMesh"
-	appMeshRoute                              resourceType = "appMeshRoute"
-	appMeshVirtualNode                        resourceType = "appMeshVirtualNode"
-	appMeshVirtualRouter                      resourceType = "appMeshVirtualRouter"
-	appMeshVirtualService                     resourceType = "appMeshVirtualService"
 	appStreamDirectoryConfig                  resourceType = "appStreamDirectoryConfig"
 	appStreamFleet                            resourceType = "appStreamFleet"
 	appStreamImageBuilder                     resourceType = "appStreamImageBuilder"
@@ -463,10 +459,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::AppConfig::Application":                      appConfigApplication,
 		"AWS::AppConfig::DeploymentStrategy":               appConfigDeploymentStrategy,
 		"AWS::AppMesh::Mesh":                               appMeshMesh,
-		"AWS::AppMesh::Route":                              appMeshRoute,
-		"AWS::AppMesh::VirtualNode":                        appMeshVirtualNode,
-		"AWS::AppMesh::VirtualRouter":                      appMeshVirtualRouter,
-		"AWS::AppMesh::VirtualService":                     appMeshVirtualService,
 		"AWS::AppStream::DirectoryConfig":                  appStreamDirectoryConfig,
 		"AWS::AppStream::Fleet":                            appStreamFleet,
 		"AWS::AppStream::ImageBuilder":                     appStreamImageBuilder,

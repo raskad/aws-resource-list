@@ -63,25 +63,9 @@ appConfigDeploymentStrategy:
   identifier: Name
   cloudformation: AWS::AppConfig::DeploymentStrategy
 appMeshMesh:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppMesh::Mesh
-appMeshRoute:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::Route
-appMeshVirtualNode:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::VirtualNode
-appMeshVirtualRouter:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::VirtualRouter
-appMeshVirtualService:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::VirtualService
 appStreamDirectoryConfig:
   implemented: false
   identifier: null
