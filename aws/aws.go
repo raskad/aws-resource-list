@@ -152,6 +152,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getLambda(session),
 		getCloudwatchLogs(session),
 		getMq(session),
+		getMediaConvert(session),
 		getMsk(session),
 		getNeptune(session),
 		getOpsWorks(session),

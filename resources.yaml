@@ -959,16 +959,16 @@ lambdaPermission:
   identifier: null
   cloudformation: AWS::Lambda::Permission
 mediaConvertJobTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaConvert::JobTemplate
 mediaConvertPreset:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaConvert::Preset
 mediaConvertQueue:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaConvert::Queue
 mediaLiveChannel:
   implemented: false
