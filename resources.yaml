@@ -319,8 +319,8 @@ configRemediationConfiguration:
   identifier: Arn
   cloudformation: AWS::Config::RemediationConfiguration
 dataPipelinePipeline:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DataPipeline::Pipeline
 daxCluster:
   implemented: false
