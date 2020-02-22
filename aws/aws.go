@@ -131,6 +131,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getElasticsearch(session),
 		getElasticBeanstalk(session),
 		getElasticLoadBalancingV2(session),
+		getElb(session),
 		getFirehose(session),
 		getFsx(session),
 		getGameLift(session),

@@ -627,8 +627,8 @@ elasticBeanstalkEnvironment:
   identifier: Id
   cloudformation: AWS::ElasticBeanstalk::Environment
 elasticLoadBalancingLoadBalancer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ElasticLoadBalancing::LoadBalancer
 elasticLoadBalancingV2Listener:
   implemented: true
