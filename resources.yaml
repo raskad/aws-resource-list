@@ -1062,10 +1062,6 @@ qLDBLedger:
   implemented: true
   identifier: Name
   cloudformation: AWS::QLDB::Ledger
-ramResourceShare:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::RAM::ResourceShare
 rdsDBCluster:
   implemented: true
   identifier: Name

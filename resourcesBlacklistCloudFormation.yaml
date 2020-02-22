@@ -253,6 +253,8 @@ resources:
     reason: No physical identifier found
   - name: AWS::PinpointEmail::Identity
     reason: No physical identifier found
+  - name: AWS::RAM::ResourceShare
+    reason: No physical identifier found
   - name: AWS::RDS::DBSecurityGroupIngress
     reason: No physical identifier found
   - name: AWS::Redshift::ClusterSecurityGroupIngress
