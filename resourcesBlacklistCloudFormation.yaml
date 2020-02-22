@@ -265,6 +265,10 @@ resources:
     reason: No physical identifier found
   - name: AWS::EventSchemas::Schema
     reason: No physical identifier found
+  - name: AWS::FMS::NotificationChannel
+    reason: No physical identifier found
+  - name: AWS::FMS::Policy
+    reason: No physical identifier found
   - name: AWS::SecretsManager::ResourcePolicy
     reason: No physical identifier found
   - name: AWS::SecretsManager::RotationSchedule

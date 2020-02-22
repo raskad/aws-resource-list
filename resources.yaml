@@ -666,14 +666,6 @@ eventSchemasRegistry:
   implemented: true
   identifier: Name
   cloudformation: AWS::EventSchemas::Registry
-fmsNotificationChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::FMS::NotificationChannel
-fmsPolicy:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::FMS::Policy
 fsxFileSystem:
   implemented: true
   identifier: Id
