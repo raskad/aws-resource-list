@@ -305,5 +305,7 @@ resources:
     reason: No physical identifier found
   - name: AWS::SSM::ResourceDataSync
     reason: No physical identifier found
+  - name: AWS::Transfer::User
+    reason: No physical identifier found
   - name: AWS::WAFRegional::WebACLAssociation
     reason: No physical identifier found

@@ -403,7 +403,6 @@ const (
 	ssmParameter                              resourceType = "ssmParameter"
 	ssmPatchBaseline                          resourceType = "ssmPatchBaseline"
 	transferServer                            resourceType = "transferServer"
-	transferUser                              resourceType = "transferUser"
 	wafByteMatchSet                           resourceType = "wafByteMatchSet"
 	wafIPSet                                  resourceType = "wafIPSet"
 	wafRule                                   resourceType = "wafRule"
@@ -751,7 +750,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::SSM::Parameter":                              ssmParameter,
 		"AWS::SSM::PatchBaseline":                          ssmPatchBaseline,
 		"AWS::Transfer::Server":                            transferServer,
-		"AWS::Transfer::User":                              transferUser,
 		"AWS::WAF::ByteMatchSet":                           wafByteMatchSet,
 		"AWS::WAF::IPSet":                                  wafIPSet,
 		"AWS::WAF::Rule":                                   wafRule,

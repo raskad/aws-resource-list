@@ -170,6 +170,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getSns(session),
 		getSqs(session),
 		getSsm(session),
+		getTransfer(session),
 		getWaf(session),
 		getWafRegional(session),
 		getWafv2(session),

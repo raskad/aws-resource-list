@@ -1286,10 +1286,6 @@ transferServer:
   implemented: false
   identifier: null
   cloudformation: AWS::Transfer::Server
-transferUser:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Transfer::User
 wafByteMatchSet:
   implemented: true
   identifier: Id
