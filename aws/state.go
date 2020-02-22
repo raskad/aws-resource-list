@@ -87,7 +87,6 @@ const (
 	alexaAskSkill                             resourceType = "alexaAskSkill"
 	amazonMQBroker                            resourceType = "amazonMQBroker"
 	amazonMQConfiguration                     resourceType = "amazonMQConfiguration"
-	amazonMQConfigurationAssociation          resourceType = "amazonMQConfigurationAssociation"
 	amplifyApp                                resourceType = "amplifyApp"
 	apiGatewayAPIKey                          resourceType = "apiGatewayAPIKey"
 	apiGatewayClientCertificate               resourceType = "apiGatewayClientCertificate"
@@ -452,7 +451,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"Alexa::ASK::Skill":                                alexaAskSkill,
 		"AWS::AmazonMQ::Broker":                            amazonMQBroker,
 		"AWS::AmazonMQ::Configuration":                     amazonMQConfiguration,
-		"AWS::AmazonMQ::ConfigurationAssociation":          amazonMQConfigurationAssociation,
 		"AWS::Amplify::App":                                amplifyApp,
 		"AWS::ApiGateway::ApiKey":                          apiGatewayAPIKey,
 		"AWS::ApiGateway::ClientCertificate":               apiGatewayClientCertificate,

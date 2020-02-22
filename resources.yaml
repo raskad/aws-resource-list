@@ -11,17 +11,13 @@ alexaAskSkill:
   identifier: Name
   cloudformation: Alexa::ASK::Skill
 amazonMQBroker:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AmazonMQ::Broker
 amazonMQConfiguration:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AmazonMQ::Configuration
-amazonMQConfigurationAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AmazonMQ::ConfigurationAssociation
 amplifyApp:
   implemented: true
   identifier: Name
