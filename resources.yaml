@@ -683,32 +683,32 @@ fsxFileSystem:
   identifier: Id
   cloudformation: AWS::FSx::FileSystem
 gameLiftAlias:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Alias
 gameLiftBuild:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Build
 gameLiftFleet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Fleet
 gameLiftGameSessionQueue:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::GameLift::GameSessionQueue
 gameLiftMatchmakingConfiguration:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::GameLift::MatchmakingConfiguration
 gameLiftMatchmakingRuleSet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::GameLift::MatchmakingRuleSet
 gameLiftScript:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Script
 glueConnection:
   implemented: true

@@ -133,6 +133,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getElasticLoadBalancingV2(session),
 		getFirehose(session),
 		getFsx(session),
+		getGameLift(session),
 		getGlue(session),
 		getGuardDuty(session),
 		getIam(session),
