@@ -100,6 +100,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getAPIGatewayV2(session),
 		getAppConfig(session),
 		getAppMesh(session),
+		getAppStream(session),
 		getAutoScaling(session),
 		getAutoScalingPlans(session),
 		getBackup(session),

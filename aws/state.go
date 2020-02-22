@@ -103,9 +103,6 @@ const (
 	appStreamFleet                            resourceType = "appStreamFleet"
 	appStreamImageBuilder                     resourceType = "appStreamImageBuilder"
 	appStreamStack                            resourceType = "appStreamStack"
-	appStreamStackFleetAssociation            resourceType = "appStreamStackFleetAssociation"
-	appStreamStackUserAssociation             resourceType = "appStreamStackUserAssociation"
-	appStreamUser                             resourceType = "appStreamUser"
 	appSyncAPICache                           resourceType = "appSyncAPICache"
 	appSyncAPIKey                             resourceType = "appSyncAPIKey"
 	appSyncDataSource                         resourceType = "appSyncDataSource"
@@ -463,9 +460,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::AppStream::Fleet":                            appStreamFleet,
 		"AWS::AppStream::ImageBuilder":                     appStreamImageBuilder,
 		"AWS::AppStream::Stack":                            appStreamStack,
-		"AWS::AppStream::StackFleetAssociation":            appStreamStackFleetAssociation,
-		"AWS::AppStream::StackUserAssociation":             appStreamStackUserAssociation,
-		"AWS::AppStream::User":                             appStreamUser,
 		"AWS::AppSync::ApiCache":                           appSyncAPICache,
 		"AWS::AppSync::ApiKey":                             appSyncAPIKey,
 		"AWS::AppSync::DataSource":                         appSyncDataSource,

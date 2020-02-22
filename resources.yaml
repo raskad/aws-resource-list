@@ -67,33 +67,21 @@ appMeshMesh:
   identifier: Name
   cloudformation: AWS::AppMesh::Mesh
 appStreamDirectoryConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::DirectoryConfig
 appStreamFleet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::Fleet
 appStreamImageBuilder:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::ImageBuilder
 appStreamStack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::Stack
-appStreamStackFleetAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppStream::StackFleetAssociation
-appStreamStackUserAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppStream::StackUserAssociation
-appStreamUser:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppStream::User
 appSyncAPICache:
   implemented: false
   identifier: null

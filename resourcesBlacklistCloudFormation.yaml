@@ -71,6 +71,12 @@ resources:
     reason: No physical identifier found
   - name: AWS::AppMesh::VirtualService
     reason: No physical identifier found
+  - name: AWS::AppStream::StackFleetAssociation
+    reason: No physical identifier found
+  - name: AWS::AppStream::StackUserAssociation
+    reason: No physical identifier found
+  - name: AWS::AppStream::User
+    reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
     reason: No physical identifier found
   - name: AWS::CodePipeline::CustomActionType
