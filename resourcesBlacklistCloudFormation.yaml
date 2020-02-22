@@ -59,6 +59,10 @@ resources:
     reason: No physical identifier found
   - name: AWS::AppConfig::Environment
     reason: No physical identifier found
+  - name: AWS::ApplicationAutoScaling::ScalableTarget
+    reason: No physical identifier found
+  - name: AWS::ApplicationAutoScaling::ScalingPolicy
+    reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
     reason: No physical identifier found
   - name: AWS::CodePipeline::CustomActionType

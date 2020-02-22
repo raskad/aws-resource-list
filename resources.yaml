@@ -62,14 +62,6 @@ appConfigDeploymentStrategy:
   implemented: true
   identifier: Name
   cloudformation: AWS::AppConfig::DeploymentStrategy
-applicationAutoScalingScalableTarget:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApplicationAutoScaling::ScalableTarget
-applicationAutoScalingScalingPolicy:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApplicationAutoScaling::ScalingPolicy
 appMeshMesh:
   implemented: false
   identifier: null
