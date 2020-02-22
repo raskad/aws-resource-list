@@ -7,260 +7,88 @@ acmpcaCertificateAuthority:
   identifier: Arn
   cloudformation: AWS::ACMPCA::CertificateAuthority
 alexaAskSkill:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: Alexa::ASK::Skill
 amazonMQBroker:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AmazonMQ::Broker
 amazonMQConfiguration:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AmazonMQ::Configuration
-amazonMQConfigurationAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AmazonMQ::ConfigurationAssociation
 amplifyApp:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Amplify::App
-amplifyBranch:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Amplify::Branch
-amplifyDomain:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Amplify::Domain
-apiGatewayAccount:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Account
 apiGatewayAPIKey:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::ApiKey
-apiGatewayAuthorizer:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Authorizer
-apiGatewayBasePathMapping:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::BasePathMapping
 apiGatewayClientCertificate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ApiGateway::ClientCertificate
-apiGatewayDeployment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Deployment
-apiGatewayDocumentationPart:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::DocumentationPart
-apiGatewayDocumentationVersion:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::DocumentationVersion
 apiGatewayDomainName:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::DomainName
-apiGatewayGatewayResponse:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::GatewayResponse
-apiGatewayMethod:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Method
-apiGatewayModel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Model
-apiGatewayRequestValidator:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::RequestValidator
-apiGatewayResource:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Resource
 apiGatewayRestAPI:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::RestApi
-apiGatewayStage:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::Stage
 apiGatewayUsagePlan:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::UsagePlan
-apiGatewayUsagePlanKey:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGateway::UsagePlanKey
 apiGatewayVpcLink:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGateway::VpcLink
 apiGatewayV2Api:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ApiGatewayV2::Api
-apiGatewayV2ApiMapping:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::ApiMapping
-apiGatewayV2Authorizer:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Authorizer
-apiGatewayV2Deployment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Deployment
 apiGatewayV2DomainName:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ApiGatewayV2::DomainName
-apiGatewayV2Integration:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Integration
-apiGatewayV2IntegrationResponse:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::IntegrationResponse
-apiGatewayV2Model:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Model
-apiGatewayV2Route:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Route
-apiGatewayV2RouteResponse:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::RouteResponse
-apiGatewayV2Stage:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApiGatewayV2::Stage
 appConfigApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppConfig::Application
-appConfigConfigurationProfile:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppConfig::ConfigurationProfile
-appConfigDeployment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppConfig::Deployment
 appConfigDeploymentStrategy:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppConfig::DeploymentStrategy
-appConfigEnvironment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppConfig::Environment
-applicationAutoScalingScalableTarget:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApplicationAutoScaling::ScalableTarget
-applicationAutoScalingScalingPolicy:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ApplicationAutoScaling::ScalingPolicy
 appMeshMesh:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppMesh::Mesh
-appMeshRoute:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::Route
-appMeshVirtualNode:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::VirtualNode
-appMeshVirtualRouter:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::VirtualRouter
-appMeshVirtualService:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppMesh::VirtualService
 appStreamDirectoryConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::DirectoryConfig
 appStreamFleet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::Fleet
 appStreamImageBuilder:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::ImageBuilder
 appStreamStack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppStream::Stack
-appStreamStackFleetAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppStream::StackFleetAssociation
-appStreamStackUserAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppStream::StackUserAssociation
-appStreamUser:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppStream::User
-appSyncAPICache:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::ApiCache
-appSyncAPIKey:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::ApiKey
-appSyncDataSource:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::DataSource
-appSyncFunctionConfiguration:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::FunctionConfiguration
 appSyncGraphQLApi:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::AppSync::GraphQLApi
-appSyncGraphQLSchema:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::GraphQLSchema
-appSyncResolver:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::AppSync::Resolver
 athenaNamedQuery:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Athena::NamedQuery
 autoScalingPlansScalingPlan:
   implemented: true
@@ -295,28 +123,24 @@ backupBackupVault:
   identifier: Name
   cloudformation: AWS::Backup::BackupVault
 batchComputeEnvironment:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Batch::ComputeEnvironment
 batchJobDefinition:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Batch::JobDefinition
 batchJobQueue:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Batch::JobQueue
-budgetsBudget:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Budgets::Budget
 certificateManagerCertificate:
   implemented: true
   identifier: Arn
   cloudformation: AWS::CertificateManager::Certificate
 cloud9EnvironmentEC2:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Cloud9::EnvironmentEC2
 cloudFrontCloudFrontOriginAccessIdentity:
   implemented: true
@@ -331,24 +155,24 @@ cloudFrontStreamingDistribution:
   identifier: Id
   cloudformation: AWS::CloudFront::StreamingDistribution
 serviceDiscoveryHTTPNamespace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::HttpNamespace
 serviceDiscoveryInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::ServiceDiscovery::Instance
 serviceDiscoveryPrivateDNSNamespace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::PrivateDnsNamespace
 serviceDiscoveryPublicDNSNamespace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::PublicDnsNamespace
 serviceDiscoveryService:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ServiceDiscovery::Service
 cloudTrailTrail:
   implemented: true
@@ -431,53 +255,33 @@ codePipelineWebhook:
   identifier: Arn
   cloudformation: AWS::CodePipeline::Webhook
 cognitoIdentityPool:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::IdentityPool
-cognitoIdentityPoolRoleAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::IdentityPoolRoleAttachment
 cognitoUserPool:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPool
 cognitoUserPoolClient:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolClient
-cognitoUserPoolDomain:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolDomain
 cognitoUserPoolGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolGroup
 cognitoUserPoolIdentityProvider:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolIdentityProvider
 cognitoUserPoolResourceServer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolResourceServer
-cognitoUserPoolRiskConfigurationAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolRiskConfigurationAttachment
-cognitoUserPoolUICustomizationAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolUICustomizationAttachment
 cognitoUserPoolUser:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Cognito::UserPoolUser
-cognitoUserPoolUserToGroupAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Cognito::UserPoolUserToGroupAttachment
 configAggregationAuthorization:
   implemented: true
   identifier: Arn
@@ -495,8 +299,8 @@ configConfigurationRecorder:
   identifier: Name
   cloudformation: AWS::Config::ConfigurationRecorder
 configConformancePack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Config::ConformancePack
 configDeliveryChannel:
   implemented: true
@@ -507,80 +311,80 @@ configOrganizationConfigRule:
   identifier: Name
   cloudformation: AWS::Config::OrganizationConfigRule
 configOrganizationConformancePack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Config::OrganizationConformancePack
 configRemediationConfiguration:
   implemented: true
   identifier: Arn
   cloudformation: AWS::Config::RemediationConfiguration
 dataPipelinePipeline:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DataPipeline::Pipeline
 daxCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DAX::Cluster
 daxParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DAX::ParameterGroup
 daxSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DAX::SubnetGroup
 directoryServiceMicrosoftAD:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DirectoryService::MicrosoftAD
 directoryServiceSimpleAD:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DirectoryService::SimpleAD
 dlmLifecyclePolicy:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DLM::LifecyclePolicy
 dmsCertificate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DMS::Certificate
 dmsEndpoint:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::Endpoint
 dmsEventSubscription:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::EventSubscription
 dmsReplicationInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::ReplicationInstance
 dmsReplicationSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::DMS::ReplicationSubnetGroup
 dmsReplicationTask:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DMS::ReplicationTask
 docDBDBCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBCluster
 docDBDBClusterParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBClusterParameterGroup
 docDBDBInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBInstance
 docDBDBSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::DocDB::DBSubnetGroup
 dynamoDBTable:
   implemented: true
@@ -823,8 +627,8 @@ elasticBeanstalkEnvironment:
   identifier: Id
   cloudformation: AWS::ElasticBeanstalk::Environment
 elasticLoadBalancingLoadBalancer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::ElasticLoadBalancing::LoadBalancer
 elasticLoadBalancingV2Listener:
   implemented: true
@@ -847,76 +651,52 @@ elasticLoadBalancingV2TargetGroup:
   identifier: Name
   cloudformation: AWS::ElasticLoadBalancingV2::TargetGroup
 emrCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::EMR::Cluster
-emrInstanceFleetConfig:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EMR::InstanceFleetConfig
-emrInstanceGroupConfig:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EMR::InstanceGroupConfig
 emrSecurityConfiguration:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::EMR::SecurityConfiguration
-emrStep:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EMR::Step
 eventSchemasDiscoverer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::EventSchemas::Discoverer
 eventSchemasRegistry:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::EventSchemas::Registry
-eventSchemasSchema:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EventSchemas::Schema
-fmsNotificationChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::FMS::NotificationChannel
-fmsPolicy:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::FMS::Policy
 fsxFileSystem:
   implemented: true
   identifier: Id
   cloudformation: AWS::FSx::FileSystem
 gameLiftAlias:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Alias
 gameLiftBuild:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Build
 gameLiftFleet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Fleet
 gameLiftGameSessionQueue:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::GameLift::GameSessionQueue
 gameLiftMatchmakingConfiguration:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::GameLift::MatchmakingConfiguration
 gameLiftMatchmakingRuleSet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::GameLift::MatchmakingRuleSet
 gameLiftScript:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::GameLift::Script
 glueConnection:
   implemented: true
@@ -1003,64 +783,52 @@ inspectorAssessmentTemplate:
   identifier: Arn
   cloudformation: AWS::Inspector::AssessmentTemplate
 ioTCertificate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::IoT::Certificate
 ioTPolicy:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT::Policy
-ioTPolicyPrincipalAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoT::PolicyPrincipalAttachment
 ioTThing:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT::Thing
-ioTThingPrincipalAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoT::ThingPrincipalAttachment
 ioTTopicRule:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT::TopicRule
 ioT1ClickDevice:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::IoT1Click::Device
-ioT1ClickPlacement:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoT1Click::Placement
 ioT1ClickProject:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoT1Click::Project
 ioTAnalyticsChannel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Channel
 ioTAnalyticsDataset:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Dataset
 ioTAnalyticsDatastore:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Datastore
 ioTAnalyticsPipeline:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTAnalytics::Pipeline
 ioTEventsDetectorModel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTEvents::DetectorModel
 ioTEventsInput:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::IoTEvents::Input
 greengrassConnectorDefinition:
   implemented: true
@@ -1126,10 +894,6 @@ greengrassSubscriptionDefinitionVersion:
   implemented: true
   identifier: Id
   cloudformation: AWS::Greengrass::SubscriptionDefinitionVersion
-ioTThingsGraphFlowTemplate:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::IoTThingsGraph::FlowTemplate
 kinesisStream:
   implemented: true
   identifier: Name
@@ -1174,198 +938,102 @@ lambdaLayerVersion:
   implemented: true
   identifier: Arn
   cloudformation: AWS::Lambda::LayerVersion
-lambdaPermission:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Lambda::Permission
-managedBlockchainMember:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ManagedBlockchain::Member
-managedBlockchainNode:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::ManagedBlockchain::Node
 mediaConvertJobTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaConvert::JobTemplate
 mediaConvertPreset:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaConvert::Preset
 mediaConvertQueue:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaConvert::Queue
 mediaLiveChannel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaLive::Channel
 mediaLiveInput:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaLive::Input
 mediaLiveInputSecurityGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::MediaLive::InputSecurityGroup
 mediaStoreContainer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::MediaStore::Container
 mskCluster:
   implemented: true
   identifier: Name
   cloudformation: AWS::MSK::Cluster
 neptuneDBCluster:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Neptune::DBCluster
 neptuneDBClusterParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Neptune::DBClusterParameterGroup
 neptuneDBInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Neptune::DBInstance
 neptuneDBParameterGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Neptune::DBParameterGroup
 neptuneDBSubnetGroup:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Neptune::DBSubnetGroup
 opsWorksApp:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::OpsWorks::App
-opsWorksElasticLoadBalancerAttachment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::OpsWorks::ElasticLoadBalancerAttachment
 opsWorksInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Instance
 opsWorksLayer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Layer
 opsWorksStack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Stack
 opsWorksUserProfile:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::OpsWorks::UserProfile
 opsWorksVolume:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::OpsWorks::Volume
-opsWorksCMServer:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::OpsWorksCM::Server
-pinpointADMChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::ADMChannel
-pinpointAPNSChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSChannel
-pinpointAPNSSandboxChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSSandboxChannel
-pinpointAPNSVoipChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSVoipChannel
-pinpointAPNSVoipSandboxChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::APNSVoipSandboxChannel
 pinpointApp:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Pinpoint::App
-pinpointApplicationSettings:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::ApplicationSettings
-pinpointBaiduChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::BaiduChannel
-pinpointCampaign:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::Campaign
-pinpointEmailChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::EmailChannel
 pinpointEmailTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Pinpoint::EmailTemplate
-pinpointEventStream:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::EventStream
-pinpointGCMChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::GCMChannel
 pinpointPushTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Pinpoint::PushTemplate
-pinpointSegment:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::Segment
-pinpointSMSChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::SMSChannel
 pinpointSmsTemplate:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Pinpoint::SmsTemplate
-pinpointVoiceChannel:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Pinpoint::VoiceChannel
-pinpointEmailConfigurationSet:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::ConfigurationSet
-pinpointEmailConfigurationSetEventDestination:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::ConfigurationSetEventDestination
-pinpointEmailDedicatedIpPool:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::DedicatedIpPool
-pinpointEmailIdentity:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::PinpointEmail::Identity
 qLDBLedger:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::QLDB::Ledger
-ramResourceShare:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::RAM::ResourceShare
 rdsDBCluster:
   implemented: true
   identifier: Name
@@ -1415,29 +1083,21 @@ redshiftClusterSubnetGroup:
   identifier: Name
   cloudformation: AWS::Redshift::ClusterSubnetGroup
 roboMakerFleet:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::Fleet
 roboMakerRobot:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::Robot
 roboMakerRobotApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::RobotApplication
-roboMakerRobotApplicationVersion:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::RoboMaker::RobotApplicationVersion
 roboMakerSimulationApplication:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::RoboMaker::SimulationApplication
-roboMakerSimulationApplicationVersion:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::RoboMaker::SimulationApplicationVersion
 route53HealthCheck:
   implemented: true
   identifier: Id
@@ -1475,41 +1135,37 @@ s3BucketPolicy:
   identifier: Name
   cloudformation: AWS::S3::BucketPolicy
 sageMakerCodeRepository:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::CodeRepository
 sageMakerEndpoint:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::Endpoint
 sageMakerEndpointConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::EndpointConfig
 sageMakerModel:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::Model
 sageMakerNotebookInstance:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::NotebookInstance
 sageMakerNotebookInstanceLifecycleConfig:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::NotebookInstanceLifecycleConfig
 sageMakerWorkteam:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::SageMaker::Workteam
 secretsManagerSecret:
   implemented: true
   identifier: Name
   cloudformation: AWS::SecretsManager::Secret
-securityHubHub:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::SecurityHub::Hub
 sesConfigurationSet:
   implemented: true
   identifier: Name
@@ -1579,13 +1235,9 @@ ssmPatchBaseline:
   identifier: Id
   cloudformation: AWS::SSM::PatchBaseline
 transferServer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::Transfer::Server
-transferUser:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Transfer::User
 wafByteMatchSet:
   implemented: true
   identifier: Id
@@ -1630,10 +1282,6 @@ wafv2WebACL:
   implemented: true
   identifier: Id
   cloudformation: AWS::WAFv2::WebACL
-wafv2WebACLAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::WAFv2::WebACLAssociation
 wafRegionalByteMatchSet:
   implemented: true
   identifier: Id
@@ -1675,6 +1323,6 @@ wafRegionalXSSMatchSet:
   identifier: Id
   cloudformation: AWS::WAFRegional::XssMatchSet
 workSpacesWorkspace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::WorkSpaces::Workspace

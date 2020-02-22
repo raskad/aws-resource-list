@@ -3,13 +3,111 @@ resources:
     reason: No way to list all certificates at the moment https://github.com/aws/aws-cli/issues/3243
   - name: AWS::ACMPCA::CertificateAuthorityActivation
     reason: No physical identifier found
+  - name: AWS::Amplify::Branch
+    reason: No physical identifier found
+  - name: AWS::Amplify::Domain
+    reason: No physical identifier found
+  - name: AWS::AmazonMQ::ConfigurationAssociation
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Account
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::BasePathMapping
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::GatewayResponse
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Method
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Authorizer
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Deployment
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::DocumentationPart
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::DocumentationVersion
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Model
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::RequestValidator
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Resource
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::UsagePlanKey
+    reason: No physical identifier found
+  - name: AWS::ApiGateway::Stage
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::ApiMapping
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Authorizer
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Deployment
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Integration
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::IntegrationResponse
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Model
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Route
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::RouteResponse
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::Stage
+    reason: No physical identifier found
+  - name: AWS::AppConfig::ConfigurationProfile
+    reason: No physical identifier found
+  - name: AWS::AppConfig::Deployment
+    reason: No physical identifier found
+  - name: AWS::AppConfig::Environment
+    reason: No physical identifier found
+  - name: AWS::ApplicationAutoScaling::ScalableTarget
+    reason: No physical identifier found
+  - name: AWS::ApplicationAutoScaling::ScalingPolicy
+    reason: No physical identifier found
+  - name: AWS::AppMesh::Route
+    reason: No physical identifier found
+  - name: AWS::AppMesh::VirtualNode
+    reason: No physical identifier found
+  - name: AWS::AppMesh::VirtualRouter
+    reason: No physical identifier found
+  - name: AWS::AppMesh::VirtualService
+    reason: No physical identifier found
+  - name: AWS::AppStream::StackFleetAssociation
+    reason: No physical identifier found
+  - name: AWS::AppStream::StackUserAssociation
+    reason: No physical identifier found
+  - name: AWS::AppStream::User
+    reason: No physical identifier found
+  - name: AWS::AppSync::ApiCache
+    reason: No physical identifier found
+  - name: AWS::AppSync::ApiKey
+    reason: No physical identifier found
+  - name: AWS::AppSync::DataSource
+    reason: No physical identifier found
+  - name: AWS::AppSync::FunctionConfiguration
+    reason: No physical identifier found
+  - name: AWS::AppSync::GraphQLSchema
+    reason: No physical identifier found
+  - name: AWS::AppSync::Resolver
+    reason: No physical identifier found
   - name: AWS::AutoScaling::LifecycleHook
+    reason: No physical identifier found
+  - name: AWS::Budgets::Budget
     reason: No physical identifier found
   - name: AWS::CodePipeline::CustomActionType
     reason: No physical identifier found
   - name: AWS::CodeStar::GitHubRepository
     reason: No physical identifier found
   - name: AWS::CodeStarNotifications::NotificationRule
+    reason: No physical identifier found
+  - name: AWS::Cognito::IdentityPoolRoleAttachment
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolDomain
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolRiskConfigurationAttachment
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolUICustomizationAttachment
+    reason: No physical identifier found
+  - name: AWS::Cognito::UserPoolUserToGroupAttachment
     reason: No physical identifier found
   - name: AWS::CloudFormation::CustomResource
     reason: CloudFormation resources are checked against
@@ -67,6 +165,12 @@ resources:
     reason: No physical identifier found
   - name: AWS::ElastiCache::SecurityGroupIngress
     reason: No physical identifier found
+  - name: AWS::EMR::InstanceFleetConfig
+    reason: No physical identifier found
+  - name: AWS::EMR::InstanceGroupConfig
+    reason: No physical identifier found
+  - name: AWS::EMR::Step
+    reason: No physical identifier found
   - name: AWS::Glue::Classifier
     reason: No physical identifier found
   - name: AWS::Glue::DataCatalogEncryptionSettings
@@ -86,6 +190,14 @@ resources:
   - name: AWS::IAM::UserToGroupAddition
     reason: No physical identifier found
   - name: AWS::Inspector::ResourceGroup
+    reason: No physical identifier found
+  - name: AWS::IoT::PolicyPrincipalAttachment
+    reason: No physical identifier found
+  - name: AWS::IoT::ThingPrincipalAttachment
+    reason: No physical identifier found
+  - name: AWS::IoTThingsGraph::FlowTemplate
+    reason: No physical identifier found
+  - name: AWS::IoT1Click::Placement
     reason: No physical identifier found
   - name: AWS::KinesisAnalytics::ApplicationOutput
     reason: No physical identifier found
@@ -109,17 +221,77 @@ resources:
     reason: No physical identifier found
   - name: AWS::Lambda::Version
     reason: No physical identifier found
+  - name: AWS::Lambda::Permission
+    reason: No physical identifier found
+  - name: AWS::ManagedBlockchain::Member
+    reason: No physical identifier found
+  - name: AWS::ManagedBlockchain::Node
+    reason: No physical identifier found
+  - name: AWS::OpsWorks::ElasticLoadBalancerAttachment
+    reason: No physical identifier found
+  - name: AWS::OpsWorksCM::Server
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::ADMChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSSandboxChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSVoipChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::APNSVoipSandboxChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::ApplicationSettings
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::BaiduChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::Campaign
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::EmailChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::EventStream
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::GCMChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::Segment
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::SMSChannel
+    reason: No physical identifier found
+  - name: AWS::Pinpoint::VoiceChannel
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::ConfigurationSet
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::ConfigurationSetEventDestination
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::DedicatedIpPool
+    reason: No physical identifier found
+  - name: AWS::PinpointEmail::Identity
+    reason: No physical identifier found
+  - name: AWS::RAM::ResourceShare
+    reason: No physical identifier found
   - name: AWS::RDS::DBSecurityGroupIngress
     reason: No physical identifier found
   - name: AWS::Redshift::ClusterSecurityGroupIngress
     reason: No physical identifier found
+  - name: AWS::RoboMaker::RobotApplicationVersion
+    reason: No physical identifier found
+  - name: AWS::RoboMaker::SimulationApplicationVersion
+    reason: No physical identifier found
   - name: AWS::Route53::RecordSetGroup
+    reason: No physical identifier found
+  - name: AWS::EventSchemas::Schema
+    reason: No physical identifier found
+  - name: AWS::FMS::NotificationChannel
+    reason: No physical identifier found
+  - name: AWS::FMS::Policy
     reason: No physical identifier found
   - name: AWS::SecretsManager::ResourcePolicy
     reason: No physical identifier found
   - name: AWS::SecretsManager::RotationSchedule
     reason: No physical identifier found
   - name: AWS::SecretsManager::SecretTargetAttachment
+    reason: No physical identifier found
+  - name: AWS::SecurityHub::Hub
     reason: No physical identifier found
   - name: AWS::ServiceCatalog::AcceptedPortfolioShare
     reason: ServiceCatalog is most likely not in scope of this application
@@ -157,5 +329,9 @@ resources:
     reason: No physical identifier found
   - name: AWS::SSM::ResourceDataSync
     reason: No physical identifier found
+  - name: AWS::Transfer::User
+    reason: No physical identifier found
   - name: AWS::WAFRegional::WebACLAssociation
+    reason: No physical identifier found
+  - name: AWS::WAFv2::WebACLAssociation
     reason: No physical identifier found

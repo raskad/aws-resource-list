@@ -8,13 +8,15 @@ import (
 func getConfig(session *session.Session) (resources resourceMap) {
 	client := configservice.New(session)
 	resourcesSliceErrorMap := resourceSliceErrorMap{
-		configAggregationAuthorization: getConfigAggregationAuthorization(client),
-		configConfigRule:               getConfigConfigRule(client),
-		configConfigurationAggregator:  getConfigConfigurationAggregator(client),
-		configConfigurationRecorder:    getConfigConfigurationRecorder(client),
-		configDeliveryChannel:          getConfigDeliveryChannel(client),
-		configOrganizationConfigRule:   getConfigOrganizationConfigRule(client),
-		configRemediationConfiguration: getConfigRemediationConfiguration(client),
+		configAggregationAuthorization:    getConfigAggregationAuthorization(client),
+		configConfigRule:                  getConfigConfigRule(client),
+		configConfigurationAggregator:     getConfigConfigurationAggregator(client),
+		configConfigurationRecorder:       getConfigConfigurationRecorder(client),
+		configConformancePack:             getConfigConformancePack(client),
+		configDeliveryChannel:             getConfigDeliveryChannel(client),
+		configOrganizationConfigRule:      getConfigOrganizationConfigRule(client),
+		configOrganizationConformancePack: getConfigOrganizationConformancePack(client),
+		configRemediationConfiguration:    getConfigRemediationConfiguration(client),
 	}
 
 	resources = resourcesSliceErrorMap.unwrap()
@@ -95,6 +97,26 @@ func getConfigConfigurationRecorder(client *configservice.ConfigService) (r reso
 	return
 }
 
+func getConfigConformancePack(client *configservice.ConfigService) (r resourceSliceError) {
+	input := configservice.DescribeConformancePacksInput{}
+	for {
+		page, err := client.DescribeConformancePacks(&input)
+		if err != nil {
+			r.err = err
+			return
+		}
+		logDebug("Listing ConfigConformancePack resources page. Remaining pages", page.NextToken)
+		for _, resource := range page.ConformancePackDetails {
+			logDebug("Got ConfigConformancePack resource with PhysicalResourceId", *resource.ConformancePackName)
+			r.resources = append(r.resources, *resource.ConformancePackName)
+		}
+		if page.NextToken == nil {
+			return
+		}
+		input.NextToken = page.NextToken
+	}
+}
+
 func getConfigDeliveryChannel(client *configservice.ConfigService) (r resourceSliceError) {
 	logDebug("Listing ConfigDeliveryChannel resources")
 	page, err := client.DescribeDeliveryChannels(&configservice.DescribeDeliveryChannelsInput{})
@@ -121,6 +143,26 @@ func getConfigOrganizationConfigRule(client *configservice.ConfigService) (r res
 		for _, resource := range page.OrganizationConfigRules {
 			logDebug("Got ConfigOrganizationConfigRule resource with PhysicalResourceId", *resource.OrganizationConfigRuleName)
 			r.resources = append(r.resources, *resource.OrganizationConfigRuleName)
+		}
+		if page.NextToken == nil {
+			return
+		}
+		input.NextToken = page.NextToken
+	}
+}
+
+func getConfigOrganizationConformancePack(client *configservice.ConfigService) (r resourceSliceError) {
+	input := configservice.DescribeOrganizationConformancePacksInput{}
+	for {
+		page, err := client.DescribeOrganizationConformancePacks(&input)
+		if err != nil {
+			r.err = err
+			return
+		}
+		logDebug("Listing ConfigOrganizationConformancePack resources page. Remaining pages", page.NextToken)
+		for _, resource := range page.OrganizationConformancePacks {
+			logDebug("Got ConfigOrganizationConformancePack resource with PhysicalResourceId", *resource.OrganizationConformancePackName)
+			r.resources = append(r.resources, *resource.OrganizationConformancePackName)
 		}
 		if page.NextToken == nil {
 			return
