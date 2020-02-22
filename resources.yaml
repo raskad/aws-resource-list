@@ -659,17 +659,13 @@ emrSecurityConfiguration:
   identifier: Name
   cloudformation: AWS::EMR::SecurityConfiguration
 eventSchemasDiscoverer:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::EventSchemas::Discoverer
 eventSchemasRegistry:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::EventSchemas::Registry
-eventSchemasSchema:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::EventSchemas::Schema
 fmsNotificationChannel:
   implemented: false
   identifier: null

@@ -250,7 +250,6 @@ const (
 	emrSecurityConfiguration                  resourceType = "emrSecurityConfiguration"
 	eventSchemasDiscoverer                    resourceType = "eventSchemasDiscoverer"
 	eventSchemasRegistry                      resourceType = "eventSchemasRegistry"
-	eventSchemasSchema                        resourceType = "eventSchemasSchema"
 	fsxFileSystem                             resourceType = "fsxFileSystem"
 	gameLiftAlias                             resourceType = "gameLiftAlias"
 	gameLiftBuild                             resourceType = "gameLiftBuild"
@@ -596,7 +595,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::EMR::SecurityConfiguration":                  emrSecurityConfiguration,
 		"AWS::EventSchemas::Discoverer":                    eventSchemasDiscoverer,
 		"AWS::EventSchemas::Registry":                      eventSchemasRegistry,
-		"AWS::EventSchemas::Schema":                        eventSchemasSchema,
 		"AWS::FSx::FileSystem":                             fsxFileSystem,
 		"AWS::GameLift::Alias":                             gameLiftAlias,
 		"AWS::GameLift::Build":                             gameLiftBuild,
