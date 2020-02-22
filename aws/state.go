@@ -160,8 +160,10 @@ const (
 	configConfigRule                          resourceType = "configConfigRule"
 	configConfigurationAggregator             resourceType = "configConfigurationAggregator"
 	configConfigurationRecorder               resourceType = "configConfigurationRecorder"
+	configConformancePack                     resourceType = "configConformancePack"
 	configDeliveryChannel                     resourceType = "configDeliveryChannel"
 	configOrganizationConfigRule              resourceType = "configOrganizationConfigRule"
+	configOrganizationConformancePack         resourceType = "configOrganizationConformancePack"
 	configRemediationConfiguration            resourceType = "configRemediationConfiguration"
 	dataPipelinePipeline                      resourceType = "dataPipelinePipeline"
 	daxCluster                                resourceType = "daxCluster"
@@ -501,8 +503,10 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Config::ConfigRule":                          configConfigRule,
 		"AWS::Config::ConfigurationAggregator":             configConfigurationAggregator,
 		"AWS::Config::ConfigurationRecorder":               configConfigurationRecorder,
+		"AWS::Config::ConformancePack":                     configConformancePack,
 		"AWS::Config::DeliveryChannel":                     configDeliveryChannel,
 		"AWS::Config::OrganizationConfigRule":              configOrganizationConfigRule,
+		"AWS::Config::OrganizationConformancePack":         configOrganizationConformancePack,
 		"AWS::Config::RemediationConfiguration":            configRemediationConfiguration,
 		"AWS::DataPipeline::Pipeline":                      dataPipelinePipeline,
 		"AWS::DAX::Cluster":                                daxCluster,

@@ -221,6 +221,8 @@ resources:
     reason: No physical identifier found
   - name: AWS::Lambda::Version
     reason: No physical identifier found
+  - name: AWS::Lambda::Permission
+    reason: No physical identifier found
   - name: AWS::ManagedBlockchain::Member
     reason: No physical identifier found
   - name: AWS::ManagedBlockchain::Node
@@ -330,4 +332,6 @@ resources:
   - name: AWS::Transfer::User
     reason: No physical identifier found
   - name: AWS::WAFRegional::WebACLAssociation
+    reason: No physical identifier found
+  - name: AWS::WAFv2::WebACLAssociation
     reason: No physical identifier found

@@ -299,8 +299,8 @@ configConfigurationRecorder:
   identifier: Name
   cloudformation: AWS::Config::ConfigurationRecorder
 configConformancePack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Config::ConformancePack
 configDeliveryChannel:
   implemented: true
@@ -311,8 +311,8 @@ configOrganizationConfigRule:
   identifier: Name
   cloudformation: AWS::Config::OrganizationConfigRule
 configOrganizationConformancePack:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Name
   cloudformation: AWS::Config::OrganizationConformancePack
 configRemediationConfiguration:
   implemented: true
@@ -938,10 +938,6 @@ lambdaLayerVersion:
   implemented: true
   identifier: Arn
   cloudformation: AWS::Lambda::LayerVersion
-lambdaPermission:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::Lambda::Permission
 mediaConvertJobTemplate:
   implemented: true
   identifier: Name
@@ -1286,10 +1282,6 @@ wafv2WebACL:
   implemented: true
   identifier: Id
   cloudformation: AWS::WAFv2::WebACL
-wafv2WebACLAssociation:
-  implemented: false
-  identifier: null
-  cloudformation: AWS::WAFv2::WebACLAssociation
 wafRegionalByteMatchSet:
   implemented: true
   identifier: Id
