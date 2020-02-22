@@ -173,6 +173,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 		getWaf(session),
 		getWafRegional(session),
 		getWafv2(session),
+		getWorkSpaces(session),
 	)
 	return
 }

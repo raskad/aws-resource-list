@@ -1379,6 +1379,6 @@ wafRegionalXSSMatchSet:
   identifier: Id
   cloudformation: AWS::WAFRegional::XssMatchSet
 workSpacesWorkspace:
-  implemented: false
-  identifier: null
+  implemented: true
+  identifier: Id
   cloudformation: AWS::WorkSpaces::Workspace
