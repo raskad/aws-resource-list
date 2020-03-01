@@ -7,19 +7,16 @@ import (
 
 func getAppStream(session *session.Session) (resources resourceMap) {
 	client := appstream.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		appStreamDirectoryConfig: getAppStreamDirectoryConfig(client),
-		appStreamFleet:           getAppStreamFleet(client),
-		appStreamImageBuilder:    getAppStreamImageBuilder(client),
-		appStreamStack:           getAppStreamStack(client),
-	}
-
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getAppStreamDirectoryConfig(client).unwrap(appStreamDirectoryConfig),
+		getAppStreamFleet(client).unwrap(appStreamFleet),
+		getAppStreamImageBuilder(client).unwrap(appStreamImageBuilder),
+		getAppStreamStack(client).unwrap(appStreamStack),
+	)
 	return
 }
 
 func getAppStreamDirectoryConfig(client *appstream.AppStream) (r resourceSliceError) {
-	logDebug("Listing AppStreamDirectoryConfig resources")
 	input := appstream.DescribeDirectoryConfigsInput{}
 	for {
 		page, err := client.DescribeDirectoryConfigs(&input)
@@ -28,7 +25,6 @@ func getAppStreamDirectoryConfig(client *appstream.AppStream) (r resourceSliceEr
 			return
 		}
 		for _, resource := range page.DirectoryConfigs {
-			logDebug("Got AppStreamDirectoryConfig resource with PhysicalResourceId", *resource.DirectoryName)
 			r.resources = append(r.resources, *resource.DirectoryName)
 		}
 		if page.NextToken == nil {
@@ -39,7 +35,6 @@ func getAppStreamDirectoryConfig(client *appstream.AppStream) (r resourceSliceEr
 }
 
 func getAppStreamFleet(client *appstream.AppStream) (r resourceSliceError) {
-	logDebug("Listing AppStreamFleet resources")
 	input := appstream.DescribeFleetsInput{}
 	for {
 		page, err := client.DescribeFleets(&input)
@@ -48,7 +43,6 @@ func getAppStreamFleet(client *appstream.AppStream) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Fleets {
-			logDebug("Got AppStreamFleet resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		if page.NextToken == nil {
@@ -59,7 +53,6 @@ func getAppStreamFleet(client *appstream.AppStream) (r resourceSliceError) {
 }
 
 func getAppStreamImageBuilder(client *appstream.AppStream) (r resourceSliceError) {
-	logDebug("Listing AppStreamImageBuilder resources")
 	input := appstream.DescribeImageBuildersInput{}
 	for {
 		page, err := client.DescribeImageBuilders(&input)
@@ -68,7 +61,6 @@ func getAppStreamImageBuilder(client *appstream.AppStream) (r resourceSliceError
 			return
 		}
 		for _, resource := range page.ImageBuilders {
-			logDebug("Got AppStreamImageBuilder resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		if page.NextToken == nil {
@@ -79,7 +71,6 @@ func getAppStreamImageBuilder(client *appstream.AppStream) (r resourceSliceError
 }
 
 func getAppStreamStack(client *appstream.AppStream) (r resourceSliceError) {
-	logDebug("Listing AppStreamStack resources")
 	input := appstream.DescribeStacksInput{}
 	for {
 		page, err := client.DescribeStacks(&input)
@@ -88,7 +79,6 @@ func getAppStreamStack(client *appstream.AppStream) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Stacks {
-			logDebug("Got AppStreamStack resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		if page.NextToken == nil {

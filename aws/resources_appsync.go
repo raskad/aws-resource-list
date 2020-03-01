@@ -7,16 +7,13 @@ import (
 
 func getAppSync(session *session.Session) (resources resourceMap) {
 	client := appsync.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		appSyncGraphQLApi: getAppSyncGraphQLApi(client),
-	}
-
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getAppSyncGraphQLApi(client).unwrap(appSyncGraphQLApi),
+	)
 	return
 }
 
 func getAppSyncGraphQLApi(client *appsync.AppSync) (r resourceSliceError) {
-	logDebug("Listing AppSyncGraphQLApi resources")
 	input := appsync.ListGraphqlApisInput{}
 	for {
 		page, err := client.ListGraphqlApis(&input)
@@ -25,7 +22,6 @@ func getAppSyncGraphQLApi(client *appsync.AppSync) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.GraphqlApis {
-			logDebug("Got AppSyncGraphQLApi resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		if page.NextToken == nil {

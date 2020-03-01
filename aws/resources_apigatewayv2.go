@@ -7,16 +7,14 @@ import (
 
 func getAPIGatewayV2(session *session.Session) (resources resourceMap) {
 	client := apigatewayv2.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		apiGatewayV2Api:        getAPIGatewayV2API(client),
-		apiGatewayV2DomainName: getAPIGatewayV2DomainName(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getAPIGatewayV2API(client).unwrap(apiGatewayV2Api),
+		getAPIGatewayV2DomainName(client).unwrap(apiGatewayV2DomainName),
+	)
 	return
 }
 
 func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError) {
-	logDebug("Listing ApiGatewayV2Api resources")
 	input := apigatewayv2.GetApisInput{}
 	for {
 		page, err := client.GetApis(&input)
@@ -25,7 +23,6 @@ func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError
 			return
 		}
 		for _, resource := range page.Items {
-			logDebug("Got ApiGatewayV2Api resource with PhysicalResourceId", *resource.ApiId)
 			r.resources = append(r.resources, *resource.ApiId)
 		}
 		if page.NextToken == nil {
@@ -36,7 +33,6 @@ func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError
 }
 
 func getAPIGatewayV2DomainName(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError) {
-	logDebug("Listing APIGatewayV2DomainName resources")
 	input := apigatewayv2.GetDomainNamesInput{}
 	for {
 		page, err := client.GetDomainNames(&input)
@@ -45,7 +41,6 @@ func getAPIGatewayV2DomainName(client *apigatewayv2.ApiGatewayV2) (r resourceSli
 			return
 		}
 		for _, resource := range page.Items {
-			logDebug("Got APIGatewayV2DomainName resource with PhysicalResourceId", *resource.DomainName)
 			r.resources = append(r.resources, *resource.DomainName)
 		}
 		if page.NextToken == nil {

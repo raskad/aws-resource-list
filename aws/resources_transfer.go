@@ -7,18 +7,15 @@ import (
 
 func getTransfer(session *session.Session) (resources resourceMap) {
 	client := transfer.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		transferServer: getTransferServer(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getTransferServer(client).unwrap(transferServer),
+	)
 	return
 }
 
 func getTransferServer(client *transfer.Transfer) (r resourceSliceError) {
-	logDebug("Listing TransferServer resources")
 	r.err = client.ListServersPages(&transfer.ListServersInput{}, func(page *transfer.ListServersOutput, lastPage bool) bool {
 		for _, resource := range page.Servers {
-			logDebug("Got TransferServer resource with PhysicalResourceId", *resource.ServerId)
 			r.resources = append(r.resources, *resource.ServerId)
 		}
 		return true

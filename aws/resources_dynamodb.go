@@ -7,18 +7,15 @@ import (
 
 func getDynamoDB(session *session.Session) (resources resourceMap) {
 	client := dynamodb.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		dynamoDBTable: getDynamoDBTable(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getDynamoDBTable(client).unwrap(dynamoDBTable),
+	)
 	return
 }
 
 func getDynamoDBTable(client *dynamodb.DynamoDB) (r resourceSliceError) {
-	logDebug("Listing DynamoDBTable resources")
 	r.err = client.ListTablesPages(&dynamodb.ListTablesInput{}, func(page *dynamodb.ListTablesOutput, lastPage bool) bool {
 		for _, resource := range page.TableNames {
-			logDebug("Got DynamoDBTable resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
 		}
 		return true

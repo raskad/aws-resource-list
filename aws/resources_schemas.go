@@ -7,20 +7,16 @@ import (
 
 func getSchemas(session *session.Session) (resources resourceMap) {
 	client := schemas.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		eventSchemasDiscoverer: getEventSchemasDiscoverer(client),
-		eventSchemasRegistry:   getEventSchemasRegistry(client),
-	}
-
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getEventSchemasDiscoverer(client).unwrap(eventSchemasDiscoverer),
+		getEventSchemasRegistry(client).unwrap(eventSchemasRegistry),
+	)
 	return
 }
 
 func getEventSchemasDiscoverer(client *schemas.Schemas) (r resourceSliceError) {
-	logDebug("Listing EventSchemasDiscoverer resources")
 	r.err = client.ListDiscoverersPages(&schemas.ListDiscoverersInput{}, func(page *schemas.ListDiscoverersOutput, lastPage bool) bool {
 		for _, resource := range page.Discoverers {
-			logDebug("Got EventSchemasDiscoverer resource with PhysicalResourceId", *resource.DiscovererId)
 			r.resources = append(r.resources, *resource.DiscovererId)
 		}
 		return true
@@ -29,10 +25,8 @@ func getEventSchemasDiscoverer(client *schemas.Schemas) (r resourceSliceError) {
 }
 
 func getEventSchemasRegistry(client *schemas.Schemas) (r resourceSliceError) {
-	logDebug("Listing EventSchemasRegistry resources")
 	r.err = client.ListRegistriesPages(&schemas.ListRegistriesInput{}, func(page *schemas.ListRegistriesOutput, lastPage bool) bool {
 		for _, resource := range page.Registries {
-			logDebug("Got EventSchemasRegistry resource with PhysicalResourceId", *resource.RegistryName)
 			r.resources = append(r.resources, *resource.RegistryName)
 		}
 		return true

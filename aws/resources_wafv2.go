@@ -7,18 +7,16 @@ import (
 
 func getWafv2(session *session.Session) (resources resourceMap) {
 	client := wafv2.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		wafv2IPSet:           getWafv2IPSet(client),
-		wafv2RegexPatternSet: getWafv2RegexPatternSet(client),
-		wafv2RuleGroup:       getWafv2RuleGroup(client),
-		wafv2WebACL:          getWafv2WebACL(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getWafv2IPSet(client).unwrap(wafv2IPSet),
+		getWafv2RegexPatternSet(client).unwrap(wafv2RegexPatternSet),
+		getWafv2RuleGroup(client).unwrap(wafv2RuleGroup),
+		getWafv2WebACL(client).unwrap(wafv2WebACL),
+	)
 	return
 }
 
 func getWafv2IPSet(client *wafv2.WAFV2) (r resourceSliceError) {
-	logDebug("Listing Wafv2IPSet resources")
 	input := wafv2.ListIPSetsInput{}
 	for {
 		page, err := client.ListIPSets(&input)
@@ -27,7 +25,6 @@ func getWafv2IPSet(client *wafv2.WAFV2) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.IPSets {
-			logDebug("Got Wafv2IPSet resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		if page.NextMarker == nil {
@@ -38,7 +35,6 @@ func getWafv2IPSet(client *wafv2.WAFV2) (r resourceSliceError) {
 }
 
 func getWafv2RegexPatternSet(client *wafv2.WAFV2) (r resourceSliceError) {
-	logDebug("Listing Wafv2RegexPatternSet resources")
 	input := wafv2.ListRegexPatternSetsInput{}
 	for {
 		page, err := client.ListRegexPatternSets(&input)
@@ -47,7 +43,6 @@ func getWafv2RegexPatternSet(client *wafv2.WAFV2) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.RegexPatternSets {
-			logDebug("Got Wafv2RegexPatternSet resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		if page.NextMarker == nil {
@@ -58,7 +53,6 @@ func getWafv2RegexPatternSet(client *wafv2.WAFV2) (r resourceSliceError) {
 }
 
 func getWafv2RuleGroup(client *wafv2.WAFV2) (r resourceSliceError) {
-	logDebug("Listing Wafv2RuleGroup resources")
 	input := wafv2.ListRuleGroupsInput{}
 	for {
 		page, err := client.ListRuleGroups(&input)
@@ -67,7 +61,6 @@ func getWafv2RuleGroup(client *wafv2.WAFV2) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.RuleGroups {
-			logDebug("Got Wafv2RuleGroup resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		if page.NextMarker == nil {
@@ -78,7 +71,6 @@ func getWafv2RuleGroup(client *wafv2.WAFV2) (r resourceSliceError) {
 }
 
 func getWafv2WebACL(client *wafv2.WAFV2) (r resourceSliceError) {
-	logDebug("Listing Wafv2WebACL resources")
 	input := wafv2.ListWebACLsInput{}
 	for {
 		page, err := client.ListWebACLs(&input)
@@ -87,7 +79,6 @@ func getWafv2WebACL(client *wafv2.WAFV2) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.WebACLs {
-			logDebug("Got Wafv2WebACL resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		if page.NextMarker == nil {

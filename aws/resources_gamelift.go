@@ -7,21 +7,19 @@ import (
 
 func getGameLift(session *session.Session) (resources resourceMap) {
 	client := gamelift.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		gameLiftAlias:                    getGameLiftAlias(client),
-		gameLiftBuild:                    getGameLiftBuild(client),
-		gameLiftFleet:                    getGameLiftFleet(client),
-		gameLiftGameSessionQueue:         getGameLiftGameSessionQueue(client),
-		gameLiftMatchmakingConfiguration: getGameLiftMatchmakingConfiguration(client),
-		gameLiftMatchmakingRuleSet:       getGameLiftMatchmakingRuleSet(client),
-		gameLiftScript:                   getGameLiftScript(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getGameLiftAlias(client).unwrap(gameLiftAlias),
+		getGameLiftBuild(client).unwrap(gameLiftBuild),
+		getGameLiftFleet(client).unwrap(gameLiftFleet),
+		getGameLiftGameSessionQueue(client).unwrap(gameLiftGameSessionQueue),
+		getGameLiftMatchmakingConfiguration(client).unwrap(gameLiftMatchmakingConfiguration),
+		getGameLiftMatchmakingRuleSet(client).unwrap(gameLiftMatchmakingRuleSet),
+		getGameLiftScript(client).unwrap(gameLiftScript),
+	)
 	return
 }
 
 func getGameLiftAlias(client *gamelift.GameLift) (r resourceSliceError) {
-	logDebug("Listing GameLiftAlias resources")
 	input := gamelift.ListAliasesInput{}
 	for {
 		page, err := client.ListAliases(&input)
@@ -30,7 +28,6 @@ func getGameLiftAlias(client *gamelift.GameLift) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Aliases {
-			logDebug("Got GameLiftAlias resource with PhysicalResourceId", *resource.AliasId)
 			r.resources = append(r.resources, *resource.AliasId)
 		}
 		if page.NextToken == nil {
@@ -41,7 +38,6 @@ func getGameLiftAlias(client *gamelift.GameLift) (r resourceSliceError) {
 }
 
 func getGameLiftBuild(client *gamelift.GameLift) (r resourceSliceError) {
-	logDebug("Listing GameLiftBuild resources")
 	input := gamelift.ListBuildsInput{}
 	for {
 		page, err := client.ListBuilds(&input)
@@ -50,7 +46,6 @@ func getGameLiftBuild(client *gamelift.GameLift) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Builds {
-			logDebug("Got GameLiftBuild resource with PhysicalResourceId", *resource.BuildId)
 			r.resources = append(r.resources, *resource.BuildId)
 		}
 		if page.NextToken == nil {
@@ -61,7 +56,6 @@ func getGameLiftBuild(client *gamelift.GameLift) (r resourceSliceError) {
 }
 
 func getGameLiftFleet(client *gamelift.GameLift) (r resourceSliceError) {
-	logDebug("Listing GameLiftFleet resources")
 	input := gamelift.ListFleetsInput{}
 	for {
 		page, err := client.ListFleets(&input)
@@ -70,7 +64,6 @@ func getGameLiftFleet(client *gamelift.GameLift) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.FleetIds {
-			logDebug("Got GameLiftFleet resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
 		}
 		if page.NextToken == nil {
@@ -81,7 +74,6 @@ func getGameLiftFleet(client *gamelift.GameLift) (r resourceSliceError) {
 }
 
 func getGameLiftGameSessionQueue(client *gamelift.GameLift) (r resourceSliceError) {
-	logDebug("Listing GameLiftGameSessionQueue resources")
 	input := gamelift.DescribeGameSessionQueuesInput{}
 	for {
 		page, err := client.DescribeGameSessionQueues(&input)
@@ -90,7 +82,6 @@ func getGameLiftGameSessionQueue(client *gamelift.GameLift) (r resourceSliceErro
 			return
 		}
 		for _, resource := range page.GameSessionQueues {
-			logDebug("Got GameLiftGameSessionQueue resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		if page.NextToken == nil {
@@ -101,7 +92,6 @@ func getGameLiftGameSessionQueue(client *gamelift.GameLift) (r resourceSliceErro
 }
 
 func getGameLiftMatchmakingConfiguration(client *gamelift.GameLift) (r resourceSliceError) {
-	logDebug("Listing GameLiftMatchmakingConfiguration resources")
 	input := gamelift.DescribeMatchmakingConfigurationsInput{}
 	for {
 		page, err := client.DescribeMatchmakingConfigurations(&input)
@@ -110,7 +100,6 @@ func getGameLiftMatchmakingConfiguration(client *gamelift.GameLift) (r resourceS
 			return
 		}
 		for _, resource := range page.Configurations {
-			logDebug("Got GameLiftMatchmakingConfiguration resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		if page.NextToken == nil {
@@ -121,7 +110,6 @@ func getGameLiftMatchmakingConfiguration(client *gamelift.GameLift) (r resourceS
 }
 
 func getGameLiftMatchmakingRuleSet(client *gamelift.GameLift) (r resourceSliceError) {
-	logDebug("Listing GameLiftMatchmakingRuleSet resources")
 	input := gamelift.DescribeMatchmakingRuleSetsInput{}
 	for {
 		page, err := client.DescribeMatchmakingRuleSets(&input)
@@ -130,7 +118,6 @@ func getGameLiftMatchmakingRuleSet(client *gamelift.GameLift) (r resourceSliceEr
 			return
 		}
 		for _, resource := range page.RuleSets {
-			logDebug("Got GameLiftMatchmakingRuleSet resource with PhysicalResourceId", *resource.RuleSetName)
 			r.resources = append(r.resources, *resource.RuleSetName)
 		}
 		if page.NextToken == nil {
@@ -141,7 +128,6 @@ func getGameLiftMatchmakingRuleSet(client *gamelift.GameLift) (r resourceSliceEr
 }
 
 func getGameLiftScript(client *gamelift.GameLift) (r resourceSliceError) {
-	logDebug("Listing GameLiftScript resources")
 	input := gamelift.ListScriptsInput{}
 	for {
 		page, err := client.ListScripts(&input)
@@ -150,7 +136,6 @@ func getGameLiftScript(client *gamelift.GameLift) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Scripts {
-			logDebug("Got GameLiftScript resource with PhysicalResourceId", *resource.ScriptId)
 			r.resources = append(r.resources, *resource.ScriptId)
 		}
 		if page.NextToken == nil {

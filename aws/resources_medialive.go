@@ -7,20 +7,17 @@ import (
 
 func getMediaLive(session *session.Session) (resources resourceMap) {
 	client := medialive.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		mediaLiveChannel:            getMediaLiveChannel(client),
-		mediaLiveInput:              getMediaLiveInput(client),
-		mediaLiveInputSecurityGroup: getMediaLiveInputSecurityGroup(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getMediaLiveChannel(client).unwrap(mediaLiveChannel),
+		getMediaLiveInput(client).unwrap(mediaLiveInput),
+		getMediaLiveInputSecurityGroup(client).unwrap(mediaLiveInputSecurityGroup),
+	)
 	return
 }
 
 func getMediaLiveChannel(client *medialive.MediaLive) (r resourceSliceError) {
-	logDebug("Listing MediaLiveChannel resources")
 	r.err = client.ListChannelsPages(&medialive.ListChannelsInput{}, func(page *medialive.ListChannelsOutput, lastPage bool) bool {
 		for _, resource := range page.Channels {
-			logDebug("Got MediaLiveChannel resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		return true
@@ -29,10 +26,8 @@ func getMediaLiveChannel(client *medialive.MediaLive) (r resourceSliceError) {
 }
 
 func getMediaLiveInput(client *medialive.MediaLive) (r resourceSliceError) {
-	logDebug("Listing MediaLiveInput resources")
 	r.err = client.ListInputsPages(&medialive.ListInputsInput{}, func(page *medialive.ListInputsOutput, lastPage bool) bool {
 		for _, resource := range page.Inputs {
-			logDebug("Got MediaLiveInput resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		return true
@@ -41,10 +36,8 @@ func getMediaLiveInput(client *medialive.MediaLive) (r resourceSliceError) {
 }
 
 func getMediaLiveInputSecurityGroup(client *medialive.MediaLive) (r resourceSliceError) {
-	logDebug("Listing MediaLiveInputSecurityGroup resources")
 	r.err = client.ListInputSecurityGroupsPages(&medialive.ListInputSecurityGroupsInput{}, func(page *medialive.ListInputSecurityGroupsOutput, lastPage bool) bool {
 		for _, resource := range page.InputSecurityGroups {
-			logDebug("Got MediaLiveInputSecurityGroup resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		return true

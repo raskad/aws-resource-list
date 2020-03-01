@@ -7,18 +7,15 @@ import (
 
 func getSdb(session *session.Session) (resources resourceMap) {
 	client := simpledb.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		sdbDomain: getSdbDomain(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getSdbDomain(client).unwrap(sdbDomain),
+	)
 	return
 }
 
 func getSdbDomain(client *simpledb.SimpleDB) (r resourceSliceError) {
-	logDebug("Listing SdbDomain resources")
 	r.err = client.ListDomainsPages(&simpledb.ListDomainsInput{}, func(page *simpledb.ListDomainsOutput, lastPage bool) bool {
 		for _, resource := range page.DomainNames {
-			logDebug("Got SdbDomain resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
 		}
 		return true

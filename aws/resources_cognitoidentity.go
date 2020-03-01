@@ -7,15 +7,13 @@ import (
 
 func getCognitoIdentity(session *session.Session) (resources resourceMap) {
 	client := cognitoidentity.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		cognitoIdentityPool: getCognitoIdentityPool(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getCognitoIdentityPool(client).unwrap(cognitoIdentityPool),
+	)
 	return
 }
 
 func getCognitoIdentityPool(client *cognitoidentity.CognitoIdentity) (r resourceSliceError) {
-	logDebug("Listing CognitoIdentityPool resources")
 	input := cognitoidentity.ListIdentityPoolsInput{}
 	for {
 		page, err := client.ListIdentityPools(&input)
@@ -24,7 +22,6 @@ func getCognitoIdentityPool(client *cognitoidentity.CognitoIdentity) (r resource
 			return
 		}
 		for _, resource := range page.IdentityPools {
-			logDebug("Got CognitoIdentityPool resource with PhysicalResourceId", *resource.IdentityPoolName)
 			r.resources = append(r.resources, *resource.IdentityPoolName)
 		}
 		if page.NextToken == nil {

@@ -7,18 +7,15 @@ import (
 
 func getKinesisAnalytics(session *session.Session) (resources resourceMap) {
 	client := kinesisanalytics.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		kinesisAnalyticsApplication: getKinesisAnalyticsApplication(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getKinesisAnalyticsApplication(client).unwrap(kinesisAnalyticsApplication),
+	)
 	return
 }
 
 func getKinesisAnalyticsApplication(client *kinesisanalytics.KinesisAnalytics) (r resourceSliceError) {
-	logDebug("Listing KinesisAnalyticsApplication resources")
 	page, err := client.ListApplications(&kinesisanalytics.ListApplicationsInput{})
 	for _, resource := range page.ApplicationSummaries {
-		logDebug("Got KinesisAnalyticsApplication resource with PhysicalResourceId", *resource.ApplicationName)
 		r.resources = append(r.resources, *resource.ApplicationName)
 	}
 	r.err = err

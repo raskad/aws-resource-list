@@ -7,19 +7,15 @@ import (
 
 func getDLM(session *session.Session) (resources resourceMap) {
 	client := dlm.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		dlmLifecyclePolicy: getDlmLifecyclePolicy(client),
-	}
-
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getDlmLifecyclePolicy(client).unwrap(dlmLifecyclePolicy),
+	)
 	return
 }
 
 func getDlmLifecyclePolicy(client *dlm.DLM) (r resourceSliceError) {
-	logDebug("Listing DlmLifecyclePolicy resources")
 	buckets, err := client.GetLifecyclePolicies(&dlm.GetLifecyclePoliciesInput{})
 	for _, resource := range buckets.Policies {
-		logDebug("Got DlmLifecyclePolicy resource with PhysicalResourceId", *resource.PolicyId)
 		r.resources = append(r.resources, *resource.PolicyId)
 	}
 	r.err = err

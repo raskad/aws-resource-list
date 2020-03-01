@@ -7,18 +7,15 @@ import (
 
 func getFirehose(session *session.Session) (resources resourceMap) {
 	client := firehose.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		kinesisFirehoseDeliveryStream: getKinesisFirehoseDeliveryStream(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getKinesisFirehoseDeliveryStream(client).unwrap(kinesisFirehoseDeliveryStream),
+	)
 	return
 }
 
 func getKinesisFirehoseDeliveryStream(client *firehose.Firehose) (r resourceSliceError) {
-	logDebug("Listing KinesisFirehoseDeliveryStream resources")
 	page, err := client.ListDeliveryStreams(&firehose.ListDeliveryStreamsInput{})
 	for _, resource := range page.DeliveryStreamNames {
-		logDebug("Got KinesisFirehoseDeliveryStream resource with PhysicalResourceId", *resource)
 		r.resources = append(r.resources, *resource)
 	}
 	r.err = err

@@ -7,19 +7,16 @@ import (
 
 func getInspector(session *session.Session) (resources resourceMap) {
 	client := inspector.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		inspectorAssessmentTarget:   getInspectorAssessmentTarget(client),
-		inspectorAssessmentTemplate: getInspectorAssessmentTemplate(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getInspectorAssessmentTarget(client).unwrap(inspectorAssessmentTarget),
+		getInspectorAssessmentTemplate(client).unwrap(inspectorAssessmentTemplate),
+	)
 	return
 }
 
 func getInspectorAssessmentTarget(client *inspector.Inspector) (r resourceSliceError) {
-	logDebug("Listing InspectorAssessmentTarget resources")
 	r.err = client.ListAssessmentTargetsPages(&inspector.ListAssessmentTargetsInput{}, func(page *inspector.ListAssessmentTargetsOutput, lastPage bool) bool {
 		for _, resource := range page.AssessmentTargetArns {
-			logDebug("Got InspectorAssessmentTarget resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
 		}
 		return true
@@ -28,10 +25,8 @@ func getInspectorAssessmentTarget(client *inspector.Inspector) (r resourceSliceE
 }
 
 func getInspectorAssessmentTemplate(client *inspector.Inspector) (r resourceSliceError) {
-	logDebug("Listing InspectorAssessmentTemplate resources")
 	r.err = client.ListAssessmentTemplatesPages(&inspector.ListAssessmentTemplatesInput{}, func(page *inspector.ListAssessmentTemplatesOutput, lastPage bool) bool {
 		for _, resource := range page.AssessmentTemplateArns {
-			logDebug("Got InspectorAssessmentTemplate resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
 		}
 		return true

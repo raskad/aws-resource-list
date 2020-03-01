@@ -7,15 +7,13 @@ import (
 
 func getAmplify(session *session.Session) (resources resourceMap) {
 	client := amplify.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		amplifyApp: getAmplifyApp(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getAmplifyApp(client).unwrap(amplifyApp),
+	)
 	return
 }
 
 func getAmplifyApp(client *amplify.Amplify) (r resourceSliceError) {
-	logDebug("Listing AmplifyApp resources")
 	input := amplify.ListAppsInput{}
 	for {
 		page, err := client.ListApps(&input)
@@ -24,7 +22,6 @@ func getAmplifyApp(client *amplify.Amplify) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Apps {
-			logDebug("Got AmplifyApp resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
 		}
 		if page.NextToken == nil {

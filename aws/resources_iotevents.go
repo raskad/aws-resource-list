@@ -7,16 +7,14 @@ import (
 
 func getIoTEvents(session *session.Session) (resources resourceMap) {
 	client := iotevents.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		ioTEventsDetectorModel: getIoTEventsDetectorModel(client),
-		ioTEventsInput:         getIoTEventsInput(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getIoTEventsDetectorModel(client).unwrap(ioTEventsDetectorModel),
+		getIoTEventsInput(client).unwrap(ioTEventsInput),
+	)
 	return
 }
 
 func getIoTEventsDetectorModel(client *iotevents.IoTEvents) (r resourceSliceError) {
-	logDebug("Listing IoTEventsDetectorModel resources")
 	input := iotevents.ListDetectorModelsInput{}
 	for {
 		page, err := client.ListDetectorModels(&input)
@@ -25,7 +23,6 @@ func getIoTEventsDetectorModel(client *iotevents.IoTEvents) (r resourceSliceErro
 			return
 		}
 		for _, resource := range page.DetectorModelSummaries {
-			logDebug("Got IoTEventsDetectorModel resource with PhysicalResourceId", *resource.DetectorModelName)
 			r.resources = append(r.resources, *resource.DetectorModelName)
 		}
 		if page.NextToken == nil {
@@ -36,7 +33,6 @@ func getIoTEventsDetectorModel(client *iotevents.IoTEvents) (r resourceSliceErro
 }
 
 func getIoTEventsInput(client *iotevents.IoTEvents) (r resourceSliceError) {
-	logDebug("Listing IoTEventsInput resources")
 	input := iotevents.ListInputsInput{}
 	for {
 		page, err := client.ListInputs(&input)
@@ -45,7 +41,6 @@ func getIoTEventsInput(client *iotevents.IoTEvents) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.InputSummaries {
-			logDebug("Got IoTEventsInput resource with PhysicalResourceId", *resource.InputName)
 			r.resources = append(r.resources, *resource.InputName)
 		}
 		if page.NextToken == nil {

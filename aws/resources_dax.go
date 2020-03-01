@@ -7,18 +7,15 @@ import (
 
 func getDAX(session *session.Session) (resources resourceMap) {
 	client := dax.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		daxCluster:        getDaxCluster(client),
-		daxParameterGroup: getDaxParameterGroup(client),
-		daxSubnetGroup:    getDaxSubnetGroup(client),
-	}
-
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getDaxCluster(client).unwrap(daxCluster),
+		getDaxParameterGroup(client).unwrap(daxParameterGroup),
+		getDaxSubnetGroup(client).unwrap(daxSubnetGroup),
+	)
 	return
 }
 
 func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
-	logDebug("Listing DaxCluster resources")
 	input := dax.DescribeClustersInput{}
 	for {
 		page, err := client.DescribeClusters(&input)
@@ -27,7 +24,6 @@ func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Clusters {
-			logDebug("Got DaxCluster resource with PhysicalResourceId", *resource.ClusterName)
 			r.resources = append(r.resources, *resource.ClusterName)
 		}
 		if page.NextToken == nil {
@@ -38,7 +34,6 @@ func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
 }
 
 func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
-	logDebug("Listing DaxParameterGroup resources")
 	input := dax.DescribeParameterGroupsInput{}
 	for {
 		page, err := client.DescribeParameterGroups(&input)
@@ -47,7 +42,6 @@ func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.ParameterGroups {
-			logDebug("Got DaxParameterGroup resource with PhysicalResourceId", *resource.ParameterGroupName)
 			r.resources = append(r.resources, *resource.ParameterGroupName)
 		}
 		if page.NextToken == nil {
@@ -58,7 +52,6 @@ func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
 }
 
 func getDaxSubnetGroup(client *dax.DAX) (r resourceSliceError) {
-	logDebug("Listing DaxSubnetGroup resources")
 	input := dax.DescribeSubnetGroupsInput{}
 	for {
 		page, err := client.DescribeSubnetGroups(&input)
@@ -67,7 +60,6 @@ func getDaxSubnetGroup(client *dax.DAX) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.SubnetGroups {
-			logDebug("Got DaxSubnetGroup resource with PhysicalResourceId", *resource.SubnetGroupName)
 			r.resources = append(r.resources, *resource.SubnetGroupName)
 		}
 		if page.NextToken == nil {

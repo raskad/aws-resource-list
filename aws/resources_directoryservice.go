@@ -7,17 +7,14 @@ import (
 
 func getDirectoryService(session *session.Session) (resources resourceMap) {
 	client := directoryservice.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		directoryServiceMicrosoftAD: getDirectoryServiceMicrosoftAD(client),
-		directoryServiceSimpleAD:    getDirectoryServiceSimpleAD(client),
-	}
-
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getDirectoryServiceMicrosoftAD(client).unwrap(directoryServiceMicrosoftAD),
+		getDirectoryServiceSimpleAD(client).unwrap(directoryServiceSimpleAD),
+	)
 	return
 }
 
 func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (r resourceSliceError) {
-	logDebug("Listing DirectoryServiceMicrosoftAD resources")
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
 		page, err := client.DescribeDirectories(&input)
@@ -27,7 +24,6 @@ func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (
 		}
 		for _, resource := range page.DirectoryDescriptions {
 			if *resource.Type == directoryservice.DirectoryTypeMicrosoftAd {
-				logDebug("Got DirectoryServiceMicrosoftAD resource with PhysicalResourceId", *resource.DirectoryId)
 				r.resources = append(r.resources, *resource.DirectoryId)
 			}
 		}
@@ -39,7 +35,6 @@ func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (
 }
 
 func getDirectoryServiceSimpleAD(client *directoryservice.DirectoryService) (r resourceSliceError) {
-	logDebug("Listing DirectoryServiceMicrosoftAD resources")
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
 		page, err := client.DescribeDirectories(&input)
@@ -49,7 +44,6 @@ func getDirectoryServiceSimpleAD(client *directoryservice.DirectoryService) (r r
 		}
 		for _, resource := range page.DirectoryDescriptions {
 			if *resource.Type == directoryservice.DirectoryTypeSimpleAd {
-				logDebug("Got DirectoryServiceMicrosoftAD resource with PhysicalResourceId", *resource.DirectoryId)
 				r.resources = append(r.resources, *resource.DirectoryId)
 			}
 		}

@@ -7,18 +7,16 @@ import (
 
 func getIoT(session *session.Session) (resources resourceMap) {
 	client := iot.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		ioTCertificate: getIoTCertificate(client),
-		ioTPolicy:      getIoTPolicy(client),
-		ioTThing:       getIoTThing(client),
-		ioTTopicRule:   getIoTTopicRule(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getIoTCertificate(client).unwrap(ioTCertificate),
+		getIoTPolicy(client).unwrap(ioTPolicy),
+		getIoTThing(client).unwrap(ioTThing),
+		getIoTTopicRule(client).unwrap(ioTTopicRule),
+	)
 	return
 }
 
 func getIoTCertificate(client *iot.IoT) (r resourceSliceError) {
-	logDebug("Listing IoTCertificate resources")
 	input := iot.ListCertificatesInput{}
 	for {
 		page, err := client.ListCertificates(&input)
@@ -27,7 +25,6 @@ func getIoTCertificate(client *iot.IoT) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Certificates {
-			logDebug("Got IoTCertificate resource with PhysicalResourceId", *resource.CertificateId)
 			r.resources = append(r.resources, *resource.CertificateId)
 		}
 		if page.NextMarker == nil {
@@ -38,7 +35,6 @@ func getIoTCertificate(client *iot.IoT) (r resourceSliceError) {
 }
 
 func getIoTPolicy(client *iot.IoT) (r resourceSliceError) {
-	logDebug("Listing IoTPolicy resources")
 	input := iot.ListPoliciesInput{}
 	for {
 		page, err := client.ListPolicies(&input)
@@ -47,7 +43,6 @@ func getIoTPolicy(client *iot.IoT) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Policies {
-			logDebug("Got IoTPolicy resource with PhysicalResourceId", *resource.PolicyName)
 			r.resources = append(r.resources, *resource.PolicyName)
 		}
 		if page.NextMarker == nil {
@@ -58,7 +53,6 @@ func getIoTPolicy(client *iot.IoT) (r resourceSliceError) {
 }
 
 func getIoTThing(client *iot.IoT) (r resourceSliceError) {
-	logDebug("Listing IoTThing resources")
 	input := iot.ListThingsInput{}
 	for {
 		page, err := client.ListThings(&input)
@@ -67,7 +61,6 @@ func getIoTThing(client *iot.IoT) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Things {
-			logDebug("Got IoTThing resource with PhysicalResourceId", *resource.ThingName)
 			r.resources = append(r.resources, *resource.ThingName)
 		}
 		if page.NextToken == nil {
@@ -78,7 +71,6 @@ func getIoTThing(client *iot.IoT) (r resourceSliceError) {
 }
 
 func getIoTTopicRule(client *iot.IoT) (r resourceSliceError) {
-	logDebug("Listing IoTTopicRule resources")
 	input := iot.ListTopicRulesInput{}
 	for {
 		page, err := client.ListTopicRules(&input)
@@ -87,7 +79,6 @@ func getIoTTopicRule(client *iot.IoT) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Rules {
-			logDebug("Got IoTTopicRule resource with PhysicalResourceId", *resource.RuleName)
 			r.resources = append(r.resources, *resource.RuleName)
 		}
 		if page.NextToken == nil {

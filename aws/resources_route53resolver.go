@@ -7,20 +7,17 @@ import (
 
 func getRoute53Resolver(session *session.Session) (resources resourceMap) {
 	client := route53resolver.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		route53ResolverResolverEndpoint:        getRoute53ResolverResolverEndpoint(client),
-		route53ResolverResolverRule:            getRoute53ResolverResolverRule(client),
-		route53ResolverResolverRuleAssociation: getRoute53ResolverResolverRuleAssociation(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getRoute53ResolverResolverEndpoint(client).unwrap(route53ResolverResolverEndpoint),
+		getRoute53ResolverResolverRule(client).unwrap(route53ResolverResolverRule),
+		getRoute53ResolverResolverRuleAssociation(client).unwrap(route53ResolverResolverRuleAssociation),
+	)
 	return
 }
 
 func getRoute53ResolverResolverEndpoint(client *route53resolver.Route53Resolver) (r resourceSliceError) {
-	logDebug("Listing Route53ResolverResolverEndpoint resources")
 	r.err = client.ListResolverEndpointsPages(&route53resolver.ListResolverEndpointsInput{}, func(page *route53resolver.ListResolverEndpointsOutput, lastPage bool) bool {
 		for _, resource := range page.ResolverEndpoints {
-			logDebug("Got Route53ResolverResolverEndpoint resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		return true
@@ -29,10 +26,8 @@ func getRoute53ResolverResolverEndpoint(client *route53resolver.Route53Resolver)
 }
 
 func getRoute53ResolverResolverRule(client *route53resolver.Route53Resolver) (r resourceSliceError) {
-	logDebug("Listing Route53ResolverResolverRule resources")
 	r.err = client.ListResolverRulesPages(&route53resolver.ListResolverRulesInput{}, func(page *route53resolver.ListResolverRulesOutput, lastPage bool) bool {
 		for _, resource := range page.ResolverRules {
-			logDebug("Got Route53ResolverResolverRule resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		return true
@@ -41,10 +36,8 @@ func getRoute53ResolverResolverRule(client *route53resolver.Route53Resolver) (r 
 }
 
 func getRoute53ResolverResolverRuleAssociation(client *route53resolver.Route53Resolver) (r resourceSliceError) {
-	logDebug("Listing Route53ResolverResolverRuleAssociation resources")
 	r.err = client.ListResolverRuleAssociationsPages(&route53resolver.ListResolverRuleAssociationsInput{}, func(page *route53resolver.ListResolverRuleAssociationsOutput, lastPage bool) bool {
 		for _, resource := range page.ResolverRuleAssociations {
-			logDebug("Got Route53ResolverResolverRuleAssociation resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
 		}
 		return true

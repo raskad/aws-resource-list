@@ -66,16 +66,15 @@ type resourceSliceError struct {
 	err       error
 }
 
-type resourceSliceErrorMap map[resourceType]resourceSliceError
-
-func (rSliceErrorMap resourceSliceErrorMap) unwrap() (rMap resourceMap) {
-	rMap = resourceMap{}
-	for rtype, rSliceError := range rSliceErrorMap {
-		if rSliceError.err != nil {
-			logError("Cloud not get resources of type", rtype, "Error:", rSliceError.err)
-		}
-		rMap[rtype] = rSliceError.resources
+func (resourceSliceError resourceSliceError) unwrap(resourceType resourceType) (rMap resourceMap) {
+	logDebug("Listing", resourceType, "resources")
+	if resourceSliceError.err != nil {
+		logError("Cloud not get resources of type", resourceType, "Error:", resourceSliceError.err)
 	}
+	for _, resource := range resourceSliceError.resources {
+		logDebug("Got", resourceType, "resource with PhysicalResourceId", resource)
+	}
+	rMap = resourceMap{resourceType: resourceSliceError.resources}
 	return
 }
 

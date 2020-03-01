@@ -7,26 +7,22 @@ import (
 
 func getRds(session *session.Session) (resources resourceMap) {
 	client := rds.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		rdsDBCluster:               getRdsDBCluster(client),
-		rdsDBClusterParameterGroup: getRdsDBClusterParameterGroup(client),
-		rdsDBInstance:              getRdsDBInstance(client),
-		rdsDBParameterGroup:        getRdsDBParameterGroup(client),
-		rdsDBSecurityGroup:         getRdsDBSecurityGroup(client),
-		rdsDBSubnetGroup:           getRdsDBSubnetGroup(client),
-		rdsEventSubscription:       getRdsEventSubscription(client),
-		rdsOptionGroup:             getRdsOptionGroup(client),
-	}
-
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getRdsDBCluster(client).unwrap(rdsDBCluster),
+		getRdsDBClusterParameterGroup(client).unwrap(rdsDBClusterParameterGroup),
+		getRdsDBInstance(client).unwrap(rdsDBInstance),
+		getRdsDBParameterGroup(client).unwrap(rdsDBParameterGroup),
+		getRdsDBSecurityGroup(client).unwrap(rdsDBSecurityGroup),
+		getRdsDBSubnetGroup(client).unwrap(rdsDBSubnetGroup),
+		getRdsEventSubscription(client).unwrap(rdsEventSubscription),
+		getRdsOptionGroup(client).unwrap(rdsOptionGroup),
+	)
 	return
 }
 
 func getRdsDBCluster(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsDBCluster resources")
 	r.err = client.DescribeDBClustersPages(&rds.DescribeDBClustersInput{}, func(page *rds.DescribeDBClustersOutput, lastPage bool) bool {
 		for _, resource := range page.DBClusters {
-			logDebug("Got RdsDBCluster resource with PhysicalResourceId", *resource.DBClusterIdentifier)
 			r.resources = append(r.resources, *resource.DBClusterIdentifier)
 		}
 		return true
@@ -35,7 +31,6 @@ func getRdsDBCluster(client *rds.RDS) (r resourceSliceError) {
 }
 
 func getRdsDBClusterParameterGroup(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsDBClusterParameterGroup resources")
 	input := rds.DescribeDBClusterParameterGroupsInput{}
 	for {
 		page, err := client.DescribeDBClusterParameterGroups(&input)
@@ -44,7 +39,6 @@ func getRdsDBClusterParameterGroup(client *rds.RDS) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.DBClusterParameterGroups {
-			logDebug("Got RdsDBClusterParameterGroup resource with PhysicalResourceId", *resource.DBClusterParameterGroupName)
 			r.resources = append(r.resources, *resource.DBClusterParameterGroupName)
 		}
 		if page.Marker == nil {
@@ -55,10 +49,8 @@ func getRdsDBClusterParameterGroup(client *rds.RDS) (r resourceSliceError) {
 }
 
 func getRdsDBInstance(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsDBInstance resources")
 	r.err = client.DescribeDBInstancesPages(&rds.DescribeDBInstancesInput{}, func(page *rds.DescribeDBInstancesOutput, lastPage bool) bool {
 		for _, resource := range page.DBInstances {
-			logDebug("Got RdsDBInstance resource with PhysicalResourceId", *resource.DBInstanceIdentifier)
 			r.resources = append(r.resources, *resource.DBInstanceIdentifier)
 		}
 		return true
@@ -67,10 +59,8 @@ func getRdsDBInstance(client *rds.RDS) (r resourceSliceError) {
 }
 
 func getRdsDBParameterGroup(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsDBParameterGroup resources")
 	r.err = client.DescribeDBParameterGroupsPages(&rds.DescribeDBParameterGroupsInput{}, func(page *rds.DescribeDBParameterGroupsOutput, lastPage bool) bool {
 		for _, resource := range page.DBParameterGroups {
-			logDebug("Got RdsDBParameterGroup resource with PhysicalResourceId", *resource.DBParameterGroupName)
 			r.resources = append(r.resources, *resource.DBParameterGroupName)
 		}
 		return true
@@ -79,10 +69,8 @@ func getRdsDBParameterGroup(client *rds.RDS) (r resourceSliceError) {
 }
 
 func getRdsDBSecurityGroup(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsDBSecurityGroup resources")
 	r.err = client.DescribeDBSecurityGroupsPages(&rds.DescribeDBSecurityGroupsInput{}, func(page *rds.DescribeDBSecurityGroupsOutput, lastPage bool) bool {
 		for _, resource := range page.DBSecurityGroups {
-			logDebug("Got RdsDBSecurityGroup resource with PhysicalResourceId", *resource.DBSecurityGroupName)
 			r.resources = append(r.resources, *resource.DBSecurityGroupName)
 		}
 		return true
@@ -91,10 +79,8 @@ func getRdsDBSecurityGroup(client *rds.RDS) (r resourceSliceError) {
 }
 
 func getRdsDBSubnetGroup(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsDBSubnetGroup resources")
 	r.err = client.DescribeDBSubnetGroupsPages(&rds.DescribeDBSubnetGroupsInput{}, func(page *rds.DescribeDBSubnetGroupsOutput, lastPage bool) bool {
 		for _, resource := range page.DBSubnetGroups {
-			logDebug("Got RdsDBSubnetGroup resource with PhysicalResourceId", *resource.DBSubnetGroupName)
 			r.resources = append(r.resources, *resource.DBSubnetGroupName)
 		}
 		return true
@@ -103,10 +89,8 @@ func getRdsDBSubnetGroup(client *rds.RDS) (r resourceSliceError) {
 }
 
 func getRdsEventSubscription(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsEventSubscription resources")
 	r.err = client.DescribeEventSubscriptionsPages(&rds.DescribeEventSubscriptionsInput{}, func(page *rds.DescribeEventSubscriptionsOutput, lastPage bool) bool {
 		for _, resource := range page.EventSubscriptionsList {
-			logDebug("Got RdsEventSubscription resource with PhysicalResourceId", *resource.CustSubscriptionId)
 			r.resources = append(r.resources, *resource.CustSubscriptionId)
 		}
 		return true
@@ -115,10 +99,8 @@ func getRdsEventSubscription(client *rds.RDS) (r resourceSliceError) {
 }
 
 func getRdsOptionGroup(client *rds.RDS) (r resourceSliceError) {
-	logDebug("Listing RdsOptionGroup resources")
 	r.err = client.DescribeOptionGroupsPages(&rds.DescribeOptionGroupsInput{}, func(page *rds.DescribeOptionGroupsOutput, lastPage bool) bool {
 		for _, resource := range page.OptionGroupsList {
-			logDebug("Got RdsOptionGroup resource with PhysicalResourceId", *resource.OptionGroupName)
 			r.resources = append(r.resources, *resource.OptionGroupName)
 		}
 		return true

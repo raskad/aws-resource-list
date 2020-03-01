@@ -7,15 +7,13 @@ import (
 
 func getIoT1ClickDevicesService(session *session.Session) (resources resourceMap) {
 	client := iot1clickdevicesservice.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		ioT1ClickDevice: getIoT1ClickDevice(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getIoT1ClickDevice(client).unwrap(ioT1ClickDevice),
+	)
 	return
 }
 
 func getIoT1ClickDevice(client *iot1clickdevicesservice.IoT1ClickDevicesService) (r resourceSliceError) {
-	logDebug("Listing IoT1ClickDevice resources")
 	input := iot1clickdevicesservice.ListDevicesInput{}
 	for {
 		page, err := client.ListDevices(&input)
@@ -24,7 +22,6 @@ func getIoT1ClickDevice(client *iot1clickdevicesservice.IoT1ClickDevicesService)
 			return
 		}
 		for _, resource := range page.Devices {
-			logDebug("Got IoT1ClickDevice resource with PhysicalResourceId", *resource.DeviceId)
 			r.resources = append(r.resources, *resource.DeviceId)
 		}
 		if page.NextToken == nil {

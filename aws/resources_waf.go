@@ -7,21 +7,19 @@ import (
 
 func getWaf(session *session.Session) (resources resourceMap) {
 	client := waf.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		wafByteMatchSet:         getWafByteMatchSet(client),
-		wafIPSet:                getWafIPSet(client),
-		wafRule:                 getWafRule(client),
-		wafSizeConstraintSet:    getWafSizeConstraintSet(client),
-		wafSQLInjectionMatchSet: getWafSQLInjectionMatchSet(client),
-		wafWebACL:               getWafWebACL(client),
-		wafXSSMatchSet:          getWafXSSMatchSet(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getWafByteMatchSet(client).unwrap(wafByteMatchSet),
+		getWafIPSet(client).unwrap(wafIPSet),
+		getWafRule(client).unwrap(wafRule),
+		getWafSizeConstraintSet(client).unwrap(wafSizeConstraintSet),
+		getWafSQLInjectionMatchSet(client).unwrap(wafSQLInjectionMatchSet),
+		getWafWebACL(client).unwrap(wafWebACL),
+		getWafXSSMatchSet(client).unwrap(wafXSSMatchSet),
+	)
 	return
 }
 
 func getWafByteMatchSet(client *waf.WAF) (r resourceSliceError) {
-	logDebug("Listing WafByteMatchSet resources")
 	input := waf.ListByteMatchSetsInput{}
 	for {
 		page, err := client.ListByteMatchSets(&input)
@@ -30,7 +28,6 @@ func getWafByteMatchSet(client *waf.WAF) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.ByteMatchSets {
-			logDebug("Got WafByteMatchSet resource with PhysicalResourceId", *resource.ByteMatchSetId)
 			r.resources = append(r.resources, *resource.ByteMatchSetId)
 		}
 		if page.NextMarker == nil {
@@ -41,7 +38,6 @@ func getWafByteMatchSet(client *waf.WAF) (r resourceSliceError) {
 }
 
 func getWafIPSet(client *waf.WAF) (r resourceSliceError) {
-	logDebug("Listing WafIPSet resources")
 	input := waf.ListIPSetsInput{}
 	for {
 		page, err := client.ListIPSets(&input)
@@ -50,7 +46,6 @@ func getWafIPSet(client *waf.WAF) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.IPSets {
-			logDebug("Got WafIPSet resource with PhysicalResourceId", *resource.IPSetId)
 			r.resources = append(r.resources, *resource.IPSetId)
 		}
 		if page.NextMarker == nil {
@@ -61,7 +56,6 @@ func getWafIPSet(client *waf.WAF) (r resourceSliceError) {
 }
 
 func getWafRule(client *waf.WAF) (r resourceSliceError) {
-	logDebug("Listing WafRule resources")
 	input := waf.ListRulesInput{}
 	for {
 		page, err := client.ListRules(&input)
@@ -70,7 +64,6 @@ func getWafRule(client *waf.WAF) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Rules {
-			logDebug("Got WafRule resource with PhysicalResourceId", *resource.RuleId)
 			r.resources = append(r.resources, *resource.RuleId)
 		}
 		if page.NextMarker == nil {
@@ -81,7 +74,6 @@ func getWafRule(client *waf.WAF) (r resourceSliceError) {
 }
 
 func getWafSizeConstraintSet(client *waf.WAF) (r resourceSliceError) {
-	logDebug("Listing WafSizeConstraintSet resources")
 	input := waf.ListSizeConstraintSetsInput{}
 	for {
 		page, err := client.ListSizeConstraintSets(&input)
@@ -90,7 +82,6 @@ func getWafSizeConstraintSet(client *waf.WAF) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.SizeConstraintSets {
-			logDebug("Got WafSizeConstraintSet resource with PhysicalResourceId", *resource.SizeConstraintSetId)
 			r.resources = append(r.resources, *resource.SizeConstraintSetId)
 		}
 		if page.NextMarker == nil {
@@ -101,7 +92,6 @@ func getWafSizeConstraintSet(client *waf.WAF) (r resourceSliceError) {
 }
 
 func getWafSQLInjectionMatchSet(client *waf.WAF) (r resourceSliceError) {
-	logDebug("Listing WafSQLInjectionMatchSet resources")
 	input := waf.ListSqlInjectionMatchSetsInput{}
 	for {
 		page, err := client.ListSqlInjectionMatchSets(&input)
@@ -110,7 +100,6 @@ func getWafSQLInjectionMatchSet(client *waf.WAF) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.SqlInjectionMatchSets {
-			logDebug("Got WafSQLInjectionMatchSet resource with PhysicalResourceId", *resource.SqlInjectionMatchSetId)
 			r.resources = append(r.resources, *resource.SqlInjectionMatchSetId)
 		}
 		if page.NextMarker == nil {
@@ -121,7 +110,6 @@ func getWafSQLInjectionMatchSet(client *waf.WAF) (r resourceSliceError) {
 }
 
 func getWafWebACL(client *waf.WAF) (r resourceSliceError) {
-	logDebug("Listing WafWebACL resources")
 	input := waf.ListWebACLsInput{}
 	for {
 		page, err := client.ListWebACLs(&input)
@@ -130,7 +118,6 @@ func getWafWebACL(client *waf.WAF) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.WebACLs {
-			logDebug("Got WafWebACL resource with PhysicalResourceId", *resource.WebACLId)
 			r.resources = append(r.resources, *resource.WebACLId)
 		}
 		if page.NextMarker == nil {
@@ -141,7 +128,6 @@ func getWafWebACL(client *waf.WAF) (r resourceSliceError) {
 }
 
 func getWafXSSMatchSet(client *waf.WAF) (r resourceSliceError) {
-	logDebug("Listing WafXSSMatchSet resources")
 	input := waf.ListXssMatchSetsInput{}
 	for {
 		page, err := client.ListXssMatchSets(&input)
@@ -150,7 +136,6 @@ func getWafXSSMatchSet(client *waf.WAF) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.XssMatchSets {
-			logDebug("Got WafXSSMatchSet resource with PhysicalResourceId", *resource.XssMatchSetId)
 			r.resources = append(r.resources, *resource.XssMatchSetId)
 		}
 		if page.NextMarker == nil {

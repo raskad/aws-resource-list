@@ -7,15 +7,13 @@ import (
 
 func getAutoScalingPlans(session *session.Session) (resources resourceMap) {
 	client := autoscalingplans.New(session)
-	resourcesSliceErrorMap := resourceSliceErrorMap{
-		autoScalingPlansScalingPlan: getAutoScalingPlansScalingPlan(client),
-	}
-	resources = resourcesSliceErrorMap.unwrap()
+	resources = reduce(
+		getAutoScalingPlansScalingPlan(client).unwrap(autoScalingPlansScalingPlan),
+	)
 	return
 }
 
 func getAutoScalingPlansScalingPlan(client *autoscalingplans.AutoScalingPlans) (r resourceSliceError) {
-	logDebug("Listing AutoScalingPlansScalingPlan resources")
 	input := autoscalingplans.DescribeScalingPlansInput{}
 	for {
 		page, err := client.DescribeScalingPlans(&input)
@@ -24,7 +22,6 @@ func getAutoScalingPlansScalingPlan(client *autoscalingplans.AutoScalingPlans) (
 			return
 		}
 		for _, resource := range page.ScalingPlans {
-			logDebug("Got AutoScalingPlansScalingPlan resource with PhysicalResourceId", *resource.ScalingPlanName)
 			r.resources = append(r.resources, *resource.ScalingPlanName)
 		}
 		if page.NextToken == nil {
