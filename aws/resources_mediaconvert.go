@@ -17,8 +17,8 @@ func getMediaConvert(session *session.Session) (resources resourceMap) {
 }
 
 func getMediaConvertJobTemplate(client *mediaconvert.MediaConvert) (r resourceSliceError) {
+	logDebug("Listing MediaConvertJobTemplate resources")
 	r.err = client.ListJobTemplatesPages(&mediaconvert.ListJobTemplatesInput{}, func(page *mediaconvert.ListJobTemplatesOutput, lastPage bool) bool {
-		logDebug("Listing MediaConvertJobTemplate resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.JobTemplates {
 			logDebug("Got MediaConvertJobTemplate resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -29,8 +29,8 @@ func getMediaConvertJobTemplate(client *mediaconvert.MediaConvert) (r resourceSl
 }
 
 func getMediaConvertPreset(client *mediaconvert.MediaConvert) (r resourceSliceError) {
+	logDebug("Listing MediaConvertPreset resources")
 	r.err = client.ListPresetsPages(&mediaconvert.ListPresetsInput{}, func(page *mediaconvert.ListPresetsOutput, lastPage bool) bool {
-		logDebug("Listing MediaConvertPreset resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Presets {
 			logDebug("Got MediaConvertPreset resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -41,8 +41,8 @@ func getMediaConvertPreset(client *mediaconvert.MediaConvert) (r resourceSliceEr
 }
 
 func getMediaConvertQueue(client *mediaconvert.MediaConvert) (r resourceSliceError) {
+	logDebug("Listing MediaConvertQueue resources")
 	r.err = client.ListQueuesPages(&mediaconvert.ListQueuesInput{}, func(page *mediaconvert.ListQueuesOutput, lastPage bool) bool {
-		logDebug("Listing MediaConvertQueue resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Queues {
 			logDebug("Got MediaConvertQueue resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

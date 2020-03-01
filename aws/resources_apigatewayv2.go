@@ -16,6 +16,7 @@ func getAPIGatewayV2(session *session.Session) (resources resourceMap) {
 }
 
 func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError) {
+	logDebug("Listing ApiGatewayV2Api resources")
 	input := apigatewayv2.GetApisInput{}
 	for {
 		page, err := client.GetApis(&input)
@@ -23,7 +24,6 @@ func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError
 			r.err = err
 			return
 		}
-		logDebug("Listing ApiGatewayV2Api resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Items {
 			logDebug("Got ApiGatewayV2Api resource with PhysicalResourceId", *resource.ApiId)
 			r.resources = append(r.resources, *resource.ApiId)
@@ -36,6 +36,7 @@ func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError
 }
 
 func getAPIGatewayV2DomainName(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError) {
+	logDebug("Listing APIGatewayV2DomainName resources")
 	input := apigatewayv2.GetDomainNamesInput{}
 	for {
 		page, err := client.GetDomainNames(&input)
@@ -43,7 +44,6 @@ func getAPIGatewayV2DomainName(client *apigatewayv2.ApiGatewayV2) (r resourceSli
 			r.err = err
 			return
 		}
-		logDebug("Listing APIGatewayV2DomainName resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Items {
 			logDebug("Got APIGatewayV2DomainName resource with PhysicalResourceId", *resource.DomainName)
 			r.resources = append(r.resources, *resource.DomainName)

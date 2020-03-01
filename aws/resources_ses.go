@@ -18,6 +18,7 @@ func getSes(session *session.Session) (resources resourceMap) {
 }
 
 func getSesConfigurationSet(client *ses.SES) (r resourceSliceError) {
+	logDebug("Listing SesConfigurationSet resources")
 	input := ses.ListConfigurationSetsInput{}
 	for {
 		page, err := client.ListConfigurationSets(&input)
@@ -25,7 +26,6 @@ func getSesConfigurationSet(client *ses.SES) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing SesConfigurationSet resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ConfigurationSets {
 			logDebug("Got SesConfigurationSet resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -52,6 +52,7 @@ func getSesReceiptFilter(client *ses.SES) (r resourceSliceError) {
 }
 
 func getSesReceiptRuleSet(client *ses.SES) (r resourceSliceError) {
+	logDebug("Listing SesReceiptRuleSet resources")
 	input := ses.ListReceiptRuleSetsInput{}
 	for {
 		page, err := client.ListReceiptRuleSets(&input)
@@ -59,7 +60,6 @@ func getSesReceiptRuleSet(client *ses.SES) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing SesReceiptRuleSet resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.RuleSets {
 			logDebug("Got SesReceiptRuleSet resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -72,6 +72,7 @@ func getSesReceiptRuleSet(client *ses.SES) (r resourceSliceError) {
 }
 
 func getSesTemplate(client *ses.SES) (r resourceSliceError) {
+	logDebug("Listing SesTemplate resources")
 	input := ses.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplates(&input)
@@ -79,7 +80,6 @@ func getSesTemplate(client *ses.SES) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing SesTemplate resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.TemplatesMetadata {
 			logDebug("Got SesTemplate resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

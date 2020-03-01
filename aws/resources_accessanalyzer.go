@@ -15,8 +15,8 @@ func getAccessAnalyzer(session *session.Session) (resources resourceMap) {
 }
 
 func getAccessAnalyzerAnalyzer(client *accessanalyzer.AccessAnalyzer) (r resourceSliceError) {
+	logDebug("Listing accessAnalyzerAnalyzer resources")
 	r.err = client.ListAnalyzersPages(&accessanalyzer.ListAnalyzersInput{}, func(page *accessanalyzer.ListAnalyzersOutput, lastPage bool) bool {
-		logDebug("List accessAnalyzerAnalyzer resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Analyzers {
 			logDebug("Got accessAnalyzerAnalyzer resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

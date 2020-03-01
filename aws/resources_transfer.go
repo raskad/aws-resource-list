@@ -15,8 +15,8 @@ func getTransfer(session *session.Session) (resources resourceMap) {
 }
 
 func getTransferServer(client *transfer.Transfer) (r resourceSliceError) {
+	logDebug("Listing TransferServer resources")
 	r.err = client.ListServersPages(&transfer.ListServersInput{}, func(page *transfer.ListServersOutput, lastPage bool) bool {
-		logDebug("List TransferServer resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Servers {
 			logDebug("Got TransferServer resource with PhysicalResourceId", *resource.ServerId)
 			r.resources = append(r.resources, *resource.ServerId)

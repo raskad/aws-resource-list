@@ -72,7 +72,7 @@ func (rSliceErrorMap resourceSliceErrorMap) unwrap() (rMap resourceMap) {
 	rMap = resourceMap{}
 	for rtype, rSliceError := range rSliceErrorMap {
 		if rSliceError.err != nil {
-			logError("Cloud not get resources of type", rtype)
+			logError("Cloud not get resources of type", rtype, "Error:", rSliceError.err)
 		}
 		rMap[rtype] = rSliceError.resources
 	}

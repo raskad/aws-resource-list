@@ -16,8 +16,8 @@ func getCodePipeline(session *session.Session) (resources resourceMap) {
 }
 
 func getCodePipelinePipeline(client *codepipeline.CodePipeline) (r resourceSliceError) {
+	logDebug("Listing CodePipelinePipeline resources")
 	r.err = client.ListPipelinesPages(&codepipeline.ListPipelinesInput{}, func(page *codepipeline.ListPipelinesOutput, lastPage bool) bool {
-		logDebug("List CodePipelinePipeline resources page")
 		for _, resource := range page.Pipelines {
 			logDebug("Got CodePipelinePipeline resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -28,8 +28,8 @@ func getCodePipelinePipeline(client *codepipeline.CodePipeline) (r resourceSlice
 }
 
 func getCodePipelineWebhook(client *codepipeline.CodePipeline) (r resourceSliceError) {
+	logDebug("Listing CodePipelineWebhook resources")
 	r.err = client.ListWebhooksPages(&codepipeline.ListWebhooksInput{}, func(page *codepipeline.ListWebhooksOutput, lastPage bool) bool {
-		logDebug("List CodePipelineWebhook resources page")
 		for _, resource := range page.Webhooks {
 			logDebug("Got CodePipelineWebhook resource with PhysicalResourceId", *resource.Arn)
 			r.resources = append(r.resources, *resource.Arn)

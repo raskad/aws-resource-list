@@ -17,8 +17,8 @@ func getRoute53Resolver(session *session.Session) (resources resourceMap) {
 }
 
 func getRoute53ResolverResolverEndpoint(client *route53resolver.Route53Resolver) (r resourceSliceError) {
+	logDebug("Listing Route53ResolverResolverEndpoint resources")
 	r.err = client.ListResolverEndpointsPages(&route53resolver.ListResolverEndpointsInput{}, func(page *route53resolver.ListResolverEndpointsOutput, lastPage bool) bool {
-		logDebug("Listing Route53ResolverResolverEndpoint resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ResolverEndpoints {
 			logDebug("Got Route53ResolverResolverEndpoint resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
@@ -29,8 +29,8 @@ func getRoute53ResolverResolverEndpoint(client *route53resolver.Route53Resolver)
 }
 
 func getRoute53ResolverResolverRule(client *route53resolver.Route53Resolver) (r resourceSliceError) {
+	logDebug("Listing Route53ResolverResolverRule resources")
 	r.err = client.ListResolverRulesPages(&route53resolver.ListResolverRulesInput{}, func(page *route53resolver.ListResolverRulesOutput, lastPage bool) bool {
-		logDebug("Listing Route53ResolverResolverRule resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ResolverRules {
 			logDebug("Got Route53ResolverResolverRule resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
@@ -41,8 +41,8 @@ func getRoute53ResolverResolverRule(client *route53resolver.Route53Resolver) (r 
 }
 
 func getRoute53ResolverResolverRuleAssociation(client *route53resolver.Route53Resolver) (r resourceSliceError) {
+	logDebug("Listing Route53ResolverResolverRuleAssociation resources")
 	r.err = client.ListResolverRuleAssociationsPages(&route53resolver.ListResolverRuleAssociationsInput{}, func(page *route53resolver.ListResolverRuleAssociationsOutput, lastPage bool) bool {
-		logDebug("Listing Route53ResolverResolverRuleAssociation resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ResolverRuleAssociations {
 			logDebug("Got Route53ResolverResolverRuleAssociation resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)

@@ -21,8 +21,8 @@ func getSsm(session *session.Session) (resources resourceMap) {
 }
 
 func getSsmAssociation(client *ssm.SSM) (r resourceSliceError) {
+	logDebug("Listing SsmAssociation resources")
 	r.err = client.ListAssociationsPages(&ssm.ListAssociationsInput{}, func(page *ssm.ListAssociationsOutput, lastPage bool) bool {
-		logDebug("Listing SsmAssociation resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Associations {
 			logDebug("Got SsmAssociation resource with PhysicalResourceId", *resource.AssociationId)
 			r.resources = append(r.resources, *resource.AssociationId)
@@ -33,8 +33,8 @@ func getSsmAssociation(client *ssm.SSM) (r resourceSliceError) {
 }
 
 func getSsmDocument(client *ssm.SSM) (r resourceSliceError) {
+	logDebug("Listing SsmDocument resources")
 	r.err = client.ListDocumentsPages(&ssm.ListDocumentsInput{}, func(page *ssm.ListDocumentsOutput, lastPage bool) bool {
-		logDebug("Listing SsmDocument resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DocumentIdentifiers {
 			logDebug("Got SsmDocument resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -45,6 +45,7 @@ func getSsmDocument(client *ssm.SSM) (r resourceSliceError) {
 }
 
 func getSsmMaintenanceWindow(client *ssm.SSM) (r resourceSliceError) {
+	logDebug("Listing SsmMaintenanceWindow resources")
 	input := ssm.DescribeMaintenanceWindowsInput{}
 	for {
 		page, err := client.DescribeMaintenanceWindows(&input)
@@ -52,7 +53,6 @@ func getSsmMaintenanceWindow(client *ssm.SSM) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing SsmMaintenanceWindow resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.WindowIdentities {
 			logDebug("Got SsmMaintenanceWindow resource with PhysicalResourceId", *resource.WindowId)
 			r.resources = append(r.resources, *resource.WindowId)
@@ -65,6 +65,7 @@ func getSsmMaintenanceWindow(client *ssm.SSM) (r resourceSliceError) {
 }
 
 func getSsmMaintenanceWindowTarget(client *ssm.SSM) (r resourceSliceError) {
+	logDebug("Listing SsmMaintenanceWindowTarget resources")
 	input := ssm.DescribeMaintenanceWindowTargetsInput{}
 	for {
 		page, err := client.DescribeMaintenanceWindowTargets(&input)
@@ -72,7 +73,6 @@ func getSsmMaintenanceWindowTarget(client *ssm.SSM) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing SsmMaintenanceWindowTarget resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Targets {
 			logDebug("Got SsmMaintenanceWindowTarget resource with PhysicalResourceId", *resource.WindowTargetId)
 			r.resources = append(r.resources, *resource.WindowTargetId)
@@ -85,6 +85,7 @@ func getSsmMaintenanceWindowTarget(client *ssm.SSM) (r resourceSliceError) {
 }
 
 func getSsmMaintenanceWindowTask(client *ssm.SSM) (r resourceSliceError) {
+	logDebug("Listing SsmMaintenanceWindowTask resources")
 	input := ssm.DescribeMaintenanceWindowTasksInput{}
 	for {
 		page, err := client.DescribeMaintenanceWindowTasks(&input)
@@ -92,7 +93,6 @@ func getSsmMaintenanceWindowTask(client *ssm.SSM) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing SsmMaintenanceWindowTask resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Tasks {
 			logDebug("Got SsmMaintenanceWindowTask resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -105,8 +105,8 @@ func getSsmMaintenanceWindowTask(client *ssm.SSM) (r resourceSliceError) {
 }
 
 func getSsmParameter(client *ssm.SSM) (r resourceSliceError) {
+	logDebug("Listing SsmParameter resources")
 	r.err = client.DescribeParametersPages(&ssm.DescribeParametersInput{}, func(page *ssm.DescribeParametersOutput, lastPage bool) bool {
-		logDebug("Listing SsmParameter resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Parameters {
 			logDebug("Got SsmParameter resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -117,6 +117,7 @@ func getSsmParameter(client *ssm.SSM) (r resourceSliceError) {
 }
 
 func getSsmPatchBaseline(client *ssm.SSM) (r resourceSliceError) {
+	logDebug("Listing SsmPatchBaseline resources")
 	input := ssm.DescribePatchBaselinesInput{}
 	for {
 		page, err := client.DescribePatchBaselines(&input)
@@ -124,7 +125,6 @@ func getSsmPatchBaseline(client *ssm.SSM) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing SsmPatchBaseline resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.BaselineIdentities {
 			logDebug("Got SsmPatchBaseline resource with PhysicalResourceId", *resource.BaselineId)
 			r.resources = append(r.resources, *resource.BaselineId)

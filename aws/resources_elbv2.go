@@ -20,8 +20,8 @@ func getElasticLoadBalancingV2(session *session.Session) (resources resourceMap)
 }
 
 func getElasticLoadBalancingV2Listener(client *elbv2.ELBV2) (r resourceSliceError) {
+	logDebug("Listing ElasticLoadBalancingV2Listener resources")
 	r.err = client.DescribeListenersPages(&elbv2.DescribeListenersInput{}, func(page *elbv2.DescribeListenersOutput, lastPage bool) bool {
-		logDebug("Listing ElasticLoadBalancingV2Listener resources page. Remaining pages", page.NextMarker)
 		for _, resource := range page.Listeners {
 			logDebug("Got ElasticLoadBalancingV2Listener resource with PhysicalResourceId", *resource.ListenerArn)
 			r.resources = append(r.resources, *resource.ListenerArn)
@@ -32,6 +32,7 @@ func getElasticLoadBalancingV2Listener(client *elbv2.ELBV2) (r resourceSliceErro
 }
 
 func getElasticLoadBalancingV2ListenerCertificate(client *elbv2.ELBV2) (r resourceSliceError) {
+	logDebug("Listing ElasticLoadBalancingV2ListenerCertificate resources")
 	input := elbv2.DescribeListenerCertificatesInput{}
 	for {
 		page, err := client.DescribeListenerCertificates(&input)
@@ -39,7 +40,6 @@ func getElasticLoadBalancingV2ListenerCertificate(client *elbv2.ELBV2) (r resour
 			r.err = err
 			return
 		}
-		logDebug("Listing ElasticLoadBalancingV2ListenerCertificate resources page. Remaining pages", page.NextMarker)
 		for _, resource := range page.Certificates {
 			logDebug("Got ElasticLoadBalancingV2ListenerCertificate resource with PhysicalResourceId", *resource.CertificateArn)
 			r.resources = append(r.resources, *resource.CertificateArn)
@@ -52,6 +52,7 @@ func getElasticLoadBalancingV2ListenerCertificate(client *elbv2.ELBV2) (r resour
 }
 
 func getElasticLoadBalancingV2ListenerRule(client *elbv2.ELBV2) (r resourceSliceError) {
+	logDebug("Listing ElasticLoadBalancingV2ListenerRule resources")
 	input := elbv2.DescribeRulesInput{}
 	for {
 		page, err := client.DescribeRules(&input)
@@ -59,7 +60,6 @@ func getElasticLoadBalancingV2ListenerRule(client *elbv2.ELBV2) (r resourceSlice
 			r.err = err
 			return
 		}
-		logDebug("Listing ElasticLoadBalancingV2ListenerRule resources page. Remaining pages", page.NextMarker)
 		for _, resource := range page.Rules {
 			logDebug("Got ElasticLoadBalancingV2ListenerRule resource with PhysicalResourceId", *resource.RuleArn)
 			r.resources = append(r.resources, *resource.RuleArn)
@@ -72,8 +72,8 @@ func getElasticLoadBalancingV2ListenerRule(client *elbv2.ELBV2) (r resourceSlice
 }
 
 func getElasticLoadBalancingV2LoadBalancer(client *elbv2.ELBV2) (r resourceSliceError) {
+	logDebug("Listing ElasticLoadBalancingV2LoadBalancer resources")
 	r.err = client.DescribeLoadBalancersPages(&elbv2.DescribeLoadBalancersInput{}, func(page *elbv2.DescribeLoadBalancersOutput, lastPage bool) bool {
-		logDebug("Listing ElasticLoadBalancingV2LoadBalancer resources page. Remaining pages", page.NextMarker)
 		for _, resource := range page.LoadBalancers {
 			logDebug("Got ElasticLoadBalancingV2LoadBalancer resource with PhysicalResourceId", *resource.LoadBalancerName)
 			r.resources = append(r.resources, *resource.LoadBalancerName)
@@ -84,8 +84,8 @@ func getElasticLoadBalancingV2LoadBalancer(client *elbv2.ELBV2) (r resourceSlice
 }
 
 func getElasticLoadBalancingV2TargetGroup(client *elbv2.ELBV2) (r resourceSliceError) {
+	logDebug("Listing ElasticLoadBalancingV2TargetGroup resources")
 	r.err = client.DescribeTargetGroupsPages(&elbv2.DescribeTargetGroupsInput{}, func(page *elbv2.DescribeTargetGroupsOutput, lastPage bool) bool {
-		logDebug("Listing ElasticLoadBalancingV2TargetGroup resources page. Remaining pages", page.NextMarker)
 		for _, resource := range page.TargetGroups {
 			logDebug("Got ElasticLoadBalancingV2TargetGroup resource with PhysicalResourceId", *resource.TargetGroupName)
 			r.resources = append(r.resources, *resource.TargetGroupName)

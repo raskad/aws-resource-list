@@ -15,8 +15,8 @@ func getGuardDuty(session *session.Session) (resources resourceMap) {
 }
 
 func getGuardDutyDetector(client *guardduty.GuardDuty) (r resourceSliceError) {
+	logDebug("Listing GuardDutyDetector resources")
 	r.err = client.ListDetectorsPages(&guardduty.ListDetectorsInput{}, func(page *guardduty.ListDetectorsOutput, lastPage bool) bool {
-		logDebug("Listing GuardDutyDetector resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DetectorIds {
 			logDebug("Got GuardDutyDetector resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)

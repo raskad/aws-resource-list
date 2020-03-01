@@ -15,8 +15,8 @@ func getAcm(session *session.Session) (resources resourceMap) {
 }
 
 func getCertificateManagerCertificate(client *acm.ACM) (r resourceSliceError) {
+	logDebug("Listing CertificateManagerCertificate resources")
 	r.err = client.ListCertificatesPages(&acm.ListCertificatesInput{}, func(page *acm.ListCertificatesOutput, lastPage bool) bool {
-		logDebug("List CertificateManagerCertificate resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.CertificateSummaryList {
 			logDebug("Got CertificateManagerCertificate resource with PhysicalResourceId", *resource.CertificateArn)
 			r.resources = append(r.resources, *resource.CertificateArn)

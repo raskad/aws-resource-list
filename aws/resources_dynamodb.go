@@ -15,8 +15,8 @@ func getDynamoDB(session *session.Session) (resources resourceMap) {
 }
 
 func getDynamoDBTable(client *dynamodb.DynamoDB) (r resourceSliceError) {
+	logDebug("Listing DynamoDBTable resources")
 	r.err = client.ListTablesPages(&dynamodb.ListTablesInput{}, func(page *dynamodb.ListTablesOutput, lastPage bool) bool {
-		logDebug("List DynamoDBTable resources page")
 		for _, resource := range page.TableNames {
 			logDebug("Got DynamoDBTable resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)

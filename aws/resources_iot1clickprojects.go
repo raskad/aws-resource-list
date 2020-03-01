@@ -15,8 +15,8 @@ func getIoT1ClickProjects(session *session.Session) (resources resourceMap) {
 }
 
 func getIoT1ClickProject(client *iot1clickprojects.IoT1ClickProjects) (r resourceSliceError) {
+	logDebug("Listing IoT1ClickProject resources")
 	r.err = client.ListProjectsPages(&iot1clickprojects.ListProjectsInput{}, func(page *iot1clickprojects.ListProjectsOutput, lastPage bool) bool {
-		logDebug("Listing IoT1ClickProject resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Projects {
 			logDebug("Got IoT1ClickProject resource with PhysicalResourceId", *resource.ProjectName)
 			r.resources = append(r.resources, *resource.ProjectName)

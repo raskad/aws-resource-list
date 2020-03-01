@@ -18,6 +18,7 @@ func getPinpoint(session *session.Session) (resources resourceMap) {
 }
 
 func getPinpointApp(client *pinpoint.Pinpoint) (r resourceSliceError) {
+	logDebug("Listing PinpointApp resources")
 	input := pinpoint.GetAppsInput{}
 	for {
 		page, err := client.GetApps(&input)
@@ -25,7 +26,6 @@ func getPinpointApp(client *pinpoint.Pinpoint) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing PinpointApp resources page. Remaining pages", page.ApplicationsResponse.NextToken)
 		for _, resource := range page.ApplicationsResponse.Item {
 			logDebug("Got PinpointApp resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
@@ -38,6 +38,7 @@ func getPinpointApp(client *pinpoint.Pinpoint) (r resourceSliceError) {
 }
 
 func getPinpointEmailTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
+	logDebug("Listing PinpointEmailTemplate resources")
 	input := pinpoint.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplates(&input)
@@ -45,7 +46,6 @@ func getPinpointEmailTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) 
 			r.err = err
 			return
 		}
-		logDebug("Listing PinpointEmailTemplate resources page. Remaining pages", page.TemplatesResponse.NextToken)
 		for _, resource := range page.TemplatesResponse.Item {
 			if *resource.TemplateType == pinpoint.TemplateTypeEmail {
 				logDebug("Got PinpointEmailTemplate resource with PhysicalResourceId", *resource.TemplateName)
@@ -60,6 +60,7 @@ func getPinpointEmailTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) 
 }
 
 func getPinpointPushTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
+	logDebug("Listing PinpointPushTemplate resources")
 	input := pinpoint.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplates(&input)
@@ -67,7 +68,6 @@ func getPinpointPushTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing PinpointPushTemplate resources page. Remaining pages", page.TemplatesResponse.NextToken)
 		for _, resource := range page.TemplatesResponse.Item {
 			if *resource.TemplateType == pinpoint.TemplateTypePush {
 				logDebug("Got PinpointPushTemplate resource with PhysicalResourceId", *resource.TemplateName)
@@ -82,6 +82,7 @@ func getPinpointPushTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
 }
 
 func getPinpointSmsTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
+	logDebug("Listing PinpointSmsTemplate resources")
 	input := pinpoint.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplates(&input)
@@ -89,7 +90,6 @@ func getPinpointSmsTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing PinpointSmsTemplate resources page. Remaining pages", page.TemplatesResponse.NextToken)
 		for _, resource := range page.TemplatesResponse.Item {
 			if *resource.TemplateType == pinpoint.TemplateTypeSms {
 				logDebug("Got PinpointSmsTemplate resource with PhysicalResourceId", *resource.TemplateName)

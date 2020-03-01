@@ -15,6 +15,7 @@ func getKinesisAnalyticsV2(session *session.Session) (resources resourceMap) {
 }
 
 func getKinesisAnalyticsV2Application(client *kinesisanalyticsv2.KinesisAnalyticsV2) (r resourceSliceError) {
+	logDebug("Listing KinesisAnalyticsV2Application resources")
 	input := kinesisanalyticsv2.ListApplicationsInput{}
 	for {
 		page, err := client.ListApplications(&input)
@@ -22,7 +23,6 @@ func getKinesisAnalyticsV2Application(client *kinesisanalyticsv2.KinesisAnalytic
 			r.err = err
 			return
 		}
-		logDebug("Listing KinesisAnalyticsV2Application resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ApplicationSummaries {
 			logDebug("Got KinesisAnalyticsV2Application resource with PhysicalResourceId", *resource.ApplicationName)
 			r.resources = append(r.resources, *resource.ApplicationName)

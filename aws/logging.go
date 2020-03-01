@@ -12,10 +12,9 @@ const (
 	info
 	err
 	fatal
-	off
 )
 
-var globalLogLevel = off
+var globalLogLevel = fatal
 
 func setGlobalLogLevel() {
 	l := os.Getenv("LOG_LEVEL")
@@ -29,7 +28,7 @@ func setGlobalLogLevel() {
 	case "FATAL":
 		globalLogLevel = fatal
 	default:
-		globalLogLevel = off
+		globalLogLevel = fatal
 	}
 }
 

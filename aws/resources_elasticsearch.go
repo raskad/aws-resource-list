@@ -15,12 +15,12 @@ func getElasticsearch(session *session.Session) (resources resourceMap) {
 }
 
 func getElasticsearchDomain(client *elasticsearchservice.ElasticsearchService) (r resourceSliceError) {
+	logDebug("Listing ElasticsearchDomain resources")
 	page, err := client.ListDomainNames(&elasticsearchservice.ListDomainNamesInput{})
 	if err != nil {
 		r.err = err
 		return
 	}
-	logDebug("Listing ElasticsearchDomain resources page.")
 	for _, resource := range page.DomainNames {
 		logDebug("Got ElasticsearchDomain resource with PhysicalResourceId", *resource.DomainName)
 		r.resources = append(r.resources, *resource.DomainName)

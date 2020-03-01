@@ -19,13 +19,13 @@ func getElasticBeanstalk(session *session.Session) (resources resourceMap) {
 }
 
 func getElasticBeanstalkApplication(client *elasticbeanstalk.ElasticBeanstalk) (r resourceSliceError) {
+	logDebug("Listing ElasticBeanstalkApplication resources")
 	input := elasticbeanstalk.DescribeApplicationsInput{}
 	page, err := client.DescribeApplications(&input)
 	if err != nil {
 		r.err = err
 		return
 	}
-	logDebug("Listing ElasticBeanstalkApplication resources.")
 	for _, resource := range page.Applications {
 		logDebug("Got ElasticBeanstalkApplication resource with PhysicalResourceId", *resource.ApplicationName)
 		r.resources = append(r.resources, *resource.ApplicationName)
@@ -34,6 +34,7 @@ func getElasticBeanstalkApplication(client *elasticbeanstalk.ElasticBeanstalk) (
 }
 
 func getElasticBeanstalkApplicationVersion(client *elasticbeanstalk.ElasticBeanstalk) (r resourceSliceError) {
+	logDebug("Listing ElasticBeanstalkApplicationVersion resources")
 	input := elasticbeanstalk.DescribeApplicationVersionsInput{}
 	for {
 		page, err := client.DescribeApplicationVersions(&input)
@@ -41,7 +42,6 @@ func getElasticBeanstalkApplicationVersion(client *elasticbeanstalk.ElasticBeans
 			r.err = err
 			return
 		}
-		logDebug("Listing ElasticBeanstalkApplicationVersion resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ApplicationVersions {
 			logDebug("Got ElasticBeanstalkApplicationVersion resource with PhysicalResourceId", *resource.VersionLabel)
 			r.resources = append(r.resources, *resource.VersionLabel)
@@ -54,13 +54,13 @@ func getElasticBeanstalkApplicationVersion(client *elasticbeanstalk.ElasticBeans
 }
 
 func getElasticBeanstalkConfigurationTemplate(client *elasticbeanstalk.ElasticBeanstalk) (r resourceSliceError) {
+	logDebug("Listing ElasticBeanstalkConfigurationTemplate resources")
 	input := elasticbeanstalk.DescribeApplicationsInput{}
 	page, err := client.DescribeApplications(&input)
 	if err != nil {
 		r.err = err
 		return
 	}
-	logDebug("Listing ElasticBeanstalkConfigurationTemplate resources.")
 	for _, resource := range page.Applications {
 		for _, resource := range resource.ConfigurationTemplates {
 			logDebug("Got ElasticBeanstalkConfigurationTemplate resource with PhysicalResourceId", *resource)
@@ -71,6 +71,7 @@ func getElasticBeanstalkConfigurationTemplate(client *elasticbeanstalk.ElasticBe
 }
 
 func getElasticBeanstalkEnvironment(client *elasticbeanstalk.ElasticBeanstalk) (r resourceSliceError) {
+	logDebug("Listing ElasticBeanstalkEnvironment resources")
 	input := elasticbeanstalk.DescribeEnvironmentsInput{}
 	for {
 		page, err := client.DescribeEnvironments(&input)
@@ -78,7 +79,6 @@ func getElasticBeanstalkEnvironment(client *elasticbeanstalk.ElasticBeanstalk) (
 			r.err = err
 			return
 		}
-		logDebug("Listing ElasticBeanstalkEnvironment resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Environments {
 			logDebug("Got ElasticBeanstalkEnvironment resource with PhysicalResourceId", *resource.EnvironmentId)
 			r.resources = append(r.resources, *resource.EnvironmentId)

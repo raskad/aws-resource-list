@@ -17,8 +17,8 @@ func getBackup(session *session.Session) (resources resourceMap) {
 }
 
 func getBackupBackupPlan(client *backup.Backup) (r resourceSliceError) {
+	logDebug("Listing BackupBackupPlan resources")
 	r.err = client.ListBackupPlansPages(&backup.ListBackupPlansInput{}, func(page *backup.ListBackupPlansOutput, lastPage bool) bool {
-		logDebug("List BackupBackupPlan resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.BackupPlansList {
 			logDebug("Got BackupBackupPlan resource with PhysicalResourceId", *resource.BackupPlanId)
 			r.resources = append(r.resources, *resource.BackupPlanId)
@@ -29,8 +29,8 @@ func getBackupBackupPlan(client *backup.Backup) (r resourceSliceError) {
 }
 
 func getBackupBackupSelection(client *backup.Backup) (r resourceSliceError) {
+	logDebug("Listing BackupBackupSelection resources")
 	r.err = client.ListBackupSelectionsPages(&backup.ListBackupSelectionsInput{}, func(page *backup.ListBackupSelectionsOutput, lastPage bool) bool {
-		logDebug("List BackupBackupSelection resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.BackupSelectionsList {
 			logDebug("Got BackupBackupSelection resource with PhysicalResourceId", *resource.SelectionId)
 			r.resources = append(r.resources, *resource.SelectionId)
@@ -41,8 +41,8 @@ func getBackupBackupSelection(client *backup.Backup) (r resourceSliceError) {
 }
 
 func getBackupBackupVault(client *backup.Backup) (r resourceSliceError) {
+	logDebug("Listing BackupBackupVault resources")
 	r.err = client.ListBackupVaultsPages(&backup.ListBackupVaultsInput{}, func(page *backup.ListBackupVaultsOutput, lastPage bool) bool {
-		logDebug("List BackupBackupVault resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.BackupVaultList {
 			logDebug("Got BackupBackupVault resource with PhysicalResourceId", *resource.BackupVaultName)
 			r.resources = append(r.resources, *resource.BackupVaultName)

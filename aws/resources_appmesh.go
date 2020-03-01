@@ -16,8 +16,8 @@ func getAppMesh(session *session.Session) (resources resourceMap) {
 }
 
 func getAppMeshMesh(client *appmesh.AppMesh) (r resourceSliceError) {
+	logDebug("Listing AppMeshMesh resources")
 	r.err = client.ListMeshesPages(&appmesh.ListMeshesInput{}, func(page *appmesh.ListMeshesOutput, lastPage bool) bool {
-		logDebug("Listing AppMeshMesh resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Meshes {
 			logDebug("Got AppMeshMesh resource with PhysicalResourceId", *resource.MeshName)
 			r.resources = append(r.resources, *resource.MeshName)

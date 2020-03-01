@@ -19,8 +19,8 @@ func getServiceDiscovery(session *session.Session) (resources resourceMap) {
 }
 
 func getServiceDiscoveryHTTPNamespace(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
+	logDebug("Listing ServiceDiscoveryHTTPNamespace resources")
 	r.err = client.ListNamespacesPages(&servicediscovery.ListNamespacesInput{}, func(page *servicediscovery.ListNamespacesOutput, lastPage bool) bool {
-		logDebug("List ServiceDiscoveryHTTPNamespace resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Namespaces {
 			if *resource.Type == "HTTP" {
 				logDebug("Got ServiceDiscoveryHTTPNamespace resource with PhysicalResourceId", *resource.Name)
@@ -33,8 +33,8 @@ func getServiceDiscoveryHTTPNamespace(client *servicediscovery.ServiceDiscovery)
 }
 
 func getServiceDiscoveryInstance(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
+	logDebug("Listing ServiceDiscoveryInstance resources")
 	r.err = client.ListInstancesPages(&servicediscovery.ListInstancesInput{}, func(page *servicediscovery.ListInstancesOutput, lastPage bool) bool {
-		logDebug("List ServiceDiscoveryInstance resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Instances {
 			logDebug("Got ServiceDiscoveryInstance resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
@@ -45,8 +45,8 @@ func getServiceDiscoveryInstance(client *servicediscovery.ServiceDiscovery) (r r
 }
 
 func getServiceDiscoveryPrivateDNSNamespace(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
+	logDebug("Listing ServiceDiscoveryPrivateDNSNamespace resources")
 	r.err = client.ListNamespacesPages(&servicediscovery.ListNamespacesInput{}, func(page *servicediscovery.ListNamespacesOutput, lastPage bool) bool {
-		logDebug("List ServiceDiscoveryPrivateDNSNamespace resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Namespaces {
 			if *resource.Type == "DNS_PRIVATE" {
 				logDebug("Got ServiceDiscoveryPrivateDNSNamespace resource with PhysicalResourceId", *resource.Name)
@@ -59,8 +59,8 @@ func getServiceDiscoveryPrivateDNSNamespace(client *servicediscovery.ServiceDisc
 }
 
 func getServiceDiscoveryPublicDNSNamespace(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
+	logDebug("Listing ServiceDiscoveryPublicDNSNamespace resources")
 	r.err = client.ListNamespacesPages(&servicediscovery.ListNamespacesInput{}, func(page *servicediscovery.ListNamespacesOutput, lastPage bool) bool {
-		logDebug("List ServiceDiscoveryPublicDNSNamespace resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Namespaces {
 			if *resource.Type == "DNS_PUBLIC" {
 				logDebug("Got ServiceDiscoveryPublicDNSNamespace resource with PhysicalResourceId", *resource.Name)
@@ -73,8 +73,8 @@ func getServiceDiscoveryPublicDNSNamespace(client *servicediscovery.ServiceDisco
 }
 
 func getServiceDiscoveryService(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
+	logDebug("Listing ServiceDiscoveryService resources")
 	r.err = client.ListServicesPages(&servicediscovery.ListServicesInput{}, func(page *servicediscovery.ListServicesOutput, lastPage bool) bool {
-		logDebug("List ServiceDiscoveryService resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Services {
 			logDebug("Got ServiceDiscoveryService resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

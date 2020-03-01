@@ -16,8 +16,8 @@ func getInspector(session *session.Session) (resources resourceMap) {
 }
 
 func getInspectorAssessmentTarget(client *inspector.Inspector) (r resourceSliceError) {
+	logDebug("Listing InspectorAssessmentTarget resources")
 	r.err = client.ListAssessmentTargetsPages(&inspector.ListAssessmentTargetsInput{}, func(page *inspector.ListAssessmentTargetsOutput, lastPage bool) bool {
-		logDebug("Listing InspectorAssessmentTarget resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.AssessmentTargetArns {
 			logDebug("Got InspectorAssessmentTarget resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
@@ -28,8 +28,8 @@ func getInspectorAssessmentTarget(client *inspector.Inspector) (r resourceSliceE
 }
 
 func getInspectorAssessmentTemplate(client *inspector.Inspector) (r resourceSliceError) {
+	logDebug("Listing InspectorAssessmentTemplate resources")
 	r.err = client.ListAssessmentTemplatesPages(&inspector.ListAssessmentTemplatesInput{}, func(page *inspector.ListAssessmentTemplatesOutput, lastPage bool) bool {
-		logDebug("Listing InspectorAssessmentTemplate resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.AssessmentTemplateArns {
 			logDebug("Got InspectorAssessmentTemplate resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)

@@ -16,7 +16,7 @@ func getDLM(session *session.Session) (resources resourceMap) {
 }
 
 func getDlmLifecyclePolicy(client *dlm.DLM) (r resourceSliceError) {
-	logInfo("Start fetching DlmLifecyclePolicy resources")
+	logDebug("Listing DlmLifecyclePolicy resources")
 	buckets, err := client.GetLifecyclePolicies(&dlm.GetLifecyclePoliciesInput{})
 	for _, resource := range buckets.Policies {
 		logDebug("Got DlmLifecyclePolicy resource with PhysicalResourceId", *resource.PolicyId)

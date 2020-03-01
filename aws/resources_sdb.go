@@ -15,8 +15,8 @@ func getSdb(session *session.Session) (resources resourceMap) {
 }
 
 func getSdbDomain(client *simpledb.SimpleDB) (r resourceSliceError) {
+	logDebug("Listing SdbDomain resources")
 	r.err = client.ListDomainsPages(&simpledb.ListDomainsInput{}, func(page *simpledb.ListDomainsOutput, lastPage bool) bool {
-		logDebug("List SdbDomain resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DomainNames {
 			logDebug("Got SdbDomain resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)

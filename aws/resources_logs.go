@@ -20,8 +20,8 @@ func getCloudwatchLogs(session *session.Session) (resources resourceMap) {
 }
 
 func getLogsDestination(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceError) {
+	logDebug("Listing LogsDestination resources")
 	r.err = client.DescribeDestinationsPages(&cloudwatchlogs.DescribeDestinationsInput{}, func(page *cloudwatchlogs.DescribeDestinationsOutput, lastPage bool) bool {
-		logDebug("Listing LogsDestination resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Destinations {
 			logDebug("Got LogsDestination resource with PhysicalResourceId", *resource.DestinationName)
 			r.resources = append(r.resources, *resource.DestinationName)
@@ -32,8 +32,8 @@ func getLogsDestination(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceE
 }
 
 func getLogsLogGroup(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceError) {
+	logDebug("Listing LogsLogGroup resources")
 	r.err = client.DescribeLogGroupsPages(&cloudwatchlogs.DescribeLogGroupsInput{}, func(page *cloudwatchlogs.DescribeLogGroupsOutput, lastPage bool) bool {
-		logDebug("Listing LogsLogGroup resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.LogGroups {
 			logDebug("Got LogsLogGroup resource with PhysicalResourceId", *resource.LogGroupName)
 			r.resources = append(r.resources, *resource.LogGroupName)
@@ -44,8 +44,8 @@ func getLogsLogGroup(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceErro
 }
 
 func getLogsLogStream(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceError) {
+	logDebug("Listing LogsLogStream resources")
 	r.err = client.DescribeLogStreamsPages(&cloudwatchlogs.DescribeLogStreamsInput{}, func(page *cloudwatchlogs.DescribeLogStreamsOutput, lastPage bool) bool {
-		logDebug("Listing LogsLogStream resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.LogStreams {
 			logDebug("Got LogsLogStream resource with PhysicalResourceId", *resource.LogStreamName)
 			r.resources = append(r.resources, *resource.LogStreamName)
@@ -56,8 +56,8 @@ func getLogsLogStream(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceErr
 }
 
 func getLogsMetricFilter(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceError) {
+	logDebug("Listing LogsMetricFilter resources")
 	r.err = client.DescribeMetricFiltersPages(&cloudwatchlogs.DescribeMetricFiltersInput{}, func(page *cloudwatchlogs.DescribeMetricFiltersOutput, lastPage bool) bool {
-		logDebug("Listing LogsMetricFilter resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.MetricFilters {
 			logDebug("Got LogsMetricFilter resource with PhysicalResourceId", *resource.FilterName)
 			r.resources = append(r.resources, *resource.FilterName)
@@ -68,8 +68,8 @@ func getLogsMetricFilter(client *cloudwatchlogs.CloudWatchLogs) (r resourceSlice
 }
 
 func getLogsSubscriptionFilter(client *cloudwatchlogs.CloudWatchLogs) (r resourceSliceError) {
+	logDebug("Listing LogsSubscriptionFilter resources")
 	r.err = client.DescribeSubscriptionFiltersPages(&cloudwatchlogs.DescribeSubscriptionFiltersInput{}, func(page *cloudwatchlogs.DescribeSubscriptionFiltersOutput, lastPage bool) bool {
-		logDebug("Listing LogsSubscriptionFilter resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.SubscriptionFilters {
 			logDebug("Got LogsSubscriptionFilter resource with PhysicalResourceId", *resource.FilterName)
 			r.resources = append(r.resources, *resource.FilterName)

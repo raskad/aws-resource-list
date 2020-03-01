@@ -16,8 +16,8 @@ func getKinesis(session *session.Session) (resources resourceMap) {
 }
 
 func getKinesisStream(client *kinesis.Kinesis) (r resourceSliceError) {
+	logDebug("Listing KinesisStream resources")
 	r.err = client.ListStreamsPages(&kinesis.ListStreamsInput{}, func(page *kinesis.ListStreamsOutput, lastPage bool) bool {
-		logDebug("Listing KinesisStream resources page")
 		for _, resource := range page.StreamNames {
 			logDebug("Got KinesisStream resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
@@ -28,8 +28,8 @@ func getKinesisStream(client *kinesis.Kinesis) (r resourceSliceError) {
 }
 
 func getKinesisStreamConsumer(client *kinesis.Kinesis) (r resourceSliceError) {
+	logDebug("Listing KinesisStreamConsumer resources")
 	r.err = client.ListStreamConsumersPages(&kinesis.ListStreamConsumersInput{}, func(page *kinesis.ListStreamConsumersOutput, lastPage bool) bool {
-		logDebug("Listing KinesisStreamConsumer resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Consumers {
 			logDebug("Got KinesisStreamConsumer resource with PhysicalResourceId", *resource.ConsumerName)
 			r.resources = append(r.resources, *resource.ConsumerName)

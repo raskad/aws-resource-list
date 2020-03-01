@@ -15,8 +15,8 @@ func getWorkSpaces(session *session.Session) (resources resourceMap) {
 }
 
 func getWorkSpacesWorkspace(client *workspaces.WorkSpaces) (r resourceSliceError) {
+	logDebug("Listing WorkSpacesWorkspace resources")
 	r.err = client.DescribeWorkspacesPages(&workspaces.DescribeWorkspacesInput{}, func(page *workspaces.DescribeWorkspacesOutput, lastPage bool) bool {
-		logDebug("List WorkSpacesWorkspace resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Workspaces {
 			logDebug("Got WorkSpacesWorkspace resource with PhysicalResourceId", *resource.WorkspaceId)
 			r.resources = append(r.resources, *resource.WorkspaceId)

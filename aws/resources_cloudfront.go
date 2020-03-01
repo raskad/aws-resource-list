@@ -17,8 +17,8 @@ func getCloudfront(session *session.Session) (resources resourceMap) {
 }
 
 func getCloudFrontCloudFrontOriginAccessIdentity(client *cloudfront.CloudFront) (r resourceSliceError) {
+	logDebug("Listing CloudFrontCloudFrontOriginAccessIdentity resources")
 	r.err = client.ListCloudFrontOriginAccessIdentitiesPages(&cloudfront.ListCloudFrontOriginAccessIdentitiesInput{}, func(page *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, lastPage bool) bool {
-		logDebug("Listing CloudFrontCloudFrontOriginAccessIdentity resources page. Remaining pages", page.CloudFrontOriginAccessIdentityList.NextMarker)
 		for _, resource := range page.CloudFrontOriginAccessIdentityList.Items {
 			logDebug("Got CloudFrontCloudFrontOriginAccessIdentity resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
@@ -29,8 +29,8 @@ func getCloudFrontCloudFrontOriginAccessIdentity(client *cloudfront.CloudFront) 
 }
 
 func getCloudFrontDistribution(client *cloudfront.CloudFront) (r resourceSliceError) {
+	logDebug("Listing CloudFrontDistribution resources")
 	r.err = client.ListDistributionsPages(&cloudfront.ListDistributionsInput{}, func(page *cloudfront.ListDistributionsOutput, lastPage bool) bool {
-		logDebug("Listing CloudFrontDistribution resources page. Remaining pages", page.DistributionList.NextMarker)
 		for _, resource := range page.DistributionList.Items {
 			logDebug("Got CloudFrontDistribution resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)
@@ -41,8 +41,8 @@ func getCloudFrontDistribution(client *cloudfront.CloudFront) (r resourceSliceEr
 }
 
 func getCloudFrontStreamingDistribution(client *cloudfront.CloudFront) (r resourceSliceError) {
+	logDebug("Listing CloudFrontStreamingDistribution resources")
 	r.err = client.ListStreamingDistributionsPages(&cloudfront.ListStreamingDistributionsInput{}, func(page *cloudfront.ListStreamingDistributionsOutput, lastPage bool) bool {
-		logDebug("Listing CloudFrontStreamingDistribution resources page. Remaining pages", page.StreamingDistributionList.NextMarker)
 		for _, resource := range page.StreamingDistributionList.Items {
 			logDebug("Got CloudFrontStreamingDistribution resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)

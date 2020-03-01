@@ -16,6 +16,7 @@ func getAppSync(session *session.Session) (resources resourceMap) {
 }
 
 func getAppSyncGraphQLApi(client *appsync.AppSync) (r resourceSliceError) {
+	logDebug("Listing AppSyncGraphQLApi resources")
 	input := appsync.ListGraphqlApisInput{}
 	for {
 		page, err := client.ListGraphqlApis(&input)
@@ -23,7 +24,6 @@ func getAppSyncGraphQLApi(client *appsync.AppSync) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing AppSyncGraphQLApi resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.GraphqlApis {
 			logDebug("Got AppSyncGraphQLApi resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

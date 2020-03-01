@@ -16,8 +16,8 @@ func getDataPipeline(session *session.Session) (resources resourceMap) {
 }
 
 func getDataPipelinePipeline(client *datapipeline.DataPipeline) (r resourceSliceError) {
+	logDebug("Listing DataPipelinePipeline resources")
 	r.err = client.ListPipelinesPages(&datapipeline.ListPipelinesInput{}, func(page *datapipeline.ListPipelinesOutput, lastPage bool) bool {
-		logDebug("Listing DataPipelinePipeline resources page. Remaining pages", page.Marker)
 		for _, resource := range page.PipelineIdList {
 			logDebug("Got DataPipelinePipeline resource with PhysicalResourceId", *resource.Id)
 			r.resources = append(r.resources, *resource.Id)

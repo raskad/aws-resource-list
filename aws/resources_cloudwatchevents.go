@@ -16,6 +16,7 @@ func getCloudWatchEvents(session *session.Session) (resources resourceMap) {
 }
 
 func getEventsEventBus(client *cloudwatchevents.CloudWatchEvents) (r resourceSliceError) {
+	logDebug("Listing EventsEventBus resources")
 	input := cloudwatchevents.ListEventBusesInput{}
 	for {
 		page, err := client.ListEventBuses(&input)
@@ -23,7 +24,6 @@ func getEventsEventBus(client *cloudwatchevents.CloudWatchEvents) (r resourceSli
 			r.err = err
 			return
 		}
-		logDebug("Listing EventsEventBus resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.EventBuses {
 			logDebug("Got EventsEventBus resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -36,6 +36,7 @@ func getEventsEventBus(client *cloudwatchevents.CloudWatchEvents) (r resourceSli
 }
 
 func getEventsRule(client *cloudwatchevents.CloudWatchEvents) (r resourceSliceError) {
+	logDebug("Listing EventsRule resources")
 	input := cloudwatchevents.ListRulesInput{}
 	for {
 		page, err := client.ListRules(&input)
@@ -43,7 +44,6 @@ func getEventsRule(client *cloudwatchevents.CloudWatchEvents) (r resourceSliceEr
 			r.err = err
 			return
 		}
-		logDebug("Listing EventsRule resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Rules {
 			logDebug("Got EventsRule resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

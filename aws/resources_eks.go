@@ -16,8 +16,8 @@ func getEks(session *session.Session) (resources resourceMap) {
 }
 
 func getEksCluster(client *eks.EKS) (r resourceSliceError) {
+	logDebug("Listing EksCluster resources")
 	r.err = client.ListClustersPages(&eks.ListClustersInput{}, func(page *eks.ListClustersOutput, lastPage bool) bool {
-		logDebug("Listing EksCluster resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Clusters {
 			logDebug("Got EksCluster resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
@@ -28,8 +28,8 @@ func getEksCluster(client *eks.EKS) (r resourceSliceError) {
 }
 
 func getEksNodegroup(client *eks.EKS) (r resourceSliceError) {
+	logDebug("Listing EksNodegroup resources")
 	r.err = client.ListNodegroupsPages(&eks.ListNodegroupsInput{}, func(page *eks.ListNodegroupsOutput, lastPage bool) bool {
-		logDebug("Listing EksNodegroup resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Nodegroups {
 			logDebug("Got EksNodegroup resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)

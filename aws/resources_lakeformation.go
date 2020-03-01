@@ -15,8 +15,8 @@ func getLakeFormation(session *session.Session) (resources resourceMap) {
 }
 
 func getLakeFormationResource(client *lakeformation.LakeFormation) (r resourceSliceError) {
+	logDebug("Listing LakeFormationResource resources")
 	r.err = client.ListResourcesPages(&lakeformation.ListResourcesInput{}, func(page *lakeformation.ListResourcesOutput, lastPage bool) bool {
-		logDebug("Listing LakeFormationResource resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ResourceInfoList {
 			logDebug("Got LakeFormationResource resource with PhysicalResourceId", *resource.ResourceArn)
 			r.resources = append(r.resources, *resource.ResourceArn)

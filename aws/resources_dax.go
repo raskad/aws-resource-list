@@ -18,6 +18,7 @@ func getDAX(session *session.Session) (resources resourceMap) {
 }
 
 func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
+	logDebug("Listing DaxCluster resources")
 	input := dax.DescribeClustersInput{}
 	for {
 		page, err := client.DescribeClusters(&input)
@@ -25,7 +26,6 @@ func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing DaxCluster resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Clusters {
 			logDebug("Got DaxCluster resource with PhysicalResourceId", *resource.ClusterName)
 			r.resources = append(r.resources, *resource.ClusterName)
@@ -38,6 +38,7 @@ func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
 }
 
 func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
+	logDebug("Listing DaxParameterGroup resources")
 	input := dax.DescribeParameterGroupsInput{}
 	for {
 		page, err := client.DescribeParameterGroups(&input)
@@ -45,7 +46,6 @@ func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing DaxParameterGroup resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ParameterGroups {
 			logDebug("Got DaxParameterGroup resource with PhysicalResourceId", *resource.ParameterGroupName)
 			r.resources = append(r.resources, *resource.ParameterGroupName)
@@ -58,6 +58,7 @@ func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
 }
 
 func getDaxSubnetGroup(client *dax.DAX) (r resourceSliceError) {
+	logDebug("Listing DaxSubnetGroup resources")
 	input := dax.DescribeSubnetGroupsInput{}
 	for {
 		page, err := client.DescribeSubnetGroups(&input)
@@ -65,7 +66,6 @@ func getDaxSubnetGroup(client *dax.DAX) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing DaxSubnetGroup resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.SubnetGroups {
 			logDebug("Got DaxSubnetGroup resource with PhysicalResourceId", *resource.SubnetGroupName)
 			r.resources = append(r.resources, *resource.SubnetGroupName)

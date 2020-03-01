@@ -16,8 +16,8 @@ func getSns(session *session.Session) (resources resourceMap) {
 }
 
 func getSnsSubscription(client *sns.SNS) (r resourceSliceError) {
+	logDebug("Listing SnsSubscription resources")
 	r.err = client.ListSubscriptionsPages(&sns.ListSubscriptionsInput{}, func(page *sns.ListSubscriptionsOutput, lastPage bool) bool {
-		logDebug("Listing SnsSubscription resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Subscriptions {
 			logDebug("Got SnsSubscription resource with PhysicalResourceId", *resource.SubscriptionArn)
 			r.resources = append(r.resources, *resource.SubscriptionArn)
@@ -28,8 +28,8 @@ func getSnsSubscription(client *sns.SNS) (r resourceSliceError) {
 }
 
 func getSnsTopic(client *sns.SNS) (r resourceSliceError) {
+	logDebug("Listing SnsTopic resources")
 	r.err = client.ListTopicsPages(&sns.ListTopicsInput{}, func(page *sns.ListTopicsOutput, lastPage bool) bool {
-		logDebug("Listing SnsTopic resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Topics {
 			logDebug("Got SnsTopic resource with PhysicalResourceId", *resource.TopicArn)
 			r.resources = append(r.resources, *resource.TopicArn)

@@ -16,8 +16,8 @@ func getAcmpca(session *session.Session) (resources resourceMap) {
 }
 
 func getAcmpcaCertificateAuthority(client *acmpca.ACMPCA) (r resourceSliceError) {
+	logDebug("Listing AcmpcaCertificateAuthority resources")
 	r.err = client.ListCertificateAuthoritiesPages(&acmpca.ListCertificateAuthoritiesInput{}, func(page *acmpca.ListCertificateAuthoritiesOutput, lastPage bool) bool {
-		logDebug("Listing AcmpcaCertificateAuthority resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.CertificateAuthorities {
 			logDebug("Got AcmpcaCertificateAuthority resource with PhysicalResourceId", *resource.Arn)
 			r.resources = append(r.resources, *resource.Arn)

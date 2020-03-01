@@ -24,8 +24,8 @@ func getGlue(session *session.Session) (resources resourceMap) {
 }
 
 func getGlueConnection(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueConnection resources")
 	r.err = client.GetConnectionsPages(&glue.GetConnectionsInput{}, func(page *glue.GetConnectionsOutput, lastPage bool) bool {
-		logDebug("Listing GlueConnection resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ConnectionList {
 			logDebug("Got GlueConnection resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -36,8 +36,8 @@ func getGlueConnection(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueCrawler(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueCrawler resources")
 	r.err = client.GetCrawlersPages(&glue.GetCrawlersInput{}, func(page *glue.GetCrawlersOutput, lastPage bool) bool {
-		logDebug("Listing GlueCrawler resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Crawlers {
 			logDebug("Got GlueCrawler resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -48,8 +48,8 @@ func getGlueCrawler(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueDatabase(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueDatabase resources")
 	r.err = client.GetDatabasesPages(&glue.GetDatabasesInput{}, func(page *glue.GetDatabasesOutput, lastPage bool) bool {
-		logDebug("Listing GlueDatabase resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DatabaseList {
 			logDebug("Got GlueDatabase resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -60,8 +60,8 @@ func getGlueDatabase(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueDevEndpoint(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueDevEndpoint resources")
 	r.err = client.GetDevEndpointsPages(&glue.GetDevEndpointsInput{}, func(page *glue.GetDevEndpointsOutput, lastPage bool) bool {
-		logDebug("Listing GlueDevEndpoint resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DevEndpoints {
 			logDebug("Got GlueDevEndpoint resource with PhysicalResourceId", *resource.EndpointName)
 			r.resources = append(r.resources, *resource.EndpointName)
@@ -72,8 +72,8 @@ func getGlueDevEndpoint(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueJob(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueJob resources")
 	r.err = client.GetJobsPages(&glue.GetJobsInput{}, func(page *glue.GetJobsOutput, lastPage bool) bool {
-		logDebug("Listing GlueJob resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Jobs {
 			logDebug("Got GlueJob resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -84,8 +84,8 @@ func getGlueJob(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueMLTransform(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueMLTransform resources")
 	r.err = client.GetMLTransformsPages(&glue.GetMLTransformsInput{}, func(page *glue.GetMLTransformsOutput, lastPage bool) bool {
-		logDebug("Listing GlueMLTransform resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Transforms {
 			logDebug("Got GlueMLTransform resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -96,8 +96,8 @@ func getGlueMLTransform(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueSecurityConfiguration(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueSecurityConfiguration resources")
 	r.err = client.GetSecurityConfigurationsPages(&glue.GetSecurityConfigurationsInput{}, func(page *glue.GetSecurityConfigurationsOutput, lastPage bool) bool {
-		logDebug("Listing GlueSecurityConfiguration resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.SecurityConfigurations {
 			logDebug("Got GlueSecurityConfiguration resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -108,8 +108,8 @@ func getGlueSecurityConfiguration(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueTable(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueTable resources")
 	r.err = client.GetTablesPages(&glue.GetTablesInput{}, func(page *glue.GetTablesOutput, lastPage bool) bool {
-		logDebug("Listing GlueTable resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.TableList {
 			logDebug("Got GlueTable resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -120,8 +120,8 @@ func getGlueTable(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueTrigger(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueTrigger resources")
 	r.err = client.GetTriggersPages(&glue.GetTriggersInput{}, func(page *glue.GetTriggersOutput, lastPage bool) bool {
-		logDebug("Listing GlueTrigger resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Triggers {
 			logDebug("Got GlueTrigger resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -132,8 +132,8 @@ func getGlueTrigger(client *glue.Glue) (r resourceSliceError) {
 }
 
 func getGlueWorkflow(client *glue.Glue) (r resourceSliceError) {
+	logDebug("Listing GlueWorkflow resources")
 	r.err = client.ListWorkflowsPages(&glue.ListWorkflowsInput{}, func(page *glue.ListWorkflowsOutput, lastPage bool) bool {
-		logDebug("Listing GlueWorkflow resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Workflows {
 			logDebug("Got GlueWorkflow resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)

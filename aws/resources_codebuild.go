@@ -17,6 +17,7 @@ func getCodeBuild(session *session.Session) (resources resourceMap) {
 }
 
 func getCodeBuildProject(client *codebuild.CodeBuild) (r resourceSliceError) {
+	logDebug("Listing CodeBuildProject resources")
 	input := codebuild.ListProjectsInput{}
 	for {
 		page, err := client.ListProjects(&input)
@@ -24,7 +25,6 @@ func getCodeBuildProject(client *codebuild.CodeBuild) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing CodeBuildProject resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Projects {
 			logDebug("Got CodeBuildProject resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
@@ -37,6 +37,7 @@ func getCodeBuildProject(client *codebuild.CodeBuild) (r resourceSliceError) {
 }
 
 func getCodeBuildReportGroup(client *codebuild.CodeBuild) (r resourceSliceError) {
+	logDebug("Listing CodeBuildReportGroup resources")
 	input := codebuild.ListReportGroupsInput{}
 	for {
 		page, err := client.ListReportGroups(&input)
@@ -44,7 +45,6 @@ func getCodeBuildReportGroup(client *codebuild.CodeBuild) (r resourceSliceError)
 			r.err = err
 			return
 		}
-		logDebug("Listing CodeBuildReportGroup resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ReportGroups {
 			logDebug("Got CodeBuildReportGroup resource with PhysicalResourceId", *resource)
 			r.resources = append(r.resources, *resource)
@@ -57,13 +57,13 @@ func getCodeBuildReportGroup(client *codebuild.CodeBuild) (r resourceSliceError)
 }
 
 func getCodeBuildSourceCredential(client *codebuild.CodeBuild) (r resourceSliceError) {
+	logDebug("Listing CodeBuildSourceCredential resources")
 	input := codebuild.ListSourceCredentialsInput{}
 	page, err := client.ListSourceCredentials(&input)
 	if err != nil {
 		r.err = err
 		return
 	}
-	logDebug("Listing CodeBuildSourceCredential resources.")
 	for _, resource := range page.SourceCredentialsInfos {
 		logDebug("Got CodeBuildSourceCredential resource with PhysicalResourceId", *resource.Arn)
 		r.resources = append(r.resources, *resource.Arn)

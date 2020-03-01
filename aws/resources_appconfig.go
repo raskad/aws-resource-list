@@ -17,8 +17,8 @@ func getAppConfig(session *session.Session) (resources resourceMap) {
 }
 
 func getAppConfigApplication(client *appconfig.AppConfig) (r resourceSliceError) {
+	logDebug("Listing AppConfigApplication resources")
 	r.err = client.ListApplicationsPages(&appconfig.ListApplicationsInput{}, func(page *appconfig.ListApplicationsOutput, lastPage bool) bool {
-		logDebug("Listing AppConfigApplication resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Items {
 			logDebug("Got AppConfigApplication resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
@@ -29,8 +29,8 @@ func getAppConfigApplication(client *appconfig.AppConfig) (r resourceSliceError)
 }
 
 func getAppConfigDeploymentStrategy(client *appconfig.AppConfig) (r resourceSliceError) {
+	logDebug("Listing AppConfigDeploymentStrategy resources")
 	r.err = client.ListDeploymentStrategiesPages(&appconfig.ListDeploymentStrategiesInput{}, func(page *appconfig.ListDeploymentStrategiesOutput, lastPage bool) bool {
-		logDebug("Listing AppConfigDeploymentStrategy resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Items {
 			logDebug("Got AppConfigDeploymentStrategy resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

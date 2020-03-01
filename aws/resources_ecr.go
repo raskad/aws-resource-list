@@ -15,8 +15,8 @@ func getEcr(session *session.Session) (resources resourceMap) {
 }
 
 func getEcrRepository(client *ecr.ECR) (r resourceSliceError) {
+	logDebug("Listing EcrRepository resources")
 	r.err = client.DescribeRepositoriesPages(&ecr.DescribeRepositoriesInput{}, func(page *ecr.DescribeRepositoriesOutput, lastPage bool) bool {
-		logDebug("Listing EcrRepository resources page. Remaining pages", page.Repositories)
 		for _, resource := range page.Repositories {
 			logDebug("Got EcrRepository resource with PhysicalResourceId", *resource.RepositoryName)
 			r.resources = append(r.resources, *resource.RepositoryName)

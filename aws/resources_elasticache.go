@@ -19,8 +19,8 @@ func getElasticache(session *session.Session) (resources resourceMap) {
 }
 
 func getElastiCacheCacheCluster(client *elasticache.ElastiCache) (r resourceSliceError) {
+	logDebug("Listing ElastiCacheCacheCluster resources")
 	r.err = client.DescribeCacheClustersPages(&elasticache.DescribeCacheClustersInput{}, func(page *elasticache.DescribeCacheClustersOutput, lastPage bool) bool {
-		logDebug("Listing ElastiCacheCacheCluster resources page. Remaining pages", page.Marker)
 		for _, resource := range page.CacheClusters {
 			logDebug("Got ElastiCacheCacheCluster resource with PhysicalResourceId", *resource.CacheClusterId)
 			r.resources = append(r.resources, *resource.CacheClusterId)
@@ -31,8 +31,8 @@ func getElastiCacheCacheCluster(client *elasticache.ElastiCache) (r resourceSlic
 }
 
 func getElastiCacheParameterGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
+	logDebug("Listing ElastiCacheParameterGroup resources")
 	r.err = client.DescribeCacheParameterGroupsPages(&elasticache.DescribeCacheParameterGroupsInput{}, func(page *elasticache.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
-		logDebug("Listing ElastiCacheParameterGroup resources page. Remaining pages", page.Marker)
 		for _, resource := range page.CacheParameterGroups {
 			logDebug("Got ElastiCacheParameterGroup resource with PhysicalResourceId", *resource.CacheParameterGroupName)
 			r.resources = append(r.resources, *resource.CacheParameterGroupName)
@@ -43,8 +43,8 @@ func getElastiCacheParameterGroup(client *elasticache.ElastiCache) (r resourceSl
 }
 
 func getElastiCacheReplicationGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
+	logDebug("Listing ElastiCacheReplicationGroup resources")
 	r.err = client.DescribeReplicationGroupsPages(&elasticache.DescribeReplicationGroupsInput{}, func(page *elasticache.DescribeReplicationGroupsOutput, lastPage bool) bool {
-		logDebug("Listing ElastiCacheReplicationGroup resources page. Remaining pages", page.Marker)
 		for _, resource := range page.ReplicationGroups {
 			logDebug("Got ElastiCacheReplicationGroup resource with PhysicalResourceId", *resource.ReplicationGroupId)
 			r.resources = append(r.resources, *resource.ReplicationGroupId)
@@ -55,8 +55,8 @@ func getElastiCacheReplicationGroup(client *elasticache.ElastiCache) (r resource
 }
 
 func getElastiCacheSecurityGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
+	logDebug("Listing ElastiCacheSecurityGroup resources")
 	r.err = client.DescribeCacheSecurityGroupsPages(&elasticache.DescribeCacheSecurityGroupsInput{}, func(page *elasticache.DescribeCacheSecurityGroupsOutput, lastPage bool) bool {
-		logDebug("Listing ElastiCacheSecurityGroup resources page. Remaining pages", page.Marker)
 		for _, resource := range page.CacheSecurityGroups {
 			logDebug("Got ElastiCacheSecurityGroup resource with PhysicalResourceId", *resource.CacheSecurityGroupName)
 			r.resources = append(r.resources, *resource.CacheSecurityGroupName)
@@ -67,8 +67,8 @@ func getElastiCacheSecurityGroup(client *elasticache.ElastiCache) (r resourceSli
 }
 
 func getElastiCacheSubnetGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
+	logDebug("Listing ElastiCacheSubnetGroup resources")
 	r.err = client.DescribeCacheSubnetGroupsPages(&elasticache.DescribeCacheSubnetGroupsInput{}, func(page *elasticache.DescribeCacheSubnetGroupsOutput, lastPage bool) bool {
-		logDebug("Listing ElastiCacheSubnetGroup resources page. Remaining pages", page.Marker)
 		for _, resource := range page.CacheSubnetGroups {
 			logDebug("Got ElastiCacheSubnetGroup resource with PhysicalResourceId", *resource.CacheSubnetGroupName)
 			r.resources = append(r.resources, *resource.CacheSubnetGroupName)

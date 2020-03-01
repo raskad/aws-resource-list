@@ -16,7 +16,7 @@ func getS3(session *session.Session) (resources resourceMap) {
 }
 
 func getS3Bucket(client *s3.S3) (r resourceSliceError) {
-	logInfo("Start fetching S3Bucket resources")
+	logDebug("Listing S3Bucket resources")
 	buckets, err := client.ListBuckets(&s3.ListBucketsInput{})
 	for _, resource := range buckets.Buckets {
 		logDebug("Got S3Bucket resource with PhysicalResourceId", *resource.Name)

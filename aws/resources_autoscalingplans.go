@@ -15,6 +15,7 @@ func getAutoScalingPlans(session *session.Session) (resources resourceMap) {
 }
 
 func getAutoScalingPlansScalingPlan(client *autoscalingplans.AutoScalingPlans) (r resourceSliceError) {
+	logDebug("Listing AutoScalingPlansScalingPlan resources")
 	input := autoscalingplans.DescribeScalingPlansInput{}
 	for {
 		page, err := client.DescribeScalingPlans(&input)
@@ -22,7 +23,6 @@ func getAutoScalingPlansScalingPlan(client *autoscalingplans.AutoScalingPlans) (
 			r.err = err
 			return
 		}
-		logDebug("Listing AutoScalingPlansScalingPlan resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.ScalingPlans {
 			logDebug("Got AutoScalingPlansScalingPlan resource with PhysicalResourceId", *resource.ScalingPlanName)
 			r.resources = append(r.resources, *resource.ScalingPlanName)

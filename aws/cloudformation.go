@@ -27,7 +27,7 @@ func getCloudForamtionState(session *session.Session) (resources resourceMap, er
 }
 
 func getCloudformationActiveStackIDs(client *cloudformation.CloudFormation) (stackIDs []*string, err error) {
-	logInfo("Start fetching all active cloudformation stacks")
+	logDebug("Listing CloudformationActiveStackID resources")
 	err = client.ListStacksPages(&cloudformation.ListStacksInput{
 		StackStatusFilter: aws.StringSlice([]string{
 			"CREATE_FAILED",
@@ -52,10 +52,9 @@ func getCloudformationActiveStackIDs(client *cloudformation.CloudFormation) (sta
 			"IMPORT_ROLLBACK_COMPLETE",
 		})},
 		func(page *cloudformation.ListStacksOutput, lastPage bool) bool {
-			logDebug("List cloudformation stacks page. Remaining pages", page.NextToken)
-			for _, s := range page.StackSummaries {
-				logDebug("Got cloudformation stack with id", s.StackId)
-				stackIDs = append(stackIDs, (s.StackId))
+			for _, resource := range page.StackSummaries {
+				logDebug("Got CloudformationActiveStackID resource with PhysicalResourceId", *resource.StackId)
+				stackIDs = append(stackIDs, (resource.StackId))
 			}
 			return true
 		})
@@ -66,16 +65,15 @@ func getCloudformationActiveStackIDs(client *cloudformation.CloudFormation) (sta
 }
 
 func getCloudformationResources(client *cloudformation.CloudFormation, stackIDs []*string) (resources map[string][]string, err error) {
+	logDebug("Listing CloudformationResources resources")
 	resources = make(map[string][]string)
 	for _, stackID := range stackIDs {
-		logInfo("Start fetching cloudformation resources for stackID", *stackID)
 		err := client.ListStackResourcesPages(&cloudformation.ListStackResourcesInput{
 			StackName: stackID,
 		},
 			func(page *cloudformation.ListStackResourcesOutput, lastPage bool) bool {
-				logDebug("List cloudformation resources page. Remaining pages", page.NextToken)
 				for _, resource := range page.StackResourceSummaries {
-					logDebug("Got cloudformation resource with ResourceType", *resource.ResourceType, "and PhysicalResourceId", resource.ResourceType)
+					logDebug("Got cloudformation resource with ResourceType", *resource.ResourceType, "and PhysicalResourceId", *resource.PhysicalResourceId)
 					resources[*resource.ResourceType] = append(resources[*resource.ResourceType], *resource.PhysicalResourceId)
 				}
 				return true

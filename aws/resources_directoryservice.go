@@ -17,6 +17,7 @@ func getDirectoryService(session *session.Session) (resources resourceMap) {
 }
 
 func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (r resourceSliceError) {
+	logDebug("Listing DirectoryServiceMicrosoftAD resources")
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
 		page, err := client.DescribeDirectories(&input)
@@ -24,7 +25,6 @@ func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (
 			r.err = err
 			return
 		}
-		logDebug("Listing DirectoryServiceMicrosoftAD resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DirectoryDescriptions {
 			if *resource.Type == directoryservice.DirectoryTypeMicrosoftAd {
 				logDebug("Got DirectoryServiceMicrosoftAD resource with PhysicalResourceId", *resource.DirectoryId)
@@ -39,6 +39,7 @@ func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (
 }
 
 func getDirectoryServiceSimpleAD(client *directoryservice.DirectoryService) (r resourceSliceError) {
+	logDebug("Listing DirectoryServiceMicrosoftAD resources")
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
 		page, err := client.DescribeDirectories(&input)
@@ -46,7 +47,6 @@ func getDirectoryServiceSimpleAD(client *directoryservice.DirectoryService) (r r
 			r.err = err
 			return
 		}
-		logDebug("Listing DirectoryServiceMicrosoftAD resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DirectoryDescriptions {
 			if *resource.Type == directoryservice.DirectoryTypeSimpleAd {
 				logDebug("Got DirectoryServiceMicrosoftAD resource with PhysicalResourceId", *resource.DirectoryId)

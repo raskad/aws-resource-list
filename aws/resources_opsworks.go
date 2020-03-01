@@ -20,7 +20,7 @@ func getOpsWorks(session *session.Session) (resources resourceMap) {
 }
 
 func getOpsWorksApp(client *opsworks.OpsWorks) (r resourceSliceError) {
-	logInfo("Start fetching OpsWorksApp resources")
+	logDebug("Listing OpsWorksApp resources")
 	output, err := client.DescribeApps(&opsworks.DescribeAppsInput{})
 	if err != nil {
 		r.err = err
@@ -34,7 +34,7 @@ func getOpsWorksApp(client *opsworks.OpsWorks) (r resourceSliceError) {
 }
 
 func getOpsWorksInstance(client *opsworks.OpsWorks) (r resourceSliceError) {
-	logInfo("Start fetching OpsWorksInstance resources")
+	logDebug("Listing OpsWorksInstance resources")
 	output, err := client.DescribeInstances(&opsworks.DescribeInstancesInput{})
 	if err != nil {
 		r.err = err
@@ -48,7 +48,7 @@ func getOpsWorksInstance(client *opsworks.OpsWorks) (r resourceSliceError) {
 }
 
 func getOpsWorksLayer(client *opsworks.OpsWorks) (r resourceSliceError) {
-	logInfo("Start fetching OpsWorksLayer resources")
+	logDebug("Listing OpsWorksLayer resources")
 	output, err := client.DescribeLayers(&opsworks.DescribeLayersInput{})
 	if err != nil {
 		r.err = err
@@ -62,7 +62,7 @@ func getOpsWorksLayer(client *opsworks.OpsWorks) (r resourceSliceError) {
 }
 
 func getOpsWorksStack(client *opsworks.OpsWorks) (r resourceSliceError) {
-	logInfo("Start fetching OpsWorksStack resources")
+	logDebug("Listing OpsWorksStack resources")
 	output, err := client.DescribeStacks(&opsworks.DescribeStacksInput{})
 	if err != nil {
 		r.err = err
@@ -76,7 +76,7 @@ func getOpsWorksStack(client *opsworks.OpsWorks) (r resourceSliceError) {
 }
 
 func getOpsWorksUserProfile(client *opsworks.OpsWorks) (r resourceSliceError) {
-	logInfo("Start fetching OpsWorksUserProfile resources")
+	logDebug("Listing OpsWorksUserProfile resources")
 	output, err := client.DescribeUserProfiles(&opsworks.DescribeUserProfilesInput{})
 	if err != nil {
 		r.err = err
@@ -90,7 +90,7 @@ func getOpsWorksUserProfile(client *opsworks.OpsWorks) (r resourceSliceError) {
 }
 
 func getOpsWorksVolume(client *opsworks.OpsWorks) (r resourceSliceError) {
-	logInfo("Start fetching OpsWorksVolume resources")
+	logDebug("Listing OpsWorksVolume resources")
 	output, err := client.DescribeVolumes(&opsworks.DescribeVolumesInput{})
 	if err != nil {
 		r.err = err

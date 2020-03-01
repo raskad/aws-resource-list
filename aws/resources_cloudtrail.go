@@ -15,8 +15,8 @@ func getCloudTrail(session *session.Session) (resources resourceMap) {
 }
 
 func getCloudTrailTrail(client *cloudtrail.CloudTrail) (r resourceSliceError) {
+	logDebug("Listing CloudTrailTrail resources")
 	r.err = client.ListTrailsPages(&cloudtrail.ListTrailsInput{}, func(page *cloudtrail.ListTrailsOutput, lastPage bool) bool {
-		logDebug("List CloudTrailTrail resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Trails {
 			logDebug("Got CloudTrailTrail resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

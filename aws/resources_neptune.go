@@ -19,6 +19,7 @@ func getNeptune(session *session.Session) (resources resourceMap) {
 }
 
 func getNeptuneDBCluster(client *neptune.Neptune) (r resourceSliceError) {
+	logDebug("Listing NeptuneDBCluster resources")
 	input := neptune.DescribeDBClustersInput{}
 	for {
 		page, err := client.DescribeDBClusters(&input)
@@ -26,7 +27,6 @@ func getNeptuneDBCluster(client *neptune.Neptune) (r resourceSliceError) {
 			r.err = err
 			return
 		}
-		logDebug("Listing NeptuneDBCluster resources page. Remaining pages", page.Marker)
 		for _, resource := range page.DBClusters {
 			logDebug("Got NeptuneDBCluster resource with PhysicalResourceId", *resource.DBClusterIdentifier)
 			r.resources = append(r.resources, *resource.DBClusterIdentifier)
@@ -39,6 +39,7 @@ func getNeptuneDBCluster(client *neptune.Neptune) (r resourceSliceError) {
 }
 
 func getNeptuneDBClusterParameterGroup(client *neptune.Neptune) (r resourceSliceError) {
+	logDebug("Listing NeptuneDBClusterParameterGroup resources")
 	input := neptune.DescribeDBClusterParameterGroupsInput{}
 	for {
 		page, err := client.DescribeDBClusterParameterGroups(&input)
@@ -46,7 +47,6 @@ func getNeptuneDBClusterParameterGroup(client *neptune.Neptune) (r resourceSlice
 			r.err = err
 			return
 		}
-		logDebug("Listing NeptuneDBClusterParameterGroup resources page. Remaining pages", page.Marker)
 		for _, resource := range page.DBClusterParameterGroups {
 			logDebug("Got NeptuneDBClusterParameterGroup resource with PhysicalResourceId", *resource.DBClusterParameterGroupName)
 			r.resources = append(r.resources, *resource.DBClusterParameterGroupName)
@@ -59,8 +59,8 @@ func getNeptuneDBClusterParameterGroup(client *neptune.Neptune) (r resourceSlice
 }
 
 func getNeptuneDBInstance(client *neptune.Neptune) (r resourceSliceError) {
+	logDebug("Listing NeptuneDBInstance resources")
 	r.err = client.DescribeDBInstancesPages(&neptune.DescribeDBInstancesInput{}, func(page *neptune.DescribeDBInstancesOutput, lastPage bool) bool {
-		logDebug("Listing NeptuneDBInstance resources page. Remaining pages", page.Marker)
 		for _, resource := range page.DBInstances {
 			logDebug("Got NeptuneDBInstance resource with PhysicalResourceId", *resource.DBInstanceIdentifier)
 			r.resources = append(r.resources, *resource.DBInstanceIdentifier)
@@ -71,8 +71,8 @@ func getNeptuneDBInstance(client *neptune.Neptune) (r resourceSliceError) {
 }
 
 func getNeptuneDBParameterGroup(client *neptune.Neptune) (r resourceSliceError) {
+	logDebug("Listing NeptuneDBParameterGroup resources")
 	r.err = client.DescribeDBParameterGroupsPages(&neptune.DescribeDBParameterGroupsInput{}, func(page *neptune.DescribeDBParameterGroupsOutput, lastPage bool) bool {
-		logDebug("Listing NeptuneDBParameterGroup resources page. Remaining pages", page.Marker)
 		for _, resource := range page.DBParameterGroups {
 			logDebug("Got NeptuneDBParameterGroup resource with PhysicalResourceId", *resource.DBParameterGroupName)
 			r.resources = append(r.resources, *resource.DBParameterGroupName)
@@ -83,8 +83,8 @@ func getNeptuneDBParameterGroup(client *neptune.Neptune) (r resourceSliceError) 
 }
 
 func getNeptuneDBSubnetGroup(client *neptune.Neptune) (r resourceSliceError) {
+	logDebug("Listing NeptuneDBSubnetGroup resources")
 	r.err = client.DescribeDBSubnetGroupsPages(&neptune.DescribeDBSubnetGroupsInput{}, func(page *neptune.DescribeDBSubnetGroupsOutput, lastPage bool) bool {
-		logDebug("Listing NeptuneDBSubnetGroup resources page. Remaining pages", page.Marker)
 		for _, resource := range page.DBSubnetGroups {
 			logDebug("Got NeptuneDBSubnetGroup resource with PhysicalResourceId", *resource.DBSubnetGroupName)
 			r.resources = append(r.resources, *resource.DBSubnetGroupName)

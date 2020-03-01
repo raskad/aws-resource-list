@@ -15,8 +15,8 @@ func getQLDB(session *session.Session) (resources resourceMap) {
 }
 
 func getQLDBLedger(client *qldb.QLDB) (r resourceSliceError) {
+	logDebug("Listing QLDBLedger resources")
 	r.err = client.ListLedgersPages(&qldb.ListLedgersInput{}, func(page *qldb.ListLedgersOutput, lastPage bool) bool {
-		logDebug("Listing QLDBLedger resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.Ledgers {
 			logDebug("Got QLDBLedger resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)

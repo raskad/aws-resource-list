@@ -17,8 +17,8 @@ func getCloudWatch(session *session.Session) (resources resourceMap) {
 }
 
 func getCloudWatchAlarm(client *cloudwatch.CloudWatch) (r resourceSliceError) {
+	logDebug("Listing CloudWatchAlarm resources")
 	r.err = client.DescribeAlarmsPages(&cloudwatch.DescribeAlarmsInput{}, func(page *cloudwatch.DescribeAlarmsOutput, lastPage bool) bool {
-		logDebug("Listing CloudWatchAlarm resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.MetricAlarms {
 			logDebug("Got CloudWatchAlarm resource with PhysicalResourceId", *resource.AlarmName)
 			r.resources = append(r.resources, *resource.AlarmName)
@@ -29,8 +29,8 @@ func getCloudWatchAlarm(client *cloudwatch.CloudWatch) (r resourceSliceError) {
 }
 
 func getCloudWatchDashboard(client *cloudwatch.CloudWatch) (r resourceSliceError) {
+	logDebug("Listing CloudWatchDashboard resources")
 	r.err = client.ListDashboardsPages(&cloudwatch.ListDashboardsInput{}, func(page *cloudwatch.ListDashboardsOutput, lastPage bool) bool {
-		logDebug("Listing CloudWatchDashboard resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.DashboardEntries {
 			logDebug("Got CloudWatchDashboard resource with PhysicalResourceId", *resource.DashboardName)
 			r.resources = append(r.resources, *resource.DashboardName)
@@ -41,8 +41,8 @@ func getCloudWatchDashboard(client *cloudwatch.CloudWatch) (r resourceSliceError
 }
 
 func getCloudWatchInsightRule(client *cloudwatch.CloudWatch) (r resourceSliceError) {
+	logDebug("Listing CloudWatchInsightRule resources")
 	r.err = client.DescribeInsightRulesPages(&cloudwatch.DescribeInsightRulesInput{}, func(page *cloudwatch.DescribeInsightRulesOutput, lastPage bool) bool {
-		logDebug("Listing CloudWatchInsightRule resources page. Remaining pages", page.NextToken)
 		for _, resource := range page.InsightRules {
 			logDebug("Got CloudWatchInsightRule resource with PhysicalResourceId", *resource.Name)
 			r.resources = append(r.resources, *resource.Name)
