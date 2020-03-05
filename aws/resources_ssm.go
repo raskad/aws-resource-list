@@ -1,18 +1,23 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ssm"
 )
 
 func getSsm(session *session.Session) (resources resourceMap) {
 	client := ssm.New(session)
+
+	ssmMaintenanceWindowResourceMap := getSsmMaintenanceWindow(client).unwrap(ssmMaintenanceWindow)
+	ssmMaintenanceWindowIDs := ssmMaintenanceWindowResourceMap[ssmMaintenanceWindow]
+
 	resources = reduce(
 		getSsmAssociation(client).unwrap(ssmAssociation),
 		getSsmDocument(client).unwrap(ssmDocument),
-		getSsmMaintenanceWindow(client).unwrap(ssmMaintenanceWindow),
-		getSsmMaintenanceWindowTarget(client).unwrap(ssmMaintenanceWindowTarget),
-		getSsmMaintenanceWindowTask(client).unwrap(ssmMaintenanceWindowTask),
+		ssmMaintenanceWindowResourceMap,
+		getSsmMaintenanceWindowTarget(client, ssmMaintenanceWindowIDs).unwrap(ssmMaintenanceWindowTarget),
+		getSsmMaintenanceWindowTask(client, ssmMaintenanceWindowIDs).unwrap(ssmMaintenanceWindowTask),
 		getSsmParameter(client).unwrap(ssmParameter),
 		getSsmPatchBaseline(client).unwrap(ssmPatchBaseline),
 	)
@@ -57,40 +62,50 @@ func getSsmMaintenanceWindow(client *ssm.SSM) (r resourceSliceError) {
 	}
 }
 
-func getSsmMaintenanceWindowTarget(client *ssm.SSM) (r resourceSliceError) {
-	input := ssm.DescribeMaintenanceWindowTargetsInput{}
-	for {
-		page, err := client.DescribeMaintenanceWindowTargets(&input)
-		if err != nil {
-			r.err = err
-			return
+func getSsmMaintenanceWindowTarget(client *ssm.SSM, windowIDs []string) (r resourceSliceError) {
+	for _, windowID := range windowIDs {
+		input := ssm.DescribeMaintenanceWindowTargetsInput{
+			WindowId: aws.String(windowID),
 		}
-		for _, resource := range page.Targets {
-			r.resources = append(r.resources, *resource.WindowTargetId)
+		for {
+			page, err := client.DescribeMaintenanceWindowTargets(&input)
+			if err != nil {
+				r.err = err
+				return
+			}
+			for _, resource := range page.Targets {
+				r.resources = append(r.resources, *resource.WindowTargetId)
+			}
+			if page.NextToken == nil {
+				return
+			}
+			input.NextToken = page.NextToken
 		}
-		if page.NextToken == nil {
-			return
-		}
-		input.NextToken = page.NextToken
 	}
+	return
 }
 
-func getSsmMaintenanceWindowTask(client *ssm.SSM) (r resourceSliceError) {
-	input := ssm.DescribeMaintenanceWindowTasksInput{}
-	for {
-		page, err := client.DescribeMaintenanceWindowTasks(&input)
-		if err != nil {
-			r.err = err
-			return
+func getSsmMaintenanceWindowTask(client *ssm.SSM, windowIDs []string) (r resourceSliceError) {
+	for _, windowID := range windowIDs {
+		input := ssm.DescribeMaintenanceWindowTasksInput{
+			WindowId: aws.String(windowID),
 		}
-		for _, resource := range page.Tasks {
-			r.resources = append(r.resources, *resource.Name)
+		for {
+			page, err := client.DescribeMaintenanceWindowTasks(&input)
+			if err != nil {
+				r.err = err
+				return
+			}
+			for _, resource := range page.Tasks {
+				r.resources = append(r.resources, *resource.Name)
+			}
+			if page.NextToken == nil {
+				return
+			}
+			input.NextToken = page.NextToken
 		}
-		if page.NextToken == nil {
-			return
-		}
-		input.NextToken = page.NextToken
 	}
+	return
 }
 
 func getSsmParameter(client *ssm.SSM) (r resourceSliceError) {

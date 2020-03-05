@@ -172,7 +172,7 @@ serviceDiscoveryPublicDNSNamespace:
   cloudformation: AWS::ServiceDiscovery::PublicDnsNamespace
 serviceDiscoveryService:
   implemented: true
-  identifier: Name
+  identifier: Id
   cloudformation: AWS::ServiceDiscovery::Service
 cloudTrailTrail:
   implemented: true
@@ -198,10 +198,6 @@ logsLogGroup:
   implemented: true
   identifier: Name
   cloudformation: AWS::Logs::LogGroup
-logsLogStream:
-  implemented: true
-  identifier: Name
-  cloudformation: AWS::Logs::LogStream
 logsMetricFilter:
   implemented: true
   identifier: Name
@@ -260,7 +256,7 @@ cognitoIdentityPool:
   cloudformation: AWS::Cognito::IdentityPool
 cognitoUserPool:
   implemented: true
-  identifier: Name
+  identifier: Id
   cloudformation: AWS::Cognito::UserPool
 cognitoUserPoolClient:
   implemented: true
@@ -288,7 +284,7 @@ configAggregationAuthorization:
   cloudformation: AWS::Config::AggregationAuthorization
 configConfigRule:
   implemented: true
-  identifier: Id
+  identifier: Name
   cloudformation: AWS::Config::ConfigRule
 configConfigurationAggregator:
   implemented: true
@@ -644,7 +640,7 @@ elasticLoadBalancingV2ListenerRule:
   cloudformation: AWS::ElasticLoadBalancingV2::ListenerRule
 elasticLoadBalancingV2LoadBalancer:
   implemented: true
-  identifier: Name
+  identifier: Arn
   cloudformation: AWS::ElasticLoadBalancingV2::LoadBalancer
 elasticLoadBalancingV2TargetGroup:
   implemented: true
@@ -896,7 +892,7 @@ greengrassSubscriptionDefinitionVersion:
   cloudformation: AWS::Greengrass::SubscriptionDefinitionVersion
 kinesisStream:
   implemented: true
-  identifier: Name
+  identifier: Arn
   cloudformation: AWS::Kinesis::Stream
 kinesisStreamConsumer:
   implemented: true

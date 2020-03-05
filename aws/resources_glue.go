@@ -1,21 +1,26 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/glue"
 )
 
 func getGlue(session *session.Session) (resources resourceMap) {
 	client := glue.New(session)
+
+	glueDatabaseResourceMap := getGlueDatabase(client).unwrap(glueDatabase)
+	glueDatabaseNames := glueDatabaseResourceMap[glueDatabase]
+
 	resources = reduce(
 		getGlueConnection(client).unwrap(glueConnection),
 		getGlueCrawler(client).unwrap(glueCrawler),
-		getGlueDatabase(client).unwrap(glueDatabase),
+		glueDatabaseResourceMap,
 		getGlueDevEndpoint(client).unwrap(glueDevEndpoint),
 		getGlueJob(client).unwrap(glueJob),
 		getGlueMLTransform(client).unwrap(glueMLTransform),
 		getGlueSecurityConfiguration(client).unwrap(glueSecurityConfiguration),
-		getGlueTable(client).unwrap(glueTable),
+		getGlueTable(client, glueDatabaseNames).unwrap(glueTable),
 		getGlueTrigger(client).unwrap(glueTrigger),
 		getGlueWorkflow(client).unwrap(glueWorkflow),
 	)
@@ -92,13 +97,17 @@ func getGlueSecurityConfiguration(client *glue.Glue) (r resourceSliceError) {
 	return
 }
 
-func getGlueTable(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetTablesPages(&glue.GetTablesInput{}, func(page *glue.GetTablesOutput, lastPage bool) bool {
-		for _, resource := range page.TableList {
-			r.resources = append(r.resources, *resource.Name)
-		}
-		return true
-	})
+func getGlueTable(client *glue.Glue, databaseNames []string) (r resourceSliceError) {
+	for _, databaseName := range databaseNames {
+		r.err = client.GetTablesPages(&glue.GetTablesInput{
+			DatabaseName: aws.String(databaseName),
+		}, func(page *glue.GetTablesOutput, lastPage bool) bool {
+			for _, resource := range page.TableList {
+				r.resources = append(r.resources, *resource.Name)
+			}
+			return true
+		})
+	}
 	return
 }
 

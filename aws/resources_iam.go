@@ -10,26 +10,37 @@ import (
 
 func getIam(session *session.Session) (resources resourceMap) {
 	client := iam.New(session)
+
+	iamUserResourceMap := getIamUser(client).unwrap(iamUser)
+	iamUserNames := iamUserResourceMap[iamUser]
+
+	iamRoleResourceMap := getIamRole(client).unwrap(iamRole)
+	iamRoleNames := iamRoleResourceMap[iamRole]
+
 	resources = reduce(
-		getIamAccessKey(client).unwrap(iamAccessKey),
+		getIamAccessKey(client, iamUserNames).unwrap(iamAccessKey),
 		getIamGroup(client).unwrap(iamGroup),
 		getIamInstanceProfile(client).unwrap(iamInstanceProfile),
 		getIamPolicy(client).unwrap(iamPolicy),
-		getIamRole(client).unwrap(iamRole),
-		getIamRolePolicy(client).unwrap(iamRolePolicy),
+		iamRoleResourceMap,
+		getIamRolePolicy(client, iamRoleNames).unwrap(iamRolePolicy),
 		getIamServiceLinkedRole(client).unwrap(iamServiceLinkedRole),
-		getIamUser(client).unwrap(iamUser),
+		iamUserResourceMap,
 	)
 	return
 }
 
-func getIamAccessKey(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListAccessKeysPages(&iam.ListAccessKeysInput{}, func(page *iam.ListAccessKeysOutput, lastPage bool) bool {
-		for _, resource := range page.AccessKeyMetadata {
-			r.resources = append(r.resources, *resource.AccessKeyId)
-		}
-		return true
-	})
+func getIamAccessKey(client *iam.IAM, userNames []string) (r resourceSliceError) {
+	for _, userName := range userNames {
+		r.err = client.ListAccessKeysPages(&iam.ListAccessKeysInput{
+			UserName: aws.String(userName),
+		}, func(page *iam.ListAccessKeysOutput, lastPage bool) bool {
+			for _, resource := range page.AccessKeyMetadata {
+				r.resources = append(r.resources, *resource.AccessKeyId)
+			}
+			return true
+		})
+	}
 	return
 }
 
@@ -77,13 +88,17 @@ func getIamRole(client *iam.IAM) (r resourceSliceError) {
 	return
 }
 
-func getIamRolePolicy(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListRolePoliciesPages(&iam.ListRolePoliciesInput{}, func(page *iam.ListRolePoliciesOutput, lastPage bool) bool {
-		for _, resource := range page.PolicyNames {
-			r.resources = append(r.resources, *resource)
-		}
-		return true
-	})
+func getIamRolePolicy(client *iam.IAM, roleNames []string) (r resourceSliceError) {
+	for _, roleName := range roleNames {
+		r.err = client.ListRolePoliciesPages(&iam.ListRolePoliciesInput{
+			RoleName: aws.String(roleName),
+		}, func(page *iam.ListRolePoliciesOutput, lastPage bool) bool {
+			for _, resource := range page.PolicyNames {
+				r.resources = append(r.resources, *resource)
+			}
+			return true
+		})
+	}
 	return
 }
 

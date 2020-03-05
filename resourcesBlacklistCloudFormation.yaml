@@ -121,6 +121,8 @@ resources:
     reason: CloudFormation resources are checked against
   - name: AWS::CloudWatch::AnomalyDetector
     reason: CloudFormation resources are checked against
+  - name: AWS::Logs::LogStream
+    reason: LogStreams are mostly dynamically created
   - name: AWS::Events::EventBusPolicy
     reason: No physical identifier found
   - name: AWS::EC2::ClientVpnAuthorizationRule

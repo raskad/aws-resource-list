@@ -1,22 +1,27 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/configservice"
 )
 
 func getConfig(session *session.Session) (resources resourceMap) {
 	client := configservice.New(session)
+
+	configConfigRuleResourceMap := getConfigConfigRule(client).unwrap(configConfigRule)
+	configConfigRuleNames := configConfigRuleResourceMap[configConfigRule]
+
 	resources = reduce(
 		getConfigAggregationAuthorization(client).unwrap(configAggregationAuthorization),
-		getConfigConfigRule(client).unwrap(configConfigRule),
+		configConfigRuleResourceMap,
 		getConfigConfigurationAggregator(client).unwrap(configConfigurationAggregator),
 		getConfigConfigurationRecorder(client).unwrap(configConfigurationRecorder),
 		getConfigConformancePack(client).unwrap(configConformancePack),
 		getConfigDeliveryChannel(client).unwrap(configDeliveryChannel),
 		getConfigOrganizationConfigRule(client).unwrap(configOrganizationConfigRule),
 		getConfigOrganizationConformancePack(client).unwrap(configOrganizationConformancePack),
-		getConfigRemediationConfiguration(client).unwrap(configRemediationConfiguration),
+		getConfigRemediationConfiguration(client, configConfigRuleNames).unwrap(configRemediationConfiguration),
 	)
 	return
 }
@@ -48,7 +53,7 @@ func getConfigConfigRule(client *configservice.ConfigService) (r resourceSliceEr
 			return
 		}
 		for _, resource := range page.ConfigRules {
-			r.resources = append(r.resources, *resource.ConfigRuleId)
+			r.resources = append(r.resources, *resource.ConfigRuleName)
 		}
 		if page.NextToken == nil {
 			return
@@ -153,8 +158,10 @@ func getConfigOrganizationConformancePack(client *configservice.ConfigService) (
 	}
 }
 
-func getConfigRemediationConfiguration(client *configservice.ConfigService) (r resourceSliceError) {
-	page, err := client.DescribeRemediationConfigurations(&configservice.DescribeRemediationConfigurationsInput{})
+func getConfigRemediationConfiguration(client *configservice.ConfigService, configRuleNames []string) (r resourceSliceError) {
+	page, err := client.DescribeRemediationConfigurations(&configservice.DescribeRemediationConfigurationsInput{
+		ConfigRuleNames: aws.StringSlice(configRuleNames),
+	})
 	if err != nil {
 		r.err = err
 		return

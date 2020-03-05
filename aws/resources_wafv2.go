@@ -1,6 +1,7 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/wafv2"
 )
@@ -17,7 +18,9 @@ func getWafv2(session *session.Session) (resources resourceMap) {
 }
 
 func getWafv2IPSet(client *wafv2.WAFV2) (r resourceSliceError) {
-	input := wafv2.ListIPSetsInput{}
+	input := wafv2.ListIPSetsInput{
+		Scope: aws.String(wafv2.ScopeRegional),
+	}
 	for {
 		page, err := client.ListIPSets(&input)
 		if err != nil {
@@ -35,7 +38,9 @@ func getWafv2IPSet(client *wafv2.WAFV2) (r resourceSliceError) {
 }
 
 func getWafv2RegexPatternSet(client *wafv2.WAFV2) (r resourceSliceError) {
-	input := wafv2.ListRegexPatternSetsInput{}
+	input := wafv2.ListRegexPatternSetsInput{
+		Scope: aws.String(wafv2.ScopeRegional),
+	}
 	for {
 		page, err := client.ListRegexPatternSets(&input)
 		if err != nil {
@@ -53,7 +58,9 @@ func getWafv2RegexPatternSet(client *wafv2.WAFV2) (r resourceSliceError) {
 }
 
 func getWafv2RuleGroup(client *wafv2.WAFV2) (r resourceSliceError) {
-	input := wafv2.ListRuleGroupsInput{}
+	input := wafv2.ListRuleGroupsInput{
+		Scope: aws.String(wafv2.ScopeRegional),
+	}
 	for {
 		page, err := client.ListRuleGroups(&input)
 		if err != nil {
@@ -71,7 +78,9 @@ func getWafv2RuleGroup(client *wafv2.WAFV2) (r resourceSliceError) {
 }
 
 func getWafv2WebACL(client *wafv2.WAFV2) (r resourceSliceError) {
-	input := wafv2.ListWebACLsInput{}
+	input := wafv2.ListWebACLsInput{
+		Scope: aws.String(wafv2.ScopeRegional),
+	}
 	for {
 		page, err := client.ListWebACLs(&input)
 		if err != nil {

@@ -1,15 +1,20 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/backup"
 )
 
 func getBackup(session *session.Session) (resources resourceMap) {
 	client := backup.New(session)
+
+	backupBackupPlanResourceMap := getBackupBackupPlan(client).unwrap(backupBackupPlan)
+	backupBackupPlanIDs := backupBackupPlanResourceMap[backupBackupPlan]
+
 	resources = reduce(
-		getBackupBackupPlan(client).unwrap(backupBackupPlan),
-		getBackupBackupSelection(client).unwrap(backupBackupSelection),
+		backupBackupPlanResourceMap,
+		getBackupBackupSelection(client, backupBackupPlanIDs).unwrap(backupBackupSelection),
 		getBackupBackupVault(client).unwrap(backupBackupVault),
 	)
 	return
@@ -25,13 +30,17 @@ func getBackupBackupPlan(client *backup.Backup) (r resourceSliceError) {
 	return
 }
 
-func getBackupBackupSelection(client *backup.Backup) (r resourceSliceError) {
-	r.err = client.ListBackupSelectionsPages(&backup.ListBackupSelectionsInput{}, func(page *backup.ListBackupSelectionsOutput, lastPage bool) bool {
-		for _, resource := range page.BackupSelectionsList {
-			r.resources = append(r.resources, *resource.SelectionId)
-		}
-		return true
-	})
+func getBackupBackupSelection(client *backup.Backup, backupBackupPlanIDs []string) (r resourceSliceError) {
+	for _, backupBackupPlanID := range backupBackupPlanIDs {
+		r.err = client.ListBackupSelectionsPages(&backup.ListBackupSelectionsInput{
+			BackupPlanId: aws.String(backupBackupPlanID),
+		}, func(page *backup.ListBackupSelectionsOutput, lastPage bool) bool {
+			for _, resource := range page.BackupSelectionsList {
+				r.resources = append(r.resources, *resource.SelectionId)
+			}
+			return true
+		})
+	}
 	return
 }
 

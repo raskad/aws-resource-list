@@ -1,16 +1,21 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/codedeploy"
 )
 
 func getCodeDeploy(session *session.Session) (resources resourceMap) {
 	client := codedeploy.New(session)
+
+	codeDeployApplicationResourceMap := getCodeDeployApplication(client).unwrap(codeDeployApplication)
+	codeDeployApplicationNames := codeDeployApplicationResourceMap[codeDeployApplication]
+
 	resources = reduce(
-		getCodeDeployApplication(client).unwrap(codeDeployApplication),
+		codeDeployApplicationResourceMap,
 		getCodeDeployDeploymentConfig(client).unwrap(codeDeployDeploymentConfig),
-		getCodeDeployDeploymentGroup(client).unwrap(codeDeployDeploymentGroup),
+		getCodeDeployDeploymentGroup(client, codeDeployApplicationNames).unwrap(codeDeployDeploymentGroup),
 	)
 	return
 }
@@ -35,12 +40,16 @@ func getCodeDeployDeploymentConfig(client *codedeploy.CodeDeploy) (r resourceSli
 	return
 }
 
-func getCodeDeployDeploymentGroup(client *codedeploy.CodeDeploy) (r resourceSliceError) {
-	r.err = client.ListDeploymentGroupsPages(&codedeploy.ListDeploymentGroupsInput{}, func(page *codedeploy.ListDeploymentGroupsOutput, lastPage bool) bool {
-		for _, resource := range page.DeploymentGroups {
-			r.resources = append(r.resources, *resource)
-		}
-		return true
-	})
+func getCodeDeployDeploymentGroup(client *codedeploy.CodeDeploy, applicationNames []string) (r resourceSliceError) {
+	for _, applicationName := range applicationNames {
+		r.err = client.ListDeploymentGroupsPages(&codedeploy.ListDeploymentGroupsInput{
+			ApplicationName: aws.String(applicationName),
+		}, func(page *codedeploy.ListDeploymentGroupsOutput, lastPage bool) bool {
+			for _, resource := range page.DeploymentGroups {
+				r.resources = append(r.resources, *resource)
+			}
+			return true
+		})
+	}
 	return
 }

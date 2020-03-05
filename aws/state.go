@@ -132,7 +132,6 @@ const (
 	cloudWatchInsightRule                     resourceType = "cloudWatchInsightRule"
 	logsDestination                           resourceType = "logsDestination"
 	logsLogGroup                              resourceType = "logsLogGroup"
-	logsLogStream                             resourceType = "logsLogStream"
 	logsMetricFilter                          resourceType = "logsMetricFilter"
 	logsSubscriptionFilter                    resourceType = "logsSubscriptionFilter"
 	eventsEventBus                            resourceType = "eventsEventBus"
@@ -320,6 +319,7 @@ const (
 	lakeFormationResource                     resourceType = "lakeFormationResource"
 	lambdaAlias                               resourceType = "lambdaAlias"
 	lambdaFunction                            resourceType = "lambdaFunction"
+	lambdaLayer                               resourceType = "lambdaLayer"
 	lambdaLayerVersion                        resourceType = "lambdaLayerVersion"
 	lambdaPermission                          resourceType = "lambdaPermission"
 	mediaConvertJobTemplate                   resourceType = "mediaConvertJobTemplate"
@@ -475,7 +475,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::CloudWatch::InsightRule":                     cloudWatchInsightRule,
 		"AWS::Logs::Destination":                           logsDestination,
 		"AWS::Logs::LogGroup":                              logsLogGroup,
-		"AWS::Logs::LogStream":                             logsLogStream,
 		"AWS::Logs::MetricFilter":                          logsMetricFilter,
 		"AWS::Logs::SubscriptionFilter":                    logsSubscriptionFilter,
 		"AWS::Events::EventBus":                            eventsEventBus,

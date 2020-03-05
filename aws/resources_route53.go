@@ -1,16 +1,21 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
 )
 
 func getRoute53(session *session.Session) (resources resourceMap) {
 	client := route53.New(session)
+
+	route53HostedZoneResourceMap := getRoute53HostedZone(client).unwrap(route53HostedZone)
+	route53HostedZoneIDs := route53HostedZoneResourceMap[route53HostedZone]
+
 	resources = reduce(
 		getRoute53HealthCheck(client).unwrap(route53HealthCheck),
-		getRoute53HostedZone(client).unwrap(route53HostedZone),
-		getRoute53RecordSet(client).unwrap(route53RecordSet),
+		route53HostedZoneResourceMap,
+		getRoute53RecordSet(client, route53HostedZoneIDs).unwrap(route53RecordSet),
 	)
 	return
 }
@@ -35,12 +40,16 @@ func getRoute53HostedZone(client *route53.Route53) (r resourceSliceError) {
 	return
 }
 
-func getRoute53RecordSet(client *route53.Route53) (r resourceSliceError) {
-	r.err = client.ListResourceRecordSetsPages(&route53.ListResourceRecordSetsInput{}, func(page *route53.ListResourceRecordSetsOutput, lastPage bool) bool {
-		for _, resource := range page.ResourceRecordSets {
-			r.resources = append(r.resources, *resource.Name)
-		}
-		return true
-	})
+func getRoute53RecordSet(client *route53.Route53, hostedZoneIDs []string) (r resourceSliceError) {
+	for _, hostedZoneID := range hostedZoneIDs {
+		r.err = client.ListResourceRecordSetsPages(&route53.ListResourceRecordSetsInput{
+			HostedZoneId: aws.String(hostedZoneID),
+		}, func(page *route53.ListResourceRecordSetsOutput, lastPage bool) bool {
+			for _, resource := range page.ResourceRecordSets {
+				r.resources = append(r.resources, *resource.Name)
+			}
+			return true
+		})
+	}
 	return
 }
