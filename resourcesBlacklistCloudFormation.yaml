@@ -121,6 +121,8 @@ resources:
     reason: CloudFormation resources are checked against
   - name: AWS::CloudWatch::AnomalyDetector
     reason: CloudFormation resources are checked against
+  - name: AWS::CloudWatch::CompositeAlarm
+    reason: No physical identifier found.
   - name: AWS::Logs::LogStream
     reason: LogStreams are mostly dynamically created
   - name: AWS::Events::EventBusPolicy
