@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/kinesis"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/kinesis"
 )
 
-func getKinesis(session *session.Session) (resources resourceMap) {
-	client := kinesis.New(session)
+func getKinesis(config aws.Config) (resources resourceMap) {
+	client := kinesis.New(config)
 
 	kinesisStreamResourceMap := getKinesisStream(client).unwrap(kinesisStream)
 	kinesisStreamARNs := kinesisStreamResourceMap[kinesisStream]
@@ -19,31 +20,42 @@ func getKinesis(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getKinesisStream(client *kinesis.Kinesis) (r resourceSliceError) {
-	r.err = client.ListStreamsPages(&kinesis.ListStreamsInput{}, func(page *kinesis.ListStreamsOutput, lastPage bool) bool {
+func getKinesisStream(client *kinesis.Client) (r resourceSliceError) {
+	req := client.ListStreamsRequest(&kinesis.ListStreamsInput{})
+	p := kinesis.NewListStreamsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.StreamNames {
-			r.err = client.DescribeStreamPages(&kinesis.DescribeStreamInput{
-				StreamName: resource,
-			}, func(page *kinesis.DescribeStreamOutput, lastPage bool) bool {
-				r.resources = append(r.resources, *page.StreamDescription.StreamARN)
-				return true
+			req := client.DescribeStreamRequest(&kinesis.DescribeStreamInput{
+				StreamName: aws.String(resource),
 			})
+			p := kinesis.NewDescribeStreamPaginator(req)
+			for p.Next(context.Background()) {
+				page := p.CurrentPage()
+				r.resources = append(r.resources, *page.StreamDescription.StreamARN)
+			}
+			r.err = p.Err()
+			return
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getKinesisStreamConsumer(client *kinesis.Kinesis, streamARNs []string) (r resourceSliceError) {
+func getKinesisStreamConsumer(client *kinesis.Client, streamARNs []string) (r resourceSliceError) {
 	for _, streamARN := range streamARNs {
-		r.err = client.ListStreamConsumersPages(&kinesis.ListStreamConsumersInput{
+		req := client.ListStreamConsumersRequest(&kinesis.ListStreamConsumersInput{
 			StreamARN: aws.String(streamARN),
-		}, func(page *kinesis.ListStreamConsumersOutput, lastPage bool) bool {
+		})
+		p := kinesis.NewListStreamConsumersPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.Consumers {
 				r.resources = append(r.resources, *resource.ConsumerName)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
+		return
 	}
 	return
 }

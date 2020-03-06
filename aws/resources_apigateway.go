@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/apigateway"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 )
 
-func getAPIGateway(session *session.Session) (resources resourceMap) {
-	client := apigateway.New(session)
+func getAPIGateway(config aws.Config) (resources resourceMap) {
+	client := apigateway.New(config)
 	resources = reduce(
 		getAPIGatewayAPIKey(client).unwrap(apiGatewayAPIKey),
 		getAPIGatewayClientCertificate(client).unwrap(apiGatewayClientCertificate),
@@ -18,62 +20,80 @@ func getAPIGateway(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getAPIGatewayAPIKey(client *apigateway.APIGateway) (r resourceSliceError) {
-	r.err = client.GetApiKeysPages(&apigateway.GetApiKeysInput{}, func(page *apigateway.GetApiKeysOutput, lastPage bool) bool {
+func getAPIGatewayAPIKey(client *apigateway.Client) (r resourceSliceError) {
+	req := client.GetApiKeysRequest(&apigateway.GetApiKeysInput{})
+	p := apigateway.NewGetApiKeysPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayClientCertificate(client *apigateway.APIGateway) (r resourceSliceError) {
-	r.err = client.GetClientCertificatesPages(&apigateway.GetClientCertificatesInput{}, func(page *apigateway.GetClientCertificatesOutput, lastPage bool) bool {
+func getAPIGatewayClientCertificate(client *apigateway.Client) (r resourceSliceError) {
+	req := client.GetClientCertificatesRequest(&apigateway.GetClientCertificatesInput{})
+	p := apigateway.NewGetClientCertificatesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.ClientCertificateId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayDomainName(client *apigateway.APIGateway) (r resourceSliceError) {
-	r.err = client.GetDomainNamesPages(&apigateway.GetDomainNamesInput{}, func(page *apigateway.GetDomainNamesOutput, lastPage bool) bool {
+func getAPIGatewayDomainName(client *apigateway.Client) (r resourceSliceError) {
+	req := client.GetDomainNamesRequest(&apigateway.GetDomainNamesInput{})
+	p := apigateway.NewGetDomainNamesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.DomainName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayRestAPI(client *apigateway.APIGateway) (r resourceSliceError) {
-	r.err = client.GetRestApisPages(&apigateway.GetRestApisInput{}, func(page *apigateway.GetRestApisOutput, lastPage bool) bool {
+func getAPIGatewayRestAPI(client *apigateway.Client) (r resourceSliceError) {
+	req := client.GetRestApisRequest(&apigateway.GetRestApisInput{})
+	p := apigateway.NewGetRestApisPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayUsagePlan(client *apigateway.APIGateway) (r resourceSliceError) {
-	r.err = client.GetUsagePlansPages(&apigateway.GetUsagePlansInput{}, func(page *apigateway.GetUsagePlansOutput, lastPage bool) bool {
+func getAPIGatewayUsagePlan(client *apigateway.Client) (r resourceSliceError) {
+	req := client.GetUsagePlanKeysRequest(&apigateway.GetUsagePlanKeysInput{})
+	p := apigateway.NewGetUsagePlanKeysPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayVpcLink(client *apigateway.APIGateway) (r resourceSliceError) {
-	r.err = client.GetVpcLinksPages(&apigateway.GetVpcLinksInput{}, func(page *apigateway.GetVpcLinksOutput, lastPage bool) bool {
+func getAPIGatewayVpcLink(client *apigateway.Client) (r resourceSliceError) {
+	req := client.GetVpcLinksRequest(&apigateway.GetVpcLinksInput{})
+	p := apigateway.NewGetVpcLinksPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

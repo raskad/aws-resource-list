@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/secretsmanager"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
-func getSecretsManager(session *session.Session) (resources resourceMap) {
-	client := secretsmanager.New(session)
+func getSecretsManager(config aws.Config) (resources resourceMap) {
+	client := secretsmanager.New(config)
 	resources = reduce(
 		getSecretsManagerSecret(client).unwrap(secretsManagerSecret),
 	)
 	return
 }
 
-func getSecretsManagerSecret(client *secretsmanager.SecretsManager) (r resourceSliceError) {
-	r.err = client.ListSecretsPages(&secretsmanager.ListSecretsInput{}, func(page *secretsmanager.ListSecretsOutput, lastPage bool) bool {
+func getSecretsManagerSecret(client *secretsmanager.Client) (r resourceSliceError) {
+	req := client.ListSecretsRequest(&secretsmanager.ListSecretsInput{})
+	p := secretsmanager.NewListSecretsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.SecretList {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

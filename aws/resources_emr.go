@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/emr"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/emr"
 )
 
-func getEmr(session *session.Session) (resources resourceMap) {
-	client := emr.New(session)
+func getEmr(config aws.Config) (resources resourceMap) {
+	client := emr.New(config)
 	resources = reduce(
 		getEmrCluster(client).unwrap(emrCluster),
 		getEmrSecurityConfiguration(client).unwrap(emrSecurityConfiguration),
@@ -14,22 +16,28 @@ func getEmr(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getEmrCluster(client *emr.EMR) (r resourceSliceError) {
-	r.err = client.ListClustersPages(&emr.ListClustersInput{}, func(page *emr.ListClustersOutput, lastPage bool) bool {
+func getEmrCluster(client *emr.Client) (r resourceSliceError) {
+	req := client.ListClustersRequest(&emr.ListClustersInput{})
+	p := emr.NewListClustersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Clusters {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEmrSecurityConfiguration(client *emr.EMR) (r resourceSliceError) {
-	r.err = client.ListSecurityConfigurationsPages(&emr.ListSecurityConfigurationsInput{}, func(page *emr.ListSecurityConfigurationsOutput, lastPage bool) bool {
+func getEmrSecurityConfiguration(client *emr.Client) (r resourceSliceError) {
+	req := client.ListSecurityConfigurationsRequest(&emr.ListSecurityConfigurationsInput{})
+	p := emr.NewListSecurityConfigurationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.SecurityConfigurations {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

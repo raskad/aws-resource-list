@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/codedeploy"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/codedeploy"
 )
 
-func getCodeDeploy(session *session.Session) (resources resourceMap) {
-	client := codedeploy.New(session)
+func getCodeDeploy(config aws.Config) (resources resourceMap) {
+	client := codedeploy.New(config)
 
 	codeDeployApplicationResourceMap := getCodeDeployApplication(client).unwrap(codeDeployApplication)
 	codeDeployApplicationNames := codeDeployApplicationResourceMap[codeDeployApplication]
@@ -20,36 +21,45 @@ func getCodeDeploy(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getCodeDeployApplication(client *codedeploy.CodeDeploy) (r resourceSliceError) {
-	r.err = client.ListApplicationsPages(&codedeploy.ListApplicationsInput{}, func(page *codedeploy.ListApplicationsOutput, lastPage bool) bool {
+func getCodeDeployApplication(client *codedeploy.Client) (r resourceSliceError) {
+	req := client.ListApplicationsRequest(&codedeploy.ListApplicationsInput{})
+	p := codedeploy.NewListApplicationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Applications {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getCodeDeployDeploymentConfig(client *codedeploy.CodeDeploy) (r resourceSliceError) {
-	r.err = client.ListDeploymentConfigsPages(&codedeploy.ListDeploymentConfigsInput{}, func(page *codedeploy.ListDeploymentConfigsOutput, lastPage bool) bool {
+func getCodeDeployDeploymentConfig(client *codedeploy.Client) (r resourceSliceError) {
+	req := client.ListDeploymentConfigsRequest(&codedeploy.ListDeploymentConfigsInput{})
+	p := codedeploy.NewListDeploymentConfigsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DeploymentConfigsList {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getCodeDeployDeploymentGroup(client *codedeploy.CodeDeploy, applicationNames []string) (r resourceSliceError) {
+func getCodeDeployDeploymentGroup(client *codedeploy.Client, applicationNames []string) (r resourceSliceError) {
 	for _, applicationName := range applicationNames {
-		r.err = client.ListDeploymentGroupsPages(&codedeploy.ListDeploymentGroupsInput{
+		req := client.ListDeploymentGroupsRequest(&codedeploy.ListDeploymentGroupsInput{
 			ApplicationName: aws.String(applicationName),
-		}, func(page *codedeploy.ListDeploymentGroupsOutput, lastPage bool) bool {
-			for _, resource := range page.DeploymentGroups {
-				r.resources = append(r.resources, *resource)
-			}
-			return true
 		})
+		p := codedeploy.NewListDeploymentGroupsPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
+			for _, resource := range page.DeploymentGroups {
+				r.resources = append(r.resources, resource)
+			}
+		}
+		r.err = p.Err()
 	}
 	return
 }

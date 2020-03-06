@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/redshift"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/redshift"
 )
 
-func getRedshift(session *session.Session) (resources resourceMap) {
-	client := redshift.New(session)
+func getRedshift(config aws.Config) (resources resourceMap) {
+	client := redshift.New(config)
 	resources = reduce(
 		getRedshiftCluster(client).unwrap(redshiftCluster),
 		getRedshiftClusterParameterGroup(client).unwrap(redshiftClusterParameterGroup),
@@ -16,42 +18,54 @@ func getRedshift(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getRedshiftCluster(client *redshift.Redshift) (r resourceSliceError) {
-	r.err = client.DescribeClustersPages(&redshift.DescribeClustersInput{}, func(page *redshift.DescribeClustersOutput, lastPage bool) bool {
+func getRedshiftCluster(client *redshift.Client) (r resourceSliceError) {
+	req := client.DescribeClustersRequest(&redshift.DescribeClustersInput{})
+	p := redshift.NewDescribeClustersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Clusters {
 			r.resources = append(r.resources, *resource.ClusterIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRedshiftClusterParameterGroup(client *redshift.Redshift) (r resourceSliceError) {
-	r.err = client.DescribeClusterParameterGroupsPages(&redshift.DescribeClusterParameterGroupsInput{}, func(page *redshift.DescribeClusterParameterGroupsOutput, lastPage bool) bool {
+func getRedshiftClusterParameterGroup(client *redshift.Client) (r resourceSliceError) {
+	req := client.DescribeClusterParameterGroupsRequest(&redshift.DescribeClusterParameterGroupsInput{})
+	p := redshift.NewDescribeClusterParameterGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ParameterGroups {
 			r.resources = append(r.resources, *resource.ParameterGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRedshiftClusterSecurityGroup(client *redshift.Redshift) (r resourceSliceError) {
-	r.err = client.DescribeClusterSecurityGroupsPages(&redshift.DescribeClusterSecurityGroupsInput{}, func(page *redshift.DescribeClusterSecurityGroupsOutput, lastPage bool) bool {
+func getRedshiftClusterSecurityGroup(client *redshift.Client) (r resourceSliceError) {
+	req := client.DescribeClusterSecurityGroupsRequest(&redshift.DescribeClusterSecurityGroupsInput{})
+	p := redshift.NewDescribeClusterSecurityGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ClusterSecurityGroups {
 			r.resources = append(r.resources, *resource.ClusterSecurityGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRedshiftClusterSubnetGroup(client *redshift.Redshift) (r resourceSliceError) {
-	r.err = client.DescribeClusterSubnetGroupsPages(&redshift.DescribeClusterSubnetGroupsInput{}, func(page *redshift.DescribeClusterSubnetGroupsOutput, lastPage bool) bool {
+func getRedshiftClusterSubnetGroup(client *redshift.Client) (r resourceSliceError) {
+	req := client.DescribeClusterSubnetGroupsRequest(&redshift.DescribeClusterSubnetGroupsInput{})
+	p := redshift.NewDescribeClusterSubnetGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ClusterSubnetGroups {
 			r.resources = append(r.resources, *resource.ClusterSubnetGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

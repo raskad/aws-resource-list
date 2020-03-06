@@ -1,25 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3control"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3control"
 )
 
-func getS3Control(session *session.Session) (resources resourceMap) {
-	client := s3control.New(session)
+func getS3Control(config aws.Config) (resources resourceMap) {
+	client := s3control.New(config)
 	resources = reduce(
 		getS3AccessPoint(client).unwrap(s3AccessPoint),
 	)
 	return
 }
 
-func getS3AccessPoint(client *s3control.S3Control) (r resourceSliceError) {
-	r.err = client.ListAccessPointsPages(&s3control.ListAccessPointsInput{AccountId: aws.String(accountID)}, func(page *s3control.ListAccessPointsOutput, lastPage bool) bool {
+func getS3AccessPoint(client *s3control.Client) (r resourceSliceError) {
+	req := client.ListAccessPointsRequest(&s3control.ListAccessPointsInput{})
+	p := s3control.NewListAccessPointsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.AccessPointList {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

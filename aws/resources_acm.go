@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/acm"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/acm"
 )
 
-func getAcm(session *session.Session) (resources resourceMap) {
-	client := acm.New(session)
+func getAcm(config aws.Config) (resources resourceMap) {
+	client := acm.New(config)
 	resources = reduce(
 		getCertificateManagerCertificate(client).unwrap(certificateManagerCertificate),
 	)
 	return
 }
 
-func getCertificateManagerCertificate(client *acm.ACM) (r resourceSliceError) {
-	r.err = client.ListCertificatesPages(&acm.ListCertificatesInput{}, func(page *acm.ListCertificatesOutput, lastPage bool) bool {
+func getCertificateManagerCertificate(client *acm.Client) (r resourceSliceError) {
+	req := client.ListCertificatesRequest(&acm.ListCertificatesInput{})
+	p := acm.NewListCertificatesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.CertificateSummaryList {
 			r.resources = append(r.resources, *resource.CertificateArn)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

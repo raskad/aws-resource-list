@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/guardduty"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 )
 
-func getGuardDuty(session *session.Session) (resources resourceMap) {
-	client := guardduty.New(session)
+func getGuardDuty(config aws.Config) (resources resourceMap) {
+	client := guardduty.New(config)
 	resources = reduce(
 		getGuardDutyDetector(client).unwrap(guardDutyDetector),
 	)
 	return
 }
 
-func getGuardDutyDetector(client *guardduty.GuardDuty) (r resourceSliceError) {
-	r.err = client.ListDetectorsPages(&guardduty.ListDetectorsInput{}, func(page *guardduty.ListDetectorsOutput, lastPage bool) bool {
+func getGuardDutyDetector(client *guardduty.Client) (r resourceSliceError) {
+	req := client.ListDetectorsRequest(&guardduty.ListDetectorsInput{})
+	p := guardduty.NewListDetectorsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DetectorIds {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

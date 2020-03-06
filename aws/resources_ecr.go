@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ecr"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ecr"
 )
 
-func getEcr(session *session.Session) (resources resourceMap) {
-	client := ecr.New(session)
+func getEcr(config aws.Config) (resources resourceMap) {
+	client := ecr.New(config)
 	resources = reduce(
 		getEcrRepository(client).unwrap(ecrRepository),
 	)
 	return
 }
 
-func getEcrRepository(client *ecr.ECR) (r resourceSliceError) {
-	r.err = client.DescribeRepositoriesPages(&ecr.DescribeRepositoriesInput{}, func(page *ecr.DescribeRepositoriesOutput, lastPage bool) bool {
+func getEcrRepository(client *ecr.Client) (r resourceSliceError) {
+	req := client.DescribeRepositoriesRequest(&ecr.DescribeRepositoriesInput{})
+	p := ecr.NewDescribeRepositoriesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Repositories {
 			r.resources = append(r.resources, *resource.RepositoryName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

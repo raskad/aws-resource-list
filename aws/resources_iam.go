@@ -1,15 +1,15 @@
 package aws
 
 import (
+	"context"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/iam"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/iam"
 )
 
-func getIam(session *session.Session) (resources resourceMap) {
-	client := iam.New(session)
+func getIam(config aws.Config) (resources resourceMap) {
+	client := iam.New(config)
 
 	iamUserResourceMap := getIamUser(client).unwrap(iamUser)
 	iamUserNames := iamUserResourceMap[iamUser]
@@ -30,96 +30,120 @@ func getIam(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getIamAccessKey(client *iam.IAM, userNames []string) (r resourceSliceError) {
+func getIamAccessKey(client *iam.Client, userNames []string) (r resourceSliceError) {
 	for _, userName := range userNames {
-		r.err = client.ListAccessKeysPages(&iam.ListAccessKeysInput{
+		req := client.ListAccessKeysRequest(&iam.ListAccessKeysInput{
 			UserName: aws.String(userName),
-		}, func(page *iam.ListAccessKeysOutput, lastPage bool) bool {
+		})
+		p := iam.NewListAccessKeysPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.AccessKeyMetadata {
 				r.resources = append(r.resources, *resource.AccessKeyId)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getIamGroup(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListGroupsPages(&iam.ListGroupsInput{}, func(page *iam.ListGroupsOutput, lastPage bool) bool {
+func getIamGroup(client *iam.Client) (r resourceSliceError) {
+	req := client.ListGroupsRequest(&iam.ListGroupsInput{})
+	p := iam.NewListGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Groups {
 			r.resources = append(r.resources, *resource.GroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIamInstanceProfile(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListInstanceProfilesPages(&iam.ListInstanceProfilesInput{}, func(page *iam.ListInstanceProfilesOutput, lastPage bool) bool {
+func getIamInstanceProfile(client *iam.Client) (r resourceSliceError) {
+	req := client.ListInstanceProfilesRequest(&iam.ListInstanceProfilesInput{})
+	p := iam.NewListInstanceProfilesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.InstanceProfiles {
 			r.resources = append(r.resources, *resource.InstanceProfileName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIamPolicy(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListPoliciesPages(&iam.ListPoliciesInput{
-		Scope: aws.String(iam.PolicyScopeTypeLocal),
-	}, func(page *iam.ListPoliciesOutput, lastPage bool) bool {
+func getIamPolicy(client *iam.Client) (r resourceSliceError) {
+	req := client.ListPoliciesRequest(&iam.ListPoliciesInput{
+		Scope: iam.PolicyScopeTypeLocal,
+	})
+	p := iam.NewListPoliciesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Policies {
 			r.resources = append(r.resources, *resource.PolicyName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIamRole(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListRolesPages(&iam.ListRolesInput{}, func(page *iam.ListRolesOutput, lastPage bool) bool {
+func getIamRole(client *iam.Client) (r resourceSliceError) {
+	req := client.ListRolesRequest(&iam.ListRolesInput{})
+	p := iam.NewListRolesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Roles {
 			if !strings.HasPrefix(*resource.Path, "/aws-service-role/") {
 				r.resources = append(r.resources, *resource.RoleName)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIamRolePolicy(client *iam.IAM, roleNames []string) (r resourceSliceError) {
+func getIamRolePolicy(client *iam.Client, roleNames []string) (r resourceSliceError) {
 	for _, roleName := range roleNames {
-		r.err = client.ListRolePoliciesPages(&iam.ListRolePoliciesInput{
+		req := client.ListRolePoliciesRequest(&iam.ListRolePoliciesInput{
 			RoleName: aws.String(roleName),
-		}, func(page *iam.ListRolePoliciesOutput, lastPage bool) bool {
-			for _, resource := range page.PolicyNames {
-				r.resources = append(r.resources, *resource)
-			}
-			return true
 		})
+		p := iam.NewListRolePoliciesPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
+			for _, resource := range page.PolicyNames {
+				r.resources = append(r.resources, resource)
+			}
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getIamServiceLinkedRole(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListRolesPages(&iam.ListRolesInput{
+func getIamServiceLinkedRole(client *iam.Client) (r resourceSliceError) {
+	req := client.ListRolesRequest(&iam.ListRolesInput{
 		PathPrefix: aws.String("/aws-service-role/"),
-	}, func(page *iam.ListRolesOutput, lastPage bool) bool {
+	})
+	p := iam.NewListRolesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Roles {
 			r.resources = append(r.resources, *resource.RoleName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIamUser(client *iam.IAM) (r resourceSliceError) {
-	r.err = client.ListUsersPages(&iam.ListUsersInput{}, func(page *iam.ListUsersOutput, lastPage bool) bool {
+func getIamUser(client *iam.Client) (r resourceSliceError) {
+	req := client.ListUsersRequest(&iam.ListUsersInput{})
+	p := iam.NewListUsersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Users {
 			r.resources = append(r.resources, *resource.UserName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

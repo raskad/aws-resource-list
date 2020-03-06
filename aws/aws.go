@@ -1,12 +1,14 @@
 package aws
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"sync"
 
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/sts"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/external"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 )
 
 var accountID = ""
@@ -40,15 +42,15 @@ func Start(gitTag string, gitCommit string) {
 	case "refresh":
 		switch cliArgs[1] {
 		case "cfn":
-			session := awsStart()
-			cfnState, err := getCloudForamtionState(session)
+			config := awsStart()
+			cfnState, err := getCloudForamtionState(config)
 			if err != nil {
 				logFatal("Could not fetch cloudformation resources:", err)
 			}
 			state[cfn] = cfnState
 		case "real":
-			session := awsStart()
-			state[real] = getRealState(session)
+			config := awsStart()
+			state[real] = getRealState(config)
 		default:
 			logFatal("Cli argument", cliArgs[1], "invalid")
 		}
@@ -64,7 +66,7 @@ func Start(gitTag string, gitCommit string) {
 			logFatal("Cli argument", cliArgs[1], "invalid")
 		}
 	case "compare":
-		state.filter(cfn, real).print()
+		state.filter(real, cfn).print()
 	case "version":
 		fmt.Println(gitTag, "@", gitCommit)
 	default:
@@ -80,124 +82,126 @@ func Start(gitTag string, gitCommit string) {
 	}
 }
 
-func getAccountID(session *session.Session) (err error) {
-	client := sts.New(session)
-	c, err := client.GetCallerIdentity(&sts.GetCallerIdentityInput{})
+func getAccountID(config aws.Config) (err error) {
+	svc := sts.New(config)
+
+	resp, err := svc.GetCallerIdentityRequest(&sts.GetCallerIdentityInput{}).Send(context.Background())
+
 	if err != nil {
 		return err
 	}
-	accountID = *c.Account
+	accountID = *resp.Account
 	return nil
 }
 
-func run(f func(session *session.Session) (resources resourceMap), session *session.Session, c chan resourceMap, wg *sync.WaitGroup) {
+func run(f func(config aws.Config) (resources resourceMap), config aws.Config, c chan resourceMap, wg *sync.WaitGroup) {
 	wg.Add(1)
-	c <- f(session)
+	c <- f(config)
 	wg.Done()
 }
 
-func getRealState(session *session.Session) (resources resourceMap) {
+func getRealState(config aws.Config) (resources resourceMap) {
 	r := []resourceMap{}
 	c := make(chan resourceMap)
 	var wg sync.WaitGroup
 
-	go run(getAccessAnalyzer, session, c, &wg)
-	go run(getAcm, session, c, &wg)
-	go run(getAcmpca, session, c, &wg)
-	go run(getAlexaForBusiness, session, c, &wg)
-	go run(getAmplify, session, c, &wg)
-	go run(getAPIGateway, session, c, &wg)
-	go run(getAPIGatewayV2, session, c, &wg)
-	go run(getAppConfig, session, c, &wg)
-	go run(getAppMesh, session, c, &wg)
-	go run(getAppStream, session, c, &wg)
-	go run(getAppSync, session, c, &wg)
-	go run(getAthena, session, c, &wg)
-	go run(getAutoScaling, session, c, &wg)
-	go run(getAutoScalingPlans, session, c, &wg)
-	go run(getBackup, session, c, &wg)
-	go run(getBatch, session, c, &wg)
-	go run(getCloud9, session, c, &wg)
-	go run(getCloudfront, session, c, &wg)
-	go run(getCloudTrail, session, c, &wg)
-	go run(getCloudWatch, session, c, &wg)
-	go run(getCloudWatchEvents, session, c, &wg)
-	go run(getCodeBuild, session, c, &wg)
-	go run(getCodeCommit, session, c, &wg)
-	go run(getCodeDeploy, session, c, &wg)
-	go run(getCodePipeline, session, c, &wg)
-	go run(getCognitoIdentity, session, c, &wg)
-	go run(getCognitoIdentityProvider, session, c, &wg)
-	go run(getConfig, session, c, &wg)
-	go run(getDataPipeline, session, c, &wg)
-	go run(getDAX, session, c, &wg)
-	go run(getDirectoryService, session, c, &wg)
-	go run(getDLM, session, c, &wg)
-	go run(getDms, session, c, &wg)
-	go run(getDocDB, session, c, &wg)
-	go run(getDynamoDB, session, c, &wg)
-	go run(getEc2, session, c, &wg)
-	go run(getEcr, session, c, &wg)
-	go run(getEcs, session, c, &wg)
-	go run(getEfs, session, c, &wg)
-	go run(getEks, session, c, &wg)
-	go run(getElasticache, session, c, &wg)
-	go run(getElasticsearch, session, c, &wg)
-	go run(getElasticBeanstalk, session, c, &wg)
-	go run(getElasticLoadBalancingV2, session, c, &wg)
-	go run(getElb, session, c, &wg)
-	go run(getEmr, session, c, &wg)
-	go run(getFirehose, session, c, &wg)
-	go run(getFsx, session, c, &wg)
-	go run(getGameLift, session, c, &wg)
-	go run(getGlue, session, c, &wg)
-	go run(getGroundStation, session, c, &wg)
-	go run(getGuardDuty, session, c, &wg)
-	go run(getIam, session, c, &wg)
-	go run(getInspector, session, c, &wg)
-	go run(getIoT, session, c, &wg)
-	go run(getIoT1ClickDevicesService, session, c, &wg)
-	go run(getIoT1ClickProjects, session, c, &wg)
-	go run(getIoTAnalytics, session, c, &wg)
-	go run(getIoTEvents, session, c, &wg)
-	go run(getKinesis, session, c, &wg)
-	go run(getKinesisAnalytics, session, c, &wg)
-	go run(getKinesisAnalyticsV2, session, c, &wg)
-	go run(getKms, session, c, &wg)
-	go run(getLakeFormation, session, c, &wg)
-	go run(getLambda, session, c, &wg)
-	go run(getCloudwatchLogs, session, c, &wg)
-	go run(getMq, session, c, &wg)
-	go run(getMediaConvert, session, c, &wg)
-	go run(getMediaLive, session, c, &wg)
-	go run(getMediaStore, session, c, &wg)
-	go run(getMsk, session, c, &wg)
-	go run(getNeptune, session, c, &wg)
-	go run(getOpsWorks, session, c, &wg)
-	go run(getPinpoint, session, c, &wg)
-	go run(getQLDB, session, c, &wg)
-	go run(getRds, session, c, &wg)
-	go run(getRedshift, session, c, &wg)
-	go run(getRoboMaker, session, c, &wg)
-	go run(getRoute53, session, c, &wg)
-	go run(getRoute53Resolver, session, c, &wg)
-	go run(getS3, session, c, &wg)
-	go run(getS3Control, session, c, &wg)
-	go run(getSageMaker, session, c, &wg)
-	go run(getSchemas, session, c, &wg)
-	go run(getSdb, session, c, &wg)
-	go run(getSecretsManager, session, c, &wg)
-	go run(getServiceDiscovery, session, c, &wg)
-	go run(getSes, session, c, &wg)
-	go run(getSns, session, c, &wg)
-	go run(getSns, session, c, &wg)
-	go run(getSqs, session, c, &wg)
-	go run(getSsm, session, c, &wg)
-	go run(getTransfer, session, c, &wg)
-	go run(getWaf, session, c, &wg)
-	go run(getWafRegional, session, c, &wg)
-	go run(getWafv2, session, c, &wg)
-	go run(getWorkSpaces, session, c, &wg)
+	go run(getAccessAnalyzer, config, c, &wg)
+	go run(getAcm, config, c, &wg)
+	go run(getAcmpca, config, c, &wg)
+	go run(getAlexaForBusiness, config, c, &wg)
+	go run(getAmplify, config, c, &wg)
+	go run(getAPIGateway, config, c, &wg)
+	go run(getAPIGatewayV2, config, c, &wg)
+	go run(getAppConfig, config, c, &wg)
+	go run(getAppMesh, config, c, &wg)
+	go run(getAppStream, config, c, &wg)
+	go run(getAppSync, config, c, &wg)
+	go run(getAthena, config, c, &wg)
+	go run(getAutoScaling, config, c, &wg)
+	go run(getAutoScalingPlans, config, c, &wg)
+	go run(getBackup, config, c, &wg)
+	go run(getBatch, config, c, &wg)
+	go run(getCloud9, config, c, &wg)
+	go run(getCloudfront, config, c, &wg)
+	go run(getCloudTrail, config, c, &wg)
+	go run(getCloudWatch, config, c, &wg)
+	go run(getCloudWatchEvents, config, c, &wg)
+	go run(getCodeBuild, config, c, &wg)
+	go run(getCodeCommit, config, c, &wg)
+	go run(getCodeDeploy, config, c, &wg)
+	go run(getCodePipeline, config, c, &wg)
+	go run(getCognitoIdentity, config, c, &wg)
+	go run(getCognitoIdentityProvider, config, c, &wg)
+	go run(getConfig, config, c, &wg)
+	go run(getDataPipeline, config, c, &wg)
+	go run(getDAX, config, c, &wg)
+	go run(getDirectoryService, config, c, &wg)
+	go run(getDLM, config, c, &wg)
+	go run(getDms, config, c, &wg)
+	go run(getDocDB, config, c, &wg)
+	go run(getDynamoDB, config, c, &wg)
+	go run(getEc2, config, c, &wg)
+	go run(getEcr, config, c, &wg)
+	go run(getEcs, config, c, &wg)
+	go run(getEfs, config, c, &wg)
+	go run(getEks, config, c, &wg)
+	go run(getElasticache, config, c, &wg)
+	go run(getElasticsearch, config, c, &wg)
+	go run(getElasticBeanstalk, config, c, &wg)
+	go run(getElasticLoadBalancing, config, c, &wg)
+	go run(getElasticLoadBalancingV2, config, c, &wg)
+	go run(getEmr, config, c, &wg)
+	go run(getFirehose, config, c, &wg)
+	go run(getFsx, config, c, &wg)
+	go run(getGameLift, config, c, &wg)
+	go run(getGlue, config, c, &wg)
+	go run(getGroundStation, config, c, &wg)
+	go run(getGuardDuty, config, c, &wg)
+	go run(getIam, config, c, &wg)
+	go run(getInspector, config, c, &wg)
+	go run(getIoT, config, c, &wg)
+	go run(getIoT1ClickDevicesService, config, c, &wg)
+	go run(getIoT1ClickProjects, config, c, &wg)
+	go run(getIoTAnalytics, config, c, &wg)
+	go run(getIoTEvents, config, c, &wg)
+	go run(getKinesis, config, c, &wg)
+	go run(getKinesisAnalytics, config, c, &wg)
+	go run(getKinesisAnalyticsV2, config, c, &wg)
+	go run(getKms, config, c, &wg)
+	go run(getLakeFormation, config, c, &wg)
+	go run(getLambda, config, c, &wg)
+	go run(getCloudwatchLogs, config, c, &wg)
+	go run(getMq, config, c, &wg)
+	go run(getMediaConvert, config, c, &wg)
+	go run(getMediaLive, config, c, &wg)
+	go run(getMediaStore, config, c, &wg)
+	go run(getMsk, config, c, &wg)
+	go run(getNeptune, config, c, &wg)
+	go run(getOpsWorks, config, c, &wg)
+	go run(getPinpoint, config, c, &wg)
+	go run(getQLDB, config, c, &wg)
+	go run(getRds, config, c, &wg)
+	go run(getRedshift, config, c, &wg)
+	go run(getRoboMaker, config, c, &wg)
+	go run(getRoute53, config, c, &wg)
+	go run(getRoute53Resolver, config, c, &wg)
+	go run(getS3, config, c, &wg)
+	go run(getS3Control, config, c, &wg)
+	go run(getSageMaker, config, c, &wg)
+	go run(getSchemas, config, c, &wg)
+	go run(getSdb, config, c, &wg)
+	go run(getSecretsManager, config, c, &wg)
+	go run(getServiceDiscovery, config, c, &wg)
+	go run(getSes, config, c, &wg)
+	go run(getSns, config, c, &wg)
+	go run(getSns, config, c, &wg)
+	go run(getSqs, config, c, &wg)
+	go run(getSsm, config, c, &wg)
+	go run(getTransfer, config, c, &wg)
+	go run(getWaf, config, c, &wg)
+	go run(getWafRegional, config, c, &wg)
+	go run(getWafv2, config, c, &wg)
+	go run(getWorkSpaces, config, c, &wg)
 
 	// Append the resourceMaps to the slice until all are listed
 	first := true
@@ -217,14 +221,14 @@ func getRealState(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func awsStart() (sess *session.Session) {
-	sess, err := session.NewSession()
+func awsStart() (config aws.Config) {
+	config, err := external.LoadDefaultAWSConfig()
 	if err != nil {
-		logFatal("Could not create aws session", err)
+		logFatal("Could not load SDK config", err)
 	}
-	logInfo("Created aws session")
+	logInfo("Created SDK config")
 
-	err = getAccountID(sess)
+	err = getAccountID(config)
 	if err != nil {
 		logFatal("Could not get caller identity", err)
 	}

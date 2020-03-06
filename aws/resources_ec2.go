@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ec2"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ec2"
 )
 
-func getEc2(session *session.Session) (resources resourceMap) {
-	client := ec2.New(session)
+func getEc2(config aws.Config) (resources resourceMap) {
+	client := ec2.New(config)
 	resources = reduce(
 		getEc2CapacityReservation(client).unwrap(ec2CapacityReservation),
 		getEc2ClientVpnEndpoint(client).unwrap(ec2ClientVpnEndpoint),
@@ -53,28 +55,34 @@ func getEc2(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getEc2CapacityReservation(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeCapacityReservationsPages(&ec2.DescribeCapacityReservationsInput{}, func(page *ec2.DescribeCapacityReservationsOutput, lastPage bool) bool {
+func getEc2CapacityReservation(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeCapacityReservationsRequest(&ec2.DescribeCapacityReservationsInput{})
+	p := ec2.NewDescribeCapacityReservationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.CapacityReservations {
 			r.resources = append(r.resources, *resource.CapacityReservationId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2ClientVpnEndpoint(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeClientVpnEndpointsPages(&ec2.DescribeClientVpnEndpointsInput{}, func(page *ec2.DescribeClientVpnEndpointsOutput, lastPage bool) bool {
+func getEc2ClientVpnEndpoint(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeClientVpnEndpointsRequest(&ec2.DescribeClientVpnEndpointsInput{})
+	p := ec2.NewDescribeClientVpnEndpointsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ClientVpnEndpoints {
 			r.resources = append(r.resources, *resource.ClientVpnEndpointId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2CustomerGateway(client *ec2.EC2) (r resourceSliceError) {
-	output, err := client.DescribeCustomerGateways(&ec2.DescribeCustomerGatewaysInput{})
+func getEc2CustomerGateway(client *ec2.Client) (r resourceSliceError) {
+	output, err := client.DescribeCustomerGatewaysRequest(&ec2.DescribeCustomerGatewaysInput{}).Send(context.Background())
 	if err != nil {
 		r.err = err
 		return
@@ -85,38 +93,47 @@ func getEc2CustomerGateway(client *ec2.EC2) (r resourceSliceError) {
 	return
 }
 
-func getEc2DHCPOptions(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeDhcpOptionsPages(&ec2.DescribeDhcpOptionsInput{}, func(page *ec2.DescribeDhcpOptionsOutput, lastPage bool) bool {
+func getEc2DHCPOptions(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeDhcpOptionsRequest(&ec2.DescribeDhcpOptionsInput{})
+	p := ec2.NewDescribeDhcpOptionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DhcpOptions {
 			r.resources = append(r.resources, *resource.DhcpOptionsId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2Fleet(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeFleetsPages(&ec2.DescribeFleetsInput{}, func(page *ec2.DescribeFleetsOutput, lastPage bool) bool {
+func getEc2Fleet(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeFleetsRequest(&ec2.DescribeFleetsInput{})
+	p := ec2.NewDescribeFleetsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Fleets {
 			r.resources = append(r.resources, *resource.FleetId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2EgressOnlyInternetGateway(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeEgressOnlyInternetGatewaysPages(&ec2.DescribeEgressOnlyInternetGatewaysInput{}, func(page *ec2.DescribeEgressOnlyInternetGatewaysOutput, lastPage bool) bool {
+func getEc2EgressOnlyInternetGateway(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeEgressOnlyInternetGatewaysRequest(&ec2.DescribeEgressOnlyInternetGatewaysInput{})
+	p := ec2.NewDescribeEgressOnlyInternetGatewaysPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.EgressOnlyInternetGateways {
 			r.resources = append(r.resources, *resource.EgressOnlyInternetGatewayId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2Eip(client *ec2.EC2) (r resourceSliceError) {
-	output, err := client.DescribeAddresses(&ec2.DescribeAddressesInput{})
+func getEc2Eip(client *ec2.Client) (r resourceSliceError) {
+	output, err := client.DescribeAddressesRequest(&ec2.DescribeAddressesInput{}).Send(context.Background())
 	if err != nil {
 		r.err = err
 		return
@@ -127,8 +144,8 @@ func getEc2Eip(client *ec2.EC2) (r resourceSliceError) {
 	return
 }
 
-func getEc2EipAssociation(client *ec2.EC2) (r resourceSliceError) {
-	output, err := client.DescribeAddresses(&ec2.DescribeAddressesInput{})
+func getEc2EipAssociation(client *ec2.Client) (r resourceSliceError) {
+	output, err := client.DescribeAddressesRequest(&ec2.DescribeAddressesInput{}).Send(context.Background())
 	if err != nil {
 		r.err = err
 		return
@@ -141,122 +158,155 @@ func getEc2EipAssociation(client *ec2.EC2) (r resourceSliceError) {
 	return
 }
 
-func getEc2FlowLog(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeFlowLogsPages(&ec2.DescribeFlowLogsInput{}, func(page *ec2.DescribeFlowLogsOutput, lastPage bool) bool {
+func getEc2FlowLog(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeFlowLogsRequest(&ec2.DescribeFlowLogsInput{})
+	p := ec2.NewDescribeFlowLogsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.FlowLogs {
 			r.resources = append(r.resources, *resource.FlowLogId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2Host(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeHostsPages(&ec2.DescribeHostsInput{}, func(page *ec2.DescribeHostsOutput, lastPage bool) bool {
+func getEc2Host(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeHostsRequest(&ec2.DescribeHostsInput{})
+	p := ec2.NewDescribeHostsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Hosts {
 			r.resources = append(r.resources, *resource.HostId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2Instace(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeInstancesPages(&ec2.DescribeInstancesInput{}, func(page *ec2.DescribeInstancesOutput, lastPage bool) bool {
-		for _, reservation := range page.Reservations {
-			for _, resource := range reservation.Instances {
+func getEc2Instace(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeInstancesRequest(&ec2.DescribeInstancesInput{})
+	p := ec2.NewDescribeInstancesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
+		for _, resource := range page.Reservations {
+			for _, resource := range resource.Instances {
 				r.resources = append(r.resources, *resource.InstanceId)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2InternetGateway(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeInternetGatewaysPages(&ec2.DescribeInternetGatewaysInput{}, func(page *ec2.DescribeInternetGatewaysOutput, lastPage bool) bool {
+func getEc2InternetGateway(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeInternetGatewaysRequest(&ec2.DescribeInternetGatewaysInput{})
+	p := ec2.NewDescribeInternetGatewaysPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.InternetGateways {
 			r.resources = append(r.resources, *resource.InternetGatewayId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2LaunchTemplate(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeLaunchTemplatesPages(&ec2.DescribeLaunchTemplatesInput{}, func(page *ec2.DescribeLaunchTemplatesOutput, lastPage bool) bool {
+func getEc2LaunchTemplate(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeLaunchTemplatesRequest(&ec2.DescribeLaunchTemplatesInput{})
+	p := ec2.NewDescribeLaunchTemplatesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.LaunchTemplates {
 			r.resources = append(r.resources, *resource.LaunchTemplateId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2NatGateway(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeNatGatewaysPages(&ec2.DescribeNatGatewaysInput{}, func(page *ec2.DescribeNatGatewaysOutput, lastPage bool) bool {
+func getEc2NatGateway(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeNatGatewaysRequest(&ec2.DescribeNatGatewaysInput{})
+	p := ec2.NewDescribeNatGatewaysPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.NatGateways {
 			r.resources = append(r.resources, *resource.NatGatewayId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2NetworkACL(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeNetworkAclsPages(&ec2.DescribeNetworkAclsInput{}, func(page *ec2.DescribeNetworkAclsOutput, lastPage bool) bool {
+func getEc2NetworkACL(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeNetworkAclsRequest(&ec2.DescribeNetworkAclsInput{})
+	p := ec2.NewDescribeNetworkAclsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.NetworkAcls {
 			r.resources = append(r.resources, *resource.NetworkAclId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2NetworkACLSubnetAssociation(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeNetworkAclsPages(&ec2.DescribeNetworkAclsInput{}, func(page *ec2.DescribeNetworkAclsOutput, lastPage bool) bool {
+func getEc2NetworkACLSubnetAssociation(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeNetworkAclsRequest(&ec2.DescribeNetworkAclsInput{})
+	p := ec2.NewDescribeNetworkAclsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.NetworkAcls {
 			for _, resource := range resource.Associations {
 				r.resources = append(r.resources, *resource.NetworkAclAssociationId)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2NetworkInterface(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeNetworkInterfacesPages(&ec2.DescribeNetworkInterfacesInput{}, func(page *ec2.DescribeNetworkInterfacesOutput, lastPage bool) bool {
+func getEc2NetworkInterface(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeNetworkInterfacesRequest(&ec2.DescribeNetworkInterfacesInput{})
+	p := ec2.NewDescribeNetworkInterfacesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.NetworkInterfaces {
 			r.resources = append(r.resources, *resource.NetworkInterfaceId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2NetworkInterfaceAttachment(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeNetworkInterfacesPages(&ec2.DescribeNetworkInterfacesInput{}, func(page *ec2.DescribeNetworkInterfacesOutput, lastPage bool) bool {
+func getEc2NetworkInterfaceAttachment(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeNetworkInterfacesRequest(&ec2.DescribeNetworkInterfacesInput{})
+	p := ec2.NewDescribeNetworkInterfacesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.NetworkInterfaces {
 			r.resources = append(r.resources, *resource.Attachment.AttachmentId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2NetworkInterfacePermission(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeNetworkInterfacePermissionsPages(&ec2.DescribeNetworkInterfacePermissionsInput{}, func(page *ec2.DescribeNetworkInterfacePermissionsOutput, lastPage bool) bool {
+func getEc2NetworkInterfacePermission(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeNetworkInterfacePermissionsRequest(&ec2.DescribeNetworkInterfacePermissionsInput{})
+	p := ec2.NewDescribeNetworkInterfacePermissionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.NetworkInterfacePermissions {
 			r.resources = append(r.resources, *resource.NetworkInterfacePermissionId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2PlacementGroup(client *ec2.EC2) (r resourceSliceError) {
-	page, err := client.DescribePlacementGroups(&ec2.DescribePlacementGroupsInput{})
+func getEc2PlacementGroup(client *ec2.Client) (r resourceSliceError) {
+	page, err := client.DescribePlacementGroupsRequest(&ec2.DescribePlacementGroupsInput{}).Send(context.Background())
 	for _, resource := range page.PlacementGroups {
 		r.resources = append(r.resources, *resource.GroupId)
 	}
@@ -264,70 +314,91 @@ func getEc2PlacementGroup(client *ec2.EC2) (r resourceSliceError) {
 	return
 }
 
-func getEc2RouteTable(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeRouteTablesPages(&ec2.DescribeRouteTablesInput{}, func(page *ec2.DescribeRouteTablesOutput, lastPage bool) bool {
+func getEc2RouteTable(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeRouteTablesRequest(&ec2.DescribeRouteTablesInput{})
+	p := ec2.NewDescribeRouteTablesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.RouteTables {
 			r.resources = append(r.resources, *resource.RouteTableId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2RouteTableSubnetAssociation(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeRouteTablesPages(&ec2.DescribeRouteTablesInput{}, func(page *ec2.DescribeRouteTablesOutput, lastPage bool) bool {
+func getEc2RouteTableSubnetAssociation(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeRouteTablesRequest(&ec2.DescribeRouteTablesInput{})
+	p := ec2.NewDescribeRouteTablesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.RouteTables {
 			for _, resource := range resource.Associations {
 				r.resources = append(r.resources, *resource.RouteTableAssociationId)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2SecurityGroup(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeSecurityGroupsPages(&ec2.DescribeSecurityGroupsInput{}, func(page *ec2.DescribeSecurityGroupsOutput, lastPage bool) bool {
+func getEc2SecurityGroup(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeSecurityGroupsRequest(&ec2.DescribeSecurityGroupsInput{})
+	p := ec2.NewDescribeSecurityGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.SecurityGroups {
 			r.resources = append(r.resources, *resource.GroupId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2SpotFleet(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeSpotFleetRequestsPages(&ec2.DescribeSpotFleetRequestsInput{}, func(page *ec2.DescribeSpotFleetRequestsOutput, lastPage bool) bool {
+func getEc2SpotFleet(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeSpotFleetRequestsRequest(&ec2.DescribeSpotFleetRequestsInput{})
+	p := ec2.NewDescribeSpotFleetRequestsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.SpotFleetRequestConfigs {
 			r.resources = append(r.resources, *resource.SpotFleetRequestId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2Subnet(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeSubnetsPages(&ec2.DescribeSubnetsInput{}, func(page *ec2.DescribeSubnetsOutput, lastPage bool) bool {
+func getEc2Subnet(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeSubnetsRequest(&ec2.DescribeSubnetsInput{})
+	p := ec2.NewDescribeSubnetsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Subnets {
 			r.resources = append(r.resources, *resource.SubnetId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2TrafficMirrorFilter(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeTrafficMirrorFiltersPages(&ec2.DescribeTrafficMirrorFiltersInput{}, func(page *ec2.DescribeTrafficMirrorFiltersOutput, lastPage bool) bool {
+func getEc2TrafficMirrorFilter(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeTrafficMirrorFiltersRequest(&ec2.DescribeTrafficMirrorFiltersInput{})
+	p := ec2.NewDescribeTrafficMirrorFiltersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TrafficMirrorFilters {
 			r.resources = append(r.resources, *resource.TrafficMirrorFilterId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2TrafficMirrorFilterRule(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeTrafficMirrorFiltersPages(&ec2.DescribeTrafficMirrorFiltersInput{}, func(page *ec2.DescribeTrafficMirrorFiltersOutput, lastPage bool) bool {
+func getEc2TrafficMirrorFilterRule(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeTrafficMirrorFiltersRequest(&ec2.DescribeTrafficMirrorFiltersInput{})
+	p := ec2.NewDescribeTrafficMirrorFiltersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TrafficMirrorFilters {
 			for _, resource := range resource.EgressFilterRules {
 				r.resources = append(r.resources, *resource.TrafficMirrorFilterRuleId)
@@ -336,115 +407,145 @@ func getEc2TrafficMirrorFilterRule(client *ec2.EC2) (r resourceSliceError) {
 				r.resources = append(r.resources, *resource.TrafficMirrorFilterRuleId)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2TrafficMirrorSession(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeTrafficMirrorSessionsPages(&ec2.DescribeTrafficMirrorSessionsInput{}, func(page *ec2.DescribeTrafficMirrorSessionsOutput, lastPage bool) bool {
+func getEc2TrafficMirrorSession(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeTrafficMirrorSessionsRequest(&ec2.DescribeTrafficMirrorSessionsInput{})
+	p := ec2.NewDescribeTrafficMirrorSessionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TrafficMirrorSessions {
 			r.resources = append(r.resources, *resource.TrafficMirrorSessionId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2TrafficMirrorTarget(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeTrafficMirrorTargetsPages(&ec2.DescribeTrafficMirrorTargetsInput{}, func(page *ec2.DescribeTrafficMirrorTargetsOutput, lastPage bool) bool {
+func getEc2TrafficMirrorTarget(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeTrafficMirrorTargetsRequest(&ec2.DescribeTrafficMirrorTargetsInput{})
+	p := ec2.NewDescribeTrafficMirrorTargetsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TrafficMirrorTargets {
 			r.resources = append(r.resources, *resource.TrafficMirrorTargetId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2TransitGateway(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeTransitGatewaysPages(&ec2.DescribeTransitGatewaysInput{}, func(page *ec2.DescribeTransitGatewaysOutput, lastPage bool) bool {
+func getEc2TransitGateway(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeTransitGatewaysRequest(&ec2.DescribeTransitGatewaysInput{})
+	p := ec2.NewDescribeTransitGatewaysPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TransitGateways {
 			r.resources = append(r.resources, *resource.TransitGatewayId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2TransitGatewayAttachment(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeTransitGatewayAttachmentsPages(&ec2.DescribeTransitGatewayAttachmentsInput{}, func(page *ec2.DescribeTransitGatewayAttachmentsOutput, lastPage bool) bool {
+func getEc2TransitGatewayAttachment(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeTransitGatewayAttachmentsRequest(&ec2.DescribeTransitGatewayAttachmentsInput{})
+	p := ec2.NewDescribeTransitGatewayAttachmentsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TransitGatewayAttachments {
 			r.resources = append(r.resources, *resource.TransitGatewayAttachmentId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2TransitGatewayRouteTable(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeTransitGatewayRouteTablesPages(&ec2.DescribeTransitGatewayRouteTablesInput{}, func(page *ec2.DescribeTransitGatewayRouteTablesOutput, lastPage bool) bool {
+func getEc2TransitGatewayRouteTable(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeTransitGatewayRouteTablesRequest(&ec2.DescribeTransitGatewayRouteTablesInput{})
+	p := ec2.NewDescribeTransitGatewayRouteTablesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TransitGatewayRouteTables {
 			r.resources = append(r.resources, *resource.TransitGatewayRouteTableId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2Volume(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeVolumesPages(&ec2.DescribeVolumesInput{}, func(page *ec2.DescribeVolumesOutput, lastPage bool) bool {
+func getEc2Volume(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeVolumesRequest(&ec2.DescribeVolumesInput{})
+	p := ec2.NewDescribeVolumesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Volumes {
 			r.resources = append(r.resources, *resource.VolumeId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2VPC(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeVpcsPages(&ec2.DescribeVpcsInput{}, func(page *ec2.DescribeVpcsOutput, lastPage bool) bool {
+func getEc2VPC(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeVpcsRequest(&ec2.DescribeVpcsInput{})
+	p := ec2.NewDescribeVpcsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Vpcs {
 			r.resources = append(r.resources, *resource.VpcId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2VPCCidrBlock(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeVpcsPages(&ec2.DescribeVpcsInput{}, func(page *ec2.DescribeVpcsOutput, lastPage bool) bool {
+func getEc2VPCCidrBlock(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeVpcsRequest(&ec2.DescribeVpcsInput{})
+	p := ec2.NewDescribeVpcsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Vpcs {
 			for _, resource := range resource.CidrBlockAssociationSet {
 				r.resources = append(r.resources, *resource.AssociationId)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2VPCEndpoint(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeVpcEndpointsPages(&ec2.DescribeVpcEndpointsInput{}, func(page *ec2.DescribeVpcEndpointsOutput, lastPage bool) bool {
+func getEc2VPCEndpoint(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeVpcEndpointsRequest(&ec2.DescribeVpcEndpointsInput{})
+	p := ec2.NewDescribeVpcEndpointsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.VpcEndpoints {
 			r.resources = append(r.resources, *resource.VpcEndpointId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2VPCEndpointConnectionNotification(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeVpcEndpointConnectionNotificationsPages(&ec2.DescribeVpcEndpointConnectionNotificationsInput{}, func(page *ec2.DescribeVpcEndpointConnectionNotificationsOutput, lastPage bool) bool {
+func getEc2VPCEndpointConnectionNotification(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeVpcEndpointConnectionNotificationsRequest(&ec2.DescribeVpcEndpointConnectionNotificationsInput{})
+	p := ec2.NewDescribeVpcEndpointConnectionNotificationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ConnectionNotificationSet {
 			r.resources = append(r.resources, *resource.ConnectionNotificationId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2VPCEndpointService(client *ec2.EC2) (r resourceSliceError) {
-	page, err := client.DescribeVpcEndpointServices(&ec2.DescribeVpcEndpointServicesInput{})
+func getEc2VPCEndpointService(client *ec2.Client) (r resourceSliceError) {
+	page, err := client.DescribeVpcEndpointServicesRequest(&ec2.DescribeVpcEndpointServicesInput{}).Send(context.Background())
 	for _, resource := range page.ServiceDetails {
 		r.resources = append(r.resources, *resource.ServiceId)
 	}
@@ -452,27 +553,33 @@ func getEc2VPCEndpointService(client *ec2.EC2) (r resourceSliceError) {
 	return
 }
 
-func getEc2VPCPeeringConnection(client *ec2.EC2) (r resourceSliceError) {
-	r.err = client.DescribeVpcPeeringConnectionsPages(&ec2.DescribeVpcPeeringConnectionsInput{}, func(page *ec2.DescribeVpcPeeringConnectionsOutput, lastPage bool) bool {
+func getEc2VPCPeeringConnection(client *ec2.Client) (r resourceSliceError) {
+	req := client.DescribeVpcPeeringConnectionsRequest(&ec2.DescribeVpcPeeringConnectionsInput{})
+	p := ec2.NewDescribeVpcPeeringConnectionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.VpcPeeringConnections {
 			r.resources = append(r.resources, *resource.VpcPeeringConnectionId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEc2VPNConnection(client *ec2.EC2) (r resourceSliceError) {
-	page, err := client.DescribeVpnConnections(&ec2.DescribeVpnConnectionsInput{})
+func getEc2VPNConnection(client *ec2.Client) (r resourceSliceError) {
+	page, err := client.DescribeVpnConnectionsRequest(&ec2.DescribeVpnConnectionsInput{}).Send(context.Background())
 	for _, resource := range page.VpnConnections {
-		r.resources = append(r.resources, *resource.VpnConnectionId)
+		if resource.ConnectionId == nil {
+			continue
+		}
+		r.resources = append(r.resources, *resource.ConnectionId)
 	}
 	r.err = err
 	return
 }
 
-func getEc2VPNGateway(client *ec2.EC2) (r resourceSliceError) {
-	page, err := client.DescribeVpnGateways(&ec2.DescribeVpnGatewaysInput{})
+func getEc2VPNGateway(client *ec2.Client) (r resourceSliceError) {
+	page, err := client.DescribeVpnGatewaysRequest(&ec2.DescribeVpnGatewaysInput{}).Send(context.Background())
 	for _, resource := range page.VpnGateways {
 		r.resources = append(r.resources, *resource.VpnGatewayId)
 	}

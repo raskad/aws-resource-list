@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudwatchevents"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchevents"
 )
 
-func getCloudWatchEvents(session *session.Session) (resources resourceMap) {
-	client := cloudwatchevents.New(session)
+func getCloudWatchEvents(config aws.Config) (resources resourceMap) {
+	client := cloudwatchevents.New(config)
 	resources = reduce(
 		getEventsEventBus(client).unwrap(eventsEventBus),
 		getEventsRule(client).unwrap(eventsRule),
@@ -14,10 +16,10 @@ func getCloudWatchEvents(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getEventsEventBus(client *cloudwatchevents.CloudWatchEvents) (r resourceSliceError) {
+func getEventsEventBus(client *cloudwatchevents.Client) (r resourceSliceError) {
 	input := cloudwatchevents.ListEventBusesInput{}
 	for {
-		page, err := client.ListEventBuses(&input)
+		page, err := client.ListEventBusesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -32,10 +34,10 @@ func getEventsEventBus(client *cloudwatchevents.CloudWatchEvents) (r resourceSli
 	}
 }
 
-func getEventsRule(client *cloudwatchevents.CloudWatchEvents) (r resourceSliceError) {
+func getEventsRule(client *cloudwatchevents.Client) (r resourceSliceError) {
 	input := cloudwatchevents.ListRulesInput{}
 	for {
-		page, err := client.ListRules(&input)
+		page, err := client.ListRulesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

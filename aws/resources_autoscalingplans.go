@@ -1,22 +1,24 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/autoscalingplans"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/autoscalingplans"
 )
 
-func getAutoScalingPlans(session *session.Session) (resources resourceMap) {
-	client := autoscalingplans.New(session)
+func getAutoScalingPlans(config aws.Config) (resources resourceMap) {
+	client := autoscalingplans.New(config)
 	resources = reduce(
 		getAutoScalingPlansScalingPlan(client).unwrap(autoScalingPlansScalingPlan),
 	)
 	return
 }
 
-func getAutoScalingPlansScalingPlan(client *autoscalingplans.AutoScalingPlans) (r resourceSliceError) {
+func getAutoScalingPlansScalingPlan(client *autoscalingplans.Client) (r resourceSliceError) {
 	input := autoscalingplans.DescribeScalingPlansInput{}
 	for {
-		page, err := client.DescribeScalingPlans(&input)
+		page, err := client.DescribeScalingPlansRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

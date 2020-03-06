@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/batch"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/batch"
 )
 
-func getBatch(session *session.Session) (resources resourceMap) {
-	client := batch.New(session)
+func getBatch(config aws.Config) (resources resourceMap) {
+	client := batch.New(config)
 	resources = reduce(
 		getBatchComputeEnvironment(client).unwrap(batchComputeEnvironment),
 		getBatchJobDefinition(client).unwrap(batchJobDefinition),
@@ -15,32 +17,41 @@ func getBatch(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getBatchComputeEnvironment(client *batch.Batch) (r resourceSliceError) {
-	r.err = client.DescribeComputeEnvironmentsPages(&batch.DescribeComputeEnvironmentsInput{}, func(page *batch.DescribeComputeEnvironmentsOutput, lastPage bool) bool {
+func getBatchComputeEnvironment(client *batch.Client) (r resourceSliceError) {
+	req := client.DescribeComputeEnvironmentsRequest(&batch.DescribeComputeEnvironmentsInput{})
+	p := batch.NewDescribeComputeEnvironmentsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ComputeEnvironments {
 			r.resources = append(r.resources, *resource.ComputeEnvironmentName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getBatchJobDefinition(client *batch.Batch) (r resourceSliceError) {
-	r.err = client.DescribeJobDefinitionsPages(&batch.DescribeJobDefinitionsInput{}, func(page *batch.DescribeJobDefinitionsOutput, lastPage bool) bool {
+func getBatchJobDefinition(client *batch.Client) (r resourceSliceError) {
+	req := client.DescribeJobDefinitionsRequest(&batch.DescribeJobDefinitionsInput{})
+	p := batch.NewDescribeJobDefinitionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.JobDefinitions {
 			r.resources = append(r.resources, *resource.JobDefinitionName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getBatchJobQueue(client *batch.Batch) (r resourceSliceError) {
-	r.err = client.DescribeJobQueuesPages(&batch.DescribeJobQueuesInput{}, func(page *batch.DescribeJobQueuesOutput, lastPage bool) bool {
+func getBatchJobQueue(client *batch.Client) (r resourceSliceError) {
+	req := client.DescribeJobQueuesRequest(&batch.DescribeJobQueuesInput{})
+	p := batch.NewDescribeJobQueuesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.JobQueues {
 			r.resources = append(r.resources, *resource.JobQueueName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

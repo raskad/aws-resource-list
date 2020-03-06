@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/appconfig"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/appconfig"
 )
 
-func getAppConfig(session *session.Session) (resources resourceMap) {
-	client := appconfig.New(session)
+func getAppConfig(config aws.Config) (resources resourceMap) {
+	client := appconfig.New(config)
 	resources = reduce(
 		getAppConfigApplication(client).unwrap(appConfigApplication),
 		getAppConfigDeploymentStrategy(client).unwrap(appConfigDeploymentStrategy),
@@ -14,22 +16,28 @@ func getAppConfig(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getAppConfigApplication(client *appconfig.AppConfig) (r resourceSliceError) {
-	r.err = client.ListApplicationsPages(&appconfig.ListApplicationsInput{}, func(page *appconfig.ListApplicationsOutput, lastPage bool) bool {
+func getAppConfigApplication(client *appconfig.Client) (r resourceSliceError) {
+	req := client.ListApplicationsRequest(&appconfig.ListApplicationsInput{})
+	p := appconfig.NewListApplicationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getAppConfigDeploymentStrategy(client *appconfig.AppConfig) (r resourceSliceError) {
-	r.err = client.ListDeploymentStrategiesPages(&appconfig.ListDeploymentStrategiesInput{}, func(page *appconfig.ListDeploymentStrategiesOutput, lastPage bool) bool {
+func getAppConfigDeploymentStrategy(client *appconfig.Client) (r resourceSliceError) {
+	req := client.ListDeploymentStrategiesRequest(&appconfig.ListDeploymentStrategiesInput{})
+	p := appconfig.NewListDeploymentStrategiesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

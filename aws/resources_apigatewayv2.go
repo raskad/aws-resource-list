@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/apigatewayv2"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/apigatewayv2"
 )
 
-func getAPIGatewayV2(session *session.Session) (resources resourceMap) {
-	client := apigatewayv2.New(session)
+func getAPIGatewayV2(config aws.Config) (resources resourceMap) {
+	client := apigatewayv2.New(config)
 	resources = reduce(
 		getAPIGatewayV2API(client).unwrap(apiGatewayV2Api),
 		getAPIGatewayV2DomainName(client).unwrap(apiGatewayV2DomainName),
@@ -14,10 +16,10 @@ func getAPIGatewayV2(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError) {
+func getAPIGatewayV2API(client *apigatewayv2.Client) (r resourceSliceError) {
 	input := apigatewayv2.GetApisInput{}
 	for {
-		page, err := client.GetApis(&input)
+		page, err := client.GetApisRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -32,10 +34,10 @@ func getAPIGatewayV2API(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError
 	}
 }
 
-func getAPIGatewayV2DomainName(client *apigatewayv2.ApiGatewayV2) (r resourceSliceError) {
+func getAPIGatewayV2DomainName(client *apigatewayv2.Client) (r resourceSliceError) {
 	input := apigatewayv2.GetDomainNamesInput{}
 	for {
-		page, err := client.GetDomainNames(&input)
+		page, err := client.GetDomainNamesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

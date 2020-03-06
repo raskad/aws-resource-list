@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/mediastore"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/mediastore"
 )
 
-func getMediaStore(session *session.Session) (resources resourceMap) {
-	client := mediastore.New(session)
+func getMediaStore(config aws.Config) (resources resourceMap) {
+	client := mediastore.New(config)
 	resources = reduce(
 		getMediaStoreContainer(client).unwrap(mediaStoreContainer),
 	)
 	return
 }
 
-func getMediaStoreContainer(client *mediastore.MediaStore) (r resourceSliceError) {
-	r.err = client.ListContainersPages(&mediastore.ListContainersInput{}, func(page *mediastore.ListContainersOutput, lastPage bool) bool {
+func getMediaStoreContainer(client *mediastore.Client) (r resourceSliceError) {
+	req := client.ListContainersRequest(&mediastore.ListContainersInput{})
+	p := mediastore.NewListContainersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Containers {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

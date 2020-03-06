@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/waf"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/waf"
 )
 
-func getWaf(session *session.Session) (resources resourceMap) {
-	client := waf.New(session)
+func getWaf(config aws.Config) (resources resourceMap) {
+	client := waf.New(config)
 	resources = reduce(
 		getWafByteMatchSet(client).unwrap(wafByteMatchSet),
 		getWafIPSet(client).unwrap(wafIPSet),
@@ -19,10 +21,10 @@ func getWaf(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getWafByteMatchSet(client *waf.WAF) (r resourceSliceError) {
+func getWafByteMatchSet(client *waf.Client) (r resourceSliceError) {
 	input := waf.ListByteMatchSetsInput{}
 	for {
-		page, err := client.ListByteMatchSets(&input)
+		page, err := client.ListByteMatchSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -37,10 +39,10 @@ func getWafByteMatchSet(client *waf.WAF) (r resourceSliceError) {
 	}
 }
 
-func getWafIPSet(client *waf.WAF) (r resourceSliceError) {
+func getWafIPSet(client *waf.Client) (r resourceSliceError) {
 	input := waf.ListIPSetsInput{}
 	for {
-		page, err := client.ListIPSets(&input)
+		page, err := client.ListIPSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -55,10 +57,10 @@ func getWafIPSet(client *waf.WAF) (r resourceSliceError) {
 	}
 }
 
-func getWafRule(client *waf.WAF) (r resourceSliceError) {
+func getWafRule(client *waf.Client) (r resourceSliceError) {
 	input := waf.ListRulesInput{}
 	for {
-		page, err := client.ListRules(&input)
+		page, err := client.ListRulesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -73,10 +75,10 @@ func getWafRule(client *waf.WAF) (r resourceSliceError) {
 	}
 }
 
-func getWafSizeConstraintSet(client *waf.WAF) (r resourceSliceError) {
+func getWafSizeConstraintSet(client *waf.Client) (r resourceSliceError) {
 	input := waf.ListSizeConstraintSetsInput{}
 	for {
-		page, err := client.ListSizeConstraintSets(&input)
+		page, err := client.ListSizeConstraintSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -91,10 +93,10 @@ func getWafSizeConstraintSet(client *waf.WAF) (r resourceSliceError) {
 	}
 }
 
-func getWafSQLInjectionMatchSet(client *waf.WAF) (r resourceSliceError) {
+func getWafSQLInjectionMatchSet(client *waf.Client) (r resourceSliceError) {
 	input := waf.ListSqlInjectionMatchSetsInput{}
 	for {
-		page, err := client.ListSqlInjectionMatchSets(&input)
+		page, err := client.ListSqlInjectionMatchSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -109,10 +111,10 @@ func getWafSQLInjectionMatchSet(client *waf.WAF) (r resourceSliceError) {
 	}
 }
 
-func getWafWebACL(client *waf.WAF) (r resourceSliceError) {
+func getWafWebACL(client *waf.Client) (r resourceSliceError) {
 	input := waf.ListWebACLsInput{}
 	for {
-		page, err := client.ListWebACLs(&input)
+		page, err := client.ListWebACLsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -127,10 +129,10 @@ func getWafWebACL(client *waf.WAF) (r resourceSliceError) {
 	}
 }
 
-func getWafXSSMatchSet(client *waf.WAF) (r resourceSliceError) {
+func getWafXSSMatchSet(client *waf.Client) (r resourceSliceError) {
 	input := waf.ListXssMatchSetsInput{}
 	for {
-		page, err := client.ListXssMatchSets(&input)
+		page, err := client.ListXssMatchSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

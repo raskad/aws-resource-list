@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/alexaforbusiness"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/alexaforbusiness"
 )
 
-func getAlexaForBusiness(session *session.Session) (resources resourceMap) {
-	client := alexaforbusiness.New(session)
+func getAlexaForBusiness(config aws.Config) (resources resourceMap) {
+	client := alexaforbusiness.New(config)
 	resources = reduce(
 		getAlexaAskSkill(client).unwrap(alexaAskSkill),
 	)
 	return
 }
 
-func getAlexaAskSkill(client *alexaforbusiness.AlexaForBusiness) (r resourceSliceError) {
-	r.err = client.ListSkillsPages(&alexaforbusiness.ListSkillsInput{}, func(page *alexaforbusiness.ListSkillsOutput, lastPage bool) bool {
+func getAlexaAskSkill(client *alexaforbusiness.Client) (r resourceSliceError) {
+	req := client.ListSkillsRequest(&alexaforbusiness.ListSkillsInput{})
+	p := alexaforbusiness.NewListSkillsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.SkillSummaries {
 			r.resources = append(r.resources, *resource.SkillName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

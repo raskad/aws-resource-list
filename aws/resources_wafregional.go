@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/waf"
-	"github.com/aws/aws-sdk-go/service/wafregional"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/wafregional"
 )
 
-func getWafRegional(session *session.Session) (resources resourceMap) {
-	client := wafregional.New(session)
+func getWafRegional(config aws.Config) (resources resourceMap) {
+	client := wafregional.New(config)
 	resources = reduce(
 		getWafRegionalByteMatchSet(client).unwrap(wafRegionalByteMatchSet),
 		getWafRegionalGeoMatchSet(client).unwrap(wafRegionalGeoMatchSet),
@@ -23,10 +24,10 @@ func getWafRegional(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getWafRegionalByteMatchSet(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListByteMatchSetsInput{}
+func getWafRegionalByteMatchSet(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListByteMatchSetsInput{}
 	for {
-		page, err := client.ListByteMatchSets(&input)
+		page, err := client.ListByteMatchSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -41,10 +42,10 @@ func getWafRegionalByteMatchSet(client *wafregional.WAFRegional) (r resourceSlic
 	}
 }
 
-func getWafRegionalGeoMatchSet(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListGeoMatchSetsInput{}
+func getWafRegionalGeoMatchSet(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListGeoMatchSetsInput{}
 	for {
-		page, err := client.ListGeoMatchSets(&input)
+		page, err := client.ListGeoMatchSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -59,10 +60,10 @@ func getWafRegionalGeoMatchSet(client *wafregional.WAFRegional) (r resourceSlice
 	}
 }
 
-func getWafRegionalIPSet(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListIPSetsInput{}
+func getWafRegionalIPSet(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListIPSetsInput{}
 	for {
-		page, err := client.ListIPSets(&input)
+		page, err := client.ListIPSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -77,10 +78,10 @@ func getWafRegionalIPSet(client *wafregional.WAFRegional) (r resourceSliceError)
 	}
 }
 
-func getWafRegionalRateBasedRule(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListRateBasedRulesInput{}
+func getWafRegionalRateBasedRule(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListRateBasedRulesInput{}
 	for {
-		page, err := client.ListRateBasedRules(&input)
+		page, err := client.ListRateBasedRulesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -95,10 +96,10 @@ func getWafRegionalRateBasedRule(client *wafregional.WAFRegional) (r resourceSli
 	}
 }
 
-func getWafRegionalRegexPatternSet(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListRegexPatternSetsInput{}
+func getWafRegionalRegexPatternSet(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListRegexPatternSetsInput{}
 	for {
-		page, err := client.ListRegexPatternSets(&input)
+		page, err := client.ListRegexPatternSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -113,10 +114,10 @@ func getWafRegionalRegexPatternSet(client *wafregional.WAFRegional) (r resourceS
 	}
 }
 
-func getWafRegionalRule(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListRulesInput{}
+func getWafRegionalRule(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListRulesInput{}
 	for {
-		page, err := client.ListRules(&input)
+		page, err := client.ListRulesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -131,10 +132,10 @@ func getWafRegionalRule(client *wafregional.WAFRegional) (r resourceSliceError) 
 	}
 }
 
-func getWafRegionalSizeConstraintSet(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListSizeConstraintSetsInput{}
+func getWafRegionalSizeConstraintSet(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListSizeConstraintSetsInput{}
 	for {
-		page, err := client.ListSizeConstraintSets(&input)
+		page, err := client.ListSizeConstraintSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -149,10 +150,10 @@ func getWafRegionalSizeConstraintSet(client *wafregional.WAFRegional) (r resourc
 	}
 }
 
-func getWafRegionalSQLInjectionMatchSet(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListSqlInjectionMatchSetsInput{}
+func getWafRegionalSQLInjectionMatchSet(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListSqlInjectionMatchSetsInput{}
 	for {
-		page, err := client.ListSqlInjectionMatchSets(&input)
+		page, err := client.ListSqlInjectionMatchSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -167,10 +168,10 @@ func getWafRegionalSQLInjectionMatchSet(client *wafregional.WAFRegional) (r reso
 	}
 }
 
-func getWafRegionalWebACL(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListWebACLsInput{}
+func getWafRegionalWebACL(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListWebACLsInput{}
 	for {
-		page, err := client.ListWebACLs(&input)
+		page, err := client.ListWebACLsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -185,10 +186,10 @@ func getWafRegionalWebACL(client *wafregional.WAFRegional) (r resourceSliceError
 	}
 }
 
-func getWafRegionalXSSMatchSet(client *wafregional.WAFRegional) (r resourceSliceError) {
-	input := waf.ListXssMatchSetsInput{}
+func getWafRegionalXSSMatchSet(client *wafregional.Client) (r resourceSliceError) {
+	input := wafregional.ListXssMatchSetsInput{}
 	for {
-		page, err := client.ListXssMatchSets(&input)
+		page, err := client.ListXssMatchSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

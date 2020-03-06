@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ssm"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 )
 
-func getSsm(session *session.Session) (resources resourceMap) {
-	client := ssm.New(session)
+func getSsm(config aws.Config) (resources resourceMap) {
+	client := ssm.New(config)
 
 	ssmMaintenanceWindowResourceMap := getSsmMaintenanceWindow(client).unwrap(ssmMaintenanceWindow)
 	ssmMaintenanceWindowIDs := ssmMaintenanceWindowResourceMap[ssmMaintenanceWindow]
@@ -24,30 +25,36 @@ func getSsm(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getSsmAssociation(client *ssm.SSM) (r resourceSliceError) {
-	r.err = client.ListAssociationsPages(&ssm.ListAssociationsInput{}, func(page *ssm.ListAssociationsOutput, lastPage bool) bool {
+func getSsmAssociation(client *ssm.Client) (r resourceSliceError) {
+	req := client.ListAssociationsRequest(&ssm.ListAssociationsInput{})
+	p := ssm.NewListAssociationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Associations {
 			r.resources = append(r.resources, *resource.AssociationId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getSsmDocument(client *ssm.SSM) (r resourceSliceError) {
-	r.err = client.ListDocumentsPages(&ssm.ListDocumentsInput{}, func(page *ssm.ListDocumentsOutput, lastPage bool) bool {
+func getSsmDocument(client *ssm.Client) (r resourceSliceError) {
+	req := client.ListDocumentsRequest(&ssm.ListDocumentsInput{})
+	p := ssm.NewListDocumentsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DocumentIdentifiers {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getSsmMaintenanceWindow(client *ssm.SSM) (r resourceSliceError) {
+func getSsmMaintenanceWindow(client *ssm.Client) (r resourceSliceError) {
 	input := ssm.DescribeMaintenanceWindowsInput{}
 	for {
-		page, err := client.DescribeMaintenanceWindows(&input)
+		page, err := client.DescribeMaintenanceWindowsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -62,13 +69,13 @@ func getSsmMaintenanceWindow(client *ssm.SSM) (r resourceSliceError) {
 	}
 }
 
-func getSsmMaintenanceWindowTarget(client *ssm.SSM, windowIDs []string) (r resourceSliceError) {
+func getSsmMaintenanceWindowTarget(client *ssm.Client, windowIDs []string) (r resourceSliceError) {
 	for _, windowID := range windowIDs {
 		input := ssm.DescribeMaintenanceWindowTargetsInput{
 			WindowId: aws.String(windowID),
 		}
 		for {
-			page, err := client.DescribeMaintenanceWindowTargets(&input)
+			page, err := client.DescribeMaintenanceWindowTargetsRequest(&input).Send(context.Background())
 			if err != nil {
 				r.err = err
 				return
@@ -85,13 +92,13 @@ func getSsmMaintenanceWindowTarget(client *ssm.SSM, windowIDs []string) (r resou
 	return
 }
 
-func getSsmMaintenanceWindowTask(client *ssm.SSM, windowIDs []string) (r resourceSliceError) {
+func getSsmMaintenanceWindowTask(client *ssm.Client, windowIDs []string) (r resourceSliceError) {
 	for _, windowID := range windowIDs {
 		input := ssm.DescribeMaintenanceWindowTasksInput{
 			WindowId: aws.String(windowID),
 		}
 		for {
-			page, err := client.DescribeMaintenanceWindowTasks(&input)
+			page, err := client.DescribeMaintenanceWindowTasksRequest(&input).Send(context.Background())
 			if err != nil {
 				r.err = err
 				return
@@ -108,20 +115,23 @@ func getSsmMaintenanceWindowTask(client *ssm.SSM, windowIDs []string) (r resourc
 	return
 }
 
-func getSsmParameter(client *ssm.SSM) (r resourceSliceError) {
-	r.err = client.DescribeParametersPages(&ssm.DescribeParametersInput{}, func(page *ssm.DescribeParametersOutput, lastPage bool) bool {
+func getSsmParameter(client *ssm.Client) (r resourceSliceError) {
+	req := client.DescribeParametersRequest(&ssm.DescribeParametersInput{})
+	p := ssm.NewDescribeParametersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Parameters {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getSsmPatchBaseline(client *ssm.SSM) (r resourceSliceError) {
+func getSsmPatchBaseline(client *ssm.Client) (r resourceSliceError) {
 	input := ssm.DescribePatchBaselinesInput{}
 	for {
-		page, err := client.DescribePatchBaselines(&input)
+		page, err := client.DescribePatchBaselinesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/elasticache"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 )
 
-func getElasticache(session *session.Session) (resources resourceMap) {
-	client := elasticache.New(session)
+func getElasticache(config aws.Config) (resources resourceMap) {
+	client := elasticache.New(config)
 	resources = reduce(
 		getElastiCacheCacheCluster(client).unwrap(elastiCacheCacheCluster),
 		getElastiCacheParameterGroup(client).unwrap(elastiCacheParameterGroup),
@@ -17,52 +19,67 @@ func getElasticache(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getElastiCacheCacheCluster(client *elasticache.ElastiCache) (r resourceSliceError) {
-	r.err = client.DescribeCacheClustersPages(&elasticache.DescribeCacheClustersInput{}, func(page *elasticache.DescribeCacheClustersOutput, lastPage bool) bool {
+func getElastiCacheCacheCluster(client *elasticache.Client) (r resourceSliceError) {
+	req := client.DescribeCacheClustersRequest(&elasticache.DescribeCacheClustersInput{})
+	p := elasticache.NewDescribeCacheClustersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.CacheClusters {
 			r.resources = append(r.resources, *resource.CacheClusterId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getElastiCacheParameterGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
-	r.err = client.DescribeCacheParameterGroupsPages(&elasticache.DescribeCacheParameterGroupsInput{}, func(page *elasticache.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
+func getElastiCacheParameterGroup(client *elasticache.Client) (r resourceSliceError) {
+	req := client.DescribeCacheParameterGroupsRequest(&elasticache.DescribeCacheParameterGroupsInput{})
+	p := elasticache.NewDescribeCacheParameterGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.CacheParameterGroups {
 			r.resources = append(r.resources, *resource.CacheParameterGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getElastiCacheReplicationGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
-	r.err = client.DescribeReplicationGroupsPages(&elasticache.DescribeReplicationGroupsInput{}, func(page *elasticache.DescribeReplicationGroupsOutput, lastPage bool) bool {
+func getElastiCacheReplicationGroup(client *elasticache.Client) (r resourceSliceError) {
+	req := client.DescribeReplicationGroupsRequest(&elasticache.DescribeReplicationGroupsInput{})
+	p := elasticache.NewDescribeReplicationGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ReplicationGroups {
 			r.resources = append(r.resources, *resource.ReplicationGroupId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getElastiCacheSecurityGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
-	r.err = client.DescribeCacheSecurityGroupsPages(&elasticache.DescribeCacheSecurityGroupsInput{}, func(page *elasticache.DescribeCacheSecurityGroupsOutput, lastPage bool) bool {
+func getElastiCacheSecurityGroup(client *elasticache.Client) (r resourceSliceError) {
+	req := client.DescribeCacheSecurityGroupsRequest(&elasticache.DescribeCacheSecurityGroupsInput{})
+	p := elasticache.NewDescribeCacheSecurityGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.CacheSecurityGroups {
 			r.resources = append(r.resources, *resource.CacheSecurityGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getElastiCacheSubnetGroup(client *elasticache.ElastiCache) (r resourceSliceError) {
-	r.err = client.DescribeCacheSubnetGroupsPages(&elasticache.DescribeCacheSubnetGroupsInput{}, func(page *elasticache.DescribeCacheSubnetGroupsOutput, lastPage bool) bool {
+func getElastiCacheSubnetGroup(client *elasticache.Client) (r resourceSliceError) {
+	req := client.DescribeCacheSubnetGroupsRequest(&elasticache.DescribeCacheSubnetGroupsInput{})
+	p := elasticache.NewDescribeCacheSubnetGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.CacheSubnetGroups {
 			r.resources = append(r.resources, *resource.CacheSubnetGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

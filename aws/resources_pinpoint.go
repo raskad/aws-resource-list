@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/pinpoint"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/pinpoint"
 )
 
-func getPinpoint(session *session.Session) (resources resourceMap) {
-	client := pinpoint.New(session)
+func getPinpoint(config aws.Config) (resources resourceMap) {
+	client := pinpoint.New(config)
 	resources = reduce(
 		getPinpointApp(client).unwrap(pinpointApp),
 		getPinpointEmailTemplate(client).unwrap(pinpointEmailTemplate),
@@ -16,10 +18,10 @@ func getPinpoint(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getPinpointApp(client *pinpoint.Pinpoint) (r resourceSliceError) {
+func getPinpointApp(client *pinpoint.Client) (r resourceSliceError) {
 	input := pinpoint.GetAppsInput{}
 	for {
-		page, err := client.GetApps(&input)
+		page, err := client.GetAppsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -34,16 +36,16 @@ func getPinpointApp(client *pinpoint.Pinpoint) (r resourceSliceError) {
 	}
 }
 
-func getPinpointEmailTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
+func getPinpointEmailTemplate(client *pinpoint.Client) (r resourceSliceError) {
 	input := pinpoint.ListTemplatesInput{}
 	for {
-		page, err := client.ListTemplates(&input)
+		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
 		}
 		for _, resource := range page.TemplatesResponse.Item {
-			if *resource.TemplateType == pinpoint.TemplateTypeEmail {
+			if resource.TemplateType == pinpoint.TemplateTypeEmail {
 				r.resources = append(r.resources, *resource.TemplateName)
 			}
 		}
@@ -54,16 +56,16 @@ func getPinpointEmailTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) 
 	}
 }
 
-func getPinpointPushTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
+func getPinpointPushTemplate(client *pinpoint.Client) (r resourceSliceError) {
 	input := pinpoint.ListTemplatesInput{}
 	for {
-		page, err := client.ListTemplates(&input)
+		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
 		}
 		for _, resource := range page.TemplatesResponse.Item {
-			if *resource.TemplateType == pinpoint.TemplateTypePush {
+			if resource.TemplateType == pinpoint.TemplateTypePush {
 				r.resources = append(r.resources, *resource.TemplateName)
 			}
 		}
@@ -74,16 +76,16 @@ func getPinpointPushTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
 	}
 }
 
-func getPinpointSmsTemplate(client *pinpoint.Pinpoint) (r resourceSliceError) {
+func getPinpointSmsTemplate(client *pinpoint.Client) (r resourceSliceError) {
 	input := pinpoint.ListTemplatesInput{}
 	for {
-		page, err := client.ListTemplates(&input)
+		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
 		}
 		for _, resource := range page.TemplatesResponse.Item {
-			if *resource.TemplateType == pinpoint.TemplateTypeSms {
+			if resource.TemplateType == pinpoint.TemplateTypeSms {
 				r.resources = append(r.resources, *resource.TemplateName)
 			}
 		}

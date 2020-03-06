@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/directoryservice"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/directoryservice"
 )
 
-func getDirectoryService(session *session.Session) (resources resourceMap) {
-	client := directoryservice.New(session)
+func getDirectoryService(config aws.Config) (resources resourceMap) {
+	client := directoryservice.New(config)
 	resources = reduce(
 		getDirectoryServiceMicrosoftAD(client).unwrap(directoryServiceMicrosoftAD),
 		getDirectoryServiceSimpleAD(client).unwrap(directoryServiceSimpleAD),
@@ -14,16 +16,16 @@ func getDirectoryService(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (r resourceSliceError) {
+func getDirectoryServiceMicrosoftAD(client *directoryservice.Client) (r resourceSliceError) {
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
-		page, err := client.DescribeDirectories(&input)
+		page, err := client.DescribeDirectoriesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
 		}
 		for _, resource := range page.DirectoryDescriptions {
-			if *resource.Type == directoryservice.DirectoryTypeMicrosoftAd {
+			if resource.Type == directoryservice.DirectoryTypeMicrosoftAd {
 				r.resources = append(r.resources, *resource.DirectoryId)
 			}
 		}
@@ -34,16 +36,16 @@ func getDirectoryServiceMicrosoftAD(client *directoryservice.DirectoryService) (
 	}
 }
 
-func getDirectoryServiceSimpleAD(client *directoryservice.DirectoryService) (r resourceSliceError) {
+func getDirectoryServiceSimpleAD(client *directoryservice.Client) (r resourceSliceError) {
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
-		page, err := client.DescribeDirectories(&input)
+		page, err := client.DescribeDirectoriesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
 		}
 		for _, resource := range page.DirectoryDescriptions {
-			if *resource.Type == directoryservice.DirectoryTypeSimpleAd {
+			if resource.Type == directoryservice.DirectoryTypeSimpleAd {
 				r.resources = append(r.resources, *resource.DirectoryId)
 			}
 		}

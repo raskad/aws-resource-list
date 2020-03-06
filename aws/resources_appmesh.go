@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/appmesh"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/appmesh"
 )
 
-func getAppMesh(session *session.Session) (resources resourceMap) {
-	client := appmesh.New(session)
+func getAppMesh(config aws.Config) (resources resourceMap) {
+	client := appmesh.New(config)
 	resources = reduce(
 		getAppMeshMesh(client).unwrap(appMeshMesh),
 	)
 	return
 }
 
-func getAppMeshMesh(client *appmesh.AppMesh) (r resourceSliceError) {
-	r.err = client.ListMeshesPages(&appmesh.ListMeshesInput{}, func(page *appmesh.ListMeshesOutput, lastPage bool) bool {
+func getAppMeshMesh(client *appmesh.Client) (r resourceSliceError) {
+	req := client.ListMeshesRequest(&appmesh.ListMeshesInput{})
+	p := appmesh.NewListMeshesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Meshes {
 			r.resources = append(r.resources, *resource.MeshName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/simpledb"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/simpledb"
 )
 
-func getSdb(session *session.Session) (resources resourceMap) {
-	client := simpledb.New(session)
+func getSdb(config aws.Config) (resources resourceMap) {
+	client := simpledb.New(config)
 	resources = reduce(
 		getSdbDomain(client).unwrap(sdbDomain),
 	)
 	return
 }
 
-func getSdbDomain(client *simpledb.SimpleDB) (r resourceSliceError) {
-	r.err = client.ListDomainsPages(&simpledb.ListDomainsInput{}, func(page *simpledb.ListDomainsOutput, lastPage bool) bool {
+func getSdbDomain(client *simpledb.Client) (r resourceSliceError) {
+	req := client.ListDomainsRequest(&simpledb.ListDomainsInput{})
+	p := simpledb.NewListDomainsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DomainNames {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

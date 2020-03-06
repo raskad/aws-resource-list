@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ses"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ses"
 )
 
-func getSes(session *session.Session) (resources resourceMap) {
-	client := ses.New(session)
+func getSes(config aws.Config) (resources resourceMap) {
+	client := ses.New(config)
 	resources = reduce(
 		getSesConfigurationSet(client).unwrap(sesConfigurationSet),
 		getSesReceiptFilter(client).unwrap(sesReceiptFilter),
@@ -16,10 +18,10 @@ func getSes(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getSesConfigurationSet(client *ses.SES) (r resourceSliceError) {
+func getSesConfigurationSet(client *ses.Client) (r resourceSliceError) {
 	input := ses.ListConfigurationSetsInput{}
 	for {
-		page, err := client.ListConfigurationSets(&input)
+		page, err := client.ListConfigurationSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -34,8 +36,8 @@ func getSesConfigurationSet(client *ses.SES) (r resourceSliceError) {
 	}
 }
 
-func getSesReceiptFilter(client *ses.SES) (r resourceSliceError) {
-	page, err := client.ListReceiptFilters(&ses.ListReceiptFiltersInput{})
+func getSesReceiptFilter(client *ses.Client) (r resourceSliceError) {
+	page, err := client.ListReceiptFiltersRequest(&ses.ListReceiptFiltersInput{}).Send(context.Background())
 	if err != nil {
 		r.err = err
 		return
@@ -46,10 +48,10 @@ func getSesReceiptFilter(client *ses.SES) (r resourceSliceError) {
 	return
 }
 
-func getSesReceiptRuleSet(client *ses.SES) (r resourceSliceError) {
+func getSesReceiptRuleSet(client *ses.Client) (r resourceSliceError) {
 	input := ses.ListReceiptRuleSetsInput{}
 	for {
-		page, err := client.ListReceiptRuleSets(&input)
+		page, err := client.ListReceiptRuleSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -64,10 +66,10 @@ func getSesReceiptRuleSet(client *ses.SES) (r resourceSliceError) {
 	}
 }
 
-func getSesTemplate(client *ses.SES) (r resourceSliceError) {
+func getSesTemplate(client *ses.Client) (r resourceSliceError) {
 	input := ses.ListTemplatesInput{}
 	for {
-		page, err := client.ListTemplates(&input)
+		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

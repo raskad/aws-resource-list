@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/eks"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/eks"
 )
 
-func getEks(session *session.Session) (resources resourceMap) {
-	client := eks.New(session)
+func getEks(config aws.Config) (resources resourceMap) {
+	client := eks.New(config)
 
 	eksClusterResourceMap := getEksCluster(client).unwrap(eksCluster)
 	eksClusterNames := eksClusterResourceMap[eksCluster]
@@ -19,26 +20,33 @@ func getEks(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getEksCluster(client *eks.EKS) (r resourceSliceError) {
-	r.err = client.ListClustersPages(&eks.ListClustersInput{}, func(page *eks.ListClustersOutput, lastPage bool) bool {
+func getEksCluster(client *eks.Client) (r resourceSliceError) {
+	req := client.ListClustersRequest(&eks.ListClustersInput{})
+	p := eks.NewListClustersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Clusters {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEksNodegroup(client *eks.EKS, clusterNames []string) (r resourceSliceError) {
+func getEksNodegroup(client *eks.Client, clusterNames []string) (r resourceSliceError) {
 	for _, clusterName := range clusterNames {
-		r.err = client.ListNodegroupsPages(&eks.ListNodegroupsInput{
+		req := client.ListNodegroupsRequest(&eks.ListNodegroupsInput{
 			ClusterName: aws.String(clusterName),
-		}, func(page *eks.ListNodegroupsOutput, lastPage bool) bool {
-			for _, resource := range page.Nodegroups {
-				r.resources = append(r.resources, *resource)
-			}
-			return true
 		})
+		p := eks.NewListNodegroupsPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
+			for _, resource := range page.Nodegroups {
+				r.resources = append(r.resources, resource)
+			}
+		}
+		r.err = p.Err()
+		return
 	}
 	return
 }

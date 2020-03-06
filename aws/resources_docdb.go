@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/docdb"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/docdb"
 )
 
-func getDocDB(session *session.Session) (resources resourceMap) {
-	client := docdb.New(session)
+func getDocDB(config aws.Config) (resources resourceMap) {
+	client := docdb.New(config)
 	resources = reduce(
 		getDocDBDBCluster(client).unwrap(docDBDBCluster),
 		getDocDBDBClusterParameterGroup(client).unwrap(docDBDBClusterParameterGroup),
@@ -16,20 +18,23 @@ func getDocDB(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getDocDBDBCluster(client *docdb.DocDB) (r resourceSliceError) {
-	r.err = client.DescribeDBClustersPages(&docdb.DescribeDBClustersInput{}, func(page *docdb.DescribeDBClustersOutput, lastPage bool) bool {
+func getDocDBDBCluster(client *docdb.Client) (r resourceSliceError) {
+	req := client.DescribeDBClustersRequest(&docdb.DescribeDBClustersInput{})
+	p := docdb.NewDescribeDBClustersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBClusters {
 			r.resources = append(r.resources, *resource.DBClusterIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getDocDBDBClusterParameterGroup(client *docdb.DocDB) (r resourceSliceError) {
+func getDocDBDBClusterParameterGroup(client *docdb.Client) (r resourceSliceError) {
 	input := docdb.DescribeDBClusterParameterGroupsInput{}
 	for {
-		page, err := client.DescribeDBClusterParameterGroups(&input)
+		page, err := client.DescribeDBClusterParameterGroupsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -44,22 +49,28 @@ func getDocDBDBClusterParameterGroup(client *docdb.DocDB) (r resourceSliceError)
 	}
 }
 
-func getDocDBDBInstance(client *docdb.DocDB) (r resourceSliceError) {
-	r.err = client.DescribeDBInstancesPages(&docdb.DescribeDBInstancesInput{}, func(page *docdb.DescribeDBInstancesOutput, lastPage bool) bool {
+func getDocDBDBInstance(client *docdb.Client) (r resourceSliceError) {
+	req := client.DescribeDBInstancesRequest(&docdb.DescribeDBInstancesInput{})
+	p := docdb.NewDescribeDBInstancesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBInstances {
 			r.resources = append(r.resources, *resource.DBInstanceIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getDocDBDBSubnetGroup(client *docdb.DocDB) (r resourceSliceError) {
-	r.err = client.DescribeDBSubnetGroupsPages(&docdb.DescribeDBSubnetGroupsInput{}, func(page *docdb.DescribeDBSubnetGroupsOutput, lastPage bool) bool {
+func getDocDBDBSubnetGroup(client *docdb.Client) (r resourceSliceError) {
+	req := client.DescribeDBSubnetGroupsRequest(&docdb.DescribeDBSubnetGroupsInput{})
+	p := docdb.NewDescribeDBSubnetGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBSubnetGroups {
 			r.resources = append(r.resources, *resource.DBSubnetGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

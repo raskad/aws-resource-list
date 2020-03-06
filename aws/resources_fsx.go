@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/fsx"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/fsx"
 )
 
-func getFsx(session *session.Session) (resources resourceMap) {
-	client := fsx.New(session)
+func getFsx(config aws.Config) (resources resourceMap) {
+	client := fsx.New(config)
 	resources = reduce(
 		getFsxFileSystem(client).unwrap(fsxFileSystem),
 	)
 	return
 }
 
-func getFsxFileSystem(client *fsx.FSx) (r resourceSliceError) {
-	r.err = client.DescribeFileSystemsPages(&fsx.DescribeFileSystemsInput{}, func(page *fsx.DescribeFileSystemsOutput, lastPage bool) bool {
+func getFsxFileSystem(client *fsx.Client) (r resourceSliceError) {
+	req := client.DescribeFileSystemsRequest(&fsx.DescribeFileSystemsInput{})
+	p := fsx.NewDescribeFileSystemsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.FileSystems {
 			r.resources = append(r.resources, *resource.FileSystemId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

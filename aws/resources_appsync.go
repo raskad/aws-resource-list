@@ -1,22 +1,24 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/appsync"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/appsync"
 )
 
-func getAppSync(session *session.Session) (resources resourceMap) {
-	client := appsync.New(session)
+func getAppSync(config aws.Config) (resources resourceMap) {
+	client := appsync.New(config)
 	resources = reduce(
 		getAppSyncGraphQLApi(client).unwrap(appSyncGraphQLApi),
 	)
 	return
 }
 
-func getAppSyncGraphQLApi(client *appsync.AppSync) (r resourceSliceError) {
+func getAppSyncGraphQLApi(client *appsync.Client) (r resourceSliceError) {
 	input := appsync.ListGraphqlApisInput{}
 	for {
-		page, err := client.ListGraphqlApis(&input)
+		page, err := client.ListGraphqlApisRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

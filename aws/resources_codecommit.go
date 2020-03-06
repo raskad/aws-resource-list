@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/codecommit"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/codecommit"
 )
 
-func getCodeCommit(session *session.Session) (resources resourceMap) {
-	client := codecommit.New(session)
+func getCodeCommit(config aws.Config) (resources resourceMap) {
+	client := codecommit.New(config)
 	resources = reduce(
 		getCodeCommitRepository(client).unwrap(codeCommitRepository),
 	)
 	return
 }
 
-func getCodeCommitRepository(client *codecommit.CodeCommit) (r resourceSliceError) {
-	r.err = client.ListRepositoriesPages(&codecommit.ListRepositoriesInput{}, func(page *codecommit.ListRepositoriesOutput, lastPage bool) bool {
+func getCodeCommitRepository(client *codecommit.Client) (r resourceSliceError) {
+	req := client.ListRepositoriesRequest(&codecommit.ListRepositoriesInput{})
+	p := codecommit.NewListRepositoriesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Repositories {
 			r.resources = append(r.resources, *resource.RepositoryId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

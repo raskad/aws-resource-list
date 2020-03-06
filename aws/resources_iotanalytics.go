@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/iotanalytics"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/iotanalytics"
 )
 
-func getIoTAnalytics(session *session.Session) (resources resourceMap) {
-	client := iotanalytics.New(session)
+func getIoTAnalytics(config aws.Config) (resources resourceMap) {
+	client := iotanalytics.New(config)
 	resources = reduce(
 		getIoTAnalyticsChannel(client).unwrap(ioTAnalyticsChannel),
 		getIoTAnalyticsDataset(client).unwrap(ioTAnalyticsDataset),
@@ -16,42 +18,54 @@ func getIoTAnalytics(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getIoTAnalyticsChannel(client *iotanalytics.IoTAnalytics) (r resourceSliceError) {
-	r.err = client.ListChannelsPages(&iotanalytics.ListChannelsInput{}, func(page *iotanalytics.ListChannelsOutput, lastPage bool) bool {
+func getIoTAnalyticsChannel(client *iotanalytics.Client) (r resourceSliceError) {
+	req := client.ListChannelsRequest(&iotanalytics.ListChannelsInput{})
+	p := iotanalytics.NewListChannelsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ChannelSummaries {
 			r.resources = append(r.resources, *resource.ChannelName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIoTAnalyticsDataset(client *iotanalytics.IoTAnalytics) (r resourceSliceError) {
-	r.err = client.ListDatasetsPages(&iotanalytics.ListDatasetsInput{}, func(page *iotanalytics.ListDatasetsOutput, lastPage bool) bool {
+func getIoTAnalyticsDataset(client *iotanalytics.Client) (r resourceSliceError) {
+	req := client.ListDatasetsRequest(&iotanalytics.ListDatasetsInput{})
+	p := iotanalytics.NewListDatasetsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DatasetSummaries {
 			r.resources = append(r.resources, *resource.DatasetName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIoTAnalyticsDatastore(client *iotanalytics.IoTAnalytics) (r resourceSliceError) {
-	r.err = client.ListDatastoresPages(&iotanalytics.ListDatastoresInput{}, func(page *iotanalytics.ListDatastoresOutput, lastPage bool) bool {
+func getIoTAnalyticsDatastore(client *iotanalytics.Client) (r resourceSliceError) {
+	req := client.ListDatastoresRequest(&iotanalytics.ListDatastoresInput{})
+	p := iotanalytics.NewListDatastoresPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DatastoreSummaries {
 			r.resources = append(r.resources, *resource.DatastoreName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getIoTAnalyticsPipeline(client *iotanalytics.IoTAnalytics) (r resourceSliceError) {
-	r.err = client.ListPipelinesPages(&iotanalytics.ListPipelinesInput{}, func(page *iotanalytics.ListPipelinesOutput, lastPage bool) bool {
+func getIoTAnalyticsPipeline(client *iotanalytics.Client) (r resourceSliceError) {
+	req := client.ListPipelinesRequest(&iotanalytics.ListPipelinesInput{})
+	p := iotanalytics.NewListPipelinesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.PipelineSummaries {
 			r.resources = append(r.resources, *resource.PipelineName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

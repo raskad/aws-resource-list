@@ -1,22 +1,24 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/iot1clickdevicesservice"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/iot1clickdevicesservice"
 )
 
-func getIoT1ClickDevicesService(session *session.Session) (resources resourceMap) {
-	client := iot1clickdevicesservice.New(session)
+func getIoT1ClickDevicesService(config aws.Config) (resources resourceMap) {
+	client := iot1clickdevicesservice.New(config)
 	resources = reduce(
 		getIoT1ClickDevice(client).unwrap(ioT1ClickDevice),
 	)
 	return
 }
 
-func getIoT1ClickDevice(client *iot1clickdevicesservice.IoT1ClickDevicesService) (r resourceSliceError) {
+func getIoT1ClickDevice(client *iot1clickdevicesservice.Client) (r resourceSliceError) {
 	input := iot1clickdevicesservice.ListDevicesInput{}
 	for {
-		page, err := client.ListDevices(&input)
+		page, err := client.ListDevicesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

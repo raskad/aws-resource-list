@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/iotevents"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/iotevents"
 )
 
-func getIoTEvents(session *session.Session) (resources resourceMap) {
-	client := iotevents.New(session)
+func getIoTEvents(config aws.Config) (resources resourceMap) {
+	client := iotevents.New(config)
 	resources = reduce(
 		getIoTEventsDetectorModel(client).unwrap(ioTEventsDetectorModel),
 		getIoTEventsInput(client).unwrap(ioTEventsInput),
@@ -14,10 +16,10 @@ func getIoTEvents(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getIoTEventsDetectorModel(client *iotevents.IoTEvents) (r resourceSliceError) {
+func getIoTEventsDetectorModel(client *iotevents.Client) (r resourceSliceError) {
 	input := iotevents.ListDetectorModelsInput{}
 	for {
-		page, err := client.ListDetectorModels(&input)
+		page, err := client.ListDetectorModelsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -32,10 +34,10 @@ func getIoTEventsDetectorModel(client *iotevents.IoTEvents) (r resourceSliceErro
 	}
 }
 
-func getIoTEventsInput(client *iotevents.IoTEvents) (r resourceSliceError) {
+func getIoTEventsInput(client *iotevents.Client) (r resourceSliceError) {
 	input := iotevents.ListInputsInput{}
 	for {
-		page, err := client.ListInputs(&input)
+		page, err := client.ListInputsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

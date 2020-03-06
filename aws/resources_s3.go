@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
-func getS3(session *session.Session) (resources resourceMap) {
-	client := s3.New(session)
+func getS3(config aws.Config) (resources resourceMap) {
+	client := s3.New(config)
 	resources = reduce(
 		getS3Bucket(client).unwrap(s3Bucket),
 		getS3Bucket(client).unwrap(s3BucketPolicy),
@@ -14,8 +16,8 @@ func getS3(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getS3Bucket(client *s3.S3) (r resourceSliceError) {
-	buckets, err := client.ListBuckets(&s3.ListBucketsInput{})
+func getS3Bucket(client *s3.Client) (r resourceSliceError) {
+	buckets, err := client.ListBucketsRequest(&s3.ListBucketsInput{}).Send(context.Background())
 	for _, resource := range buckets.Buckets {
 		r.resources = append(r.resources, *resource.Name)
 	}

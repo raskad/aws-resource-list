@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/efs"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/efs"
 )
 
-func getEfs(session *session.Session) (resources resourceMap) {
-	client := efs.New(session)
+func getEfs(config aws.Config) (resources resourceMap) {
+	client := efs.New(config)
 
 	efsFileSystemResourceMap := getEfsFileSystem(client).unwrap(efsFileSystem)
 	efsFileSystemIDs := efsFileSystemResourceMap[efsFileSystem]
@@ -19,23 +20,26 @@ func getEfs(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getEfsFileSystem(client *efs.EFS) (r resourceSliceError) {
-	r.err = client.DescribeFileSystemsPages(&efs.DescribeFileSystemsInput{}, func(page *efs.DescribeFileSystemsOutput, lastPage bool) bool {
+func getEfsFileSystem(client *efs.Client) (r resourceSliceError) {
+	req := client.DescribeFileSystemsRequest(&efs.DescribeFileSystemsInput{})
+	p := efs.NewDescribeFileSystemsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.FileSystems {
 			r.resources = append(r.resources, *resource.FileSystemId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEfsMountTarget(client *efs.EFS, fileSystemIDs []string) (r resourceSliceError) {
+func getEfsMountTarget(client *efs.Client, fileSystemIDs []string) (r resourceSliceError) {
 	for _, fileSystemID := range fileSystemIDs {
 		input := efs.DescribeMountTargetsInput{
 			FileSystemId: aws.String(fileSystemID),
 		}
 		for {
-			page, err := client.DescribeMountTargets(&input)
+			page, err := client.DescribeMountTargetsRequest(&input).Send(context.Background())
 			if err != nil {
 				r.err = err
 				return

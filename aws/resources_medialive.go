@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/medialive"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/medialive"
 )
 
-func getMediaLive(session *session.Session) (resources resourceMap) {
-	client := medialive.New(session)
+func getMediaLive(config aws.Config) (resources resourceMap) {
+	client := medialive.New(config)
 	resources = reduce(
 		getMediaLiveChannel(client).unwrap(mediaLiveChannel),
 		getMediaLiveInput(client).unwrap(mediaLiveInput),
@@ -15,32 +17,41 @@ func getMediaLive(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getMediaLiveChannel(client *medialive.MediaLive) (r resourceSliceError) {
-	r.err = client.ListChannelsPages(&medialive.ListChannelsInput{}, func(page *medialive.ListChannelsOutput, lastPage bool) bool {
+func getMediaLiveChannel(client *medialive.Client) (r resourceSliceError) {
+	req := client.ListChannelsRequest(&medialive.ListChannelsInput{})
+	p := medialive.NewListChannelsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Channels {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getMediaLiveInput(client *medialive.MediaLive) (r resourceSliceError) {
-	r.err = client.ListInputsPages(&medialive.ListInputsInput{}, func(page *medialive.ListInputsOutput, lastPage bool) bool {
+func getMediaLiveInput(client *medialive.Client) (r resourceSliceError) {
+	req := client.ListInputsRequest(&medialive.ListInputsInput{})
+	p := medialive.NewListInputsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Inputs {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getMediaLiveInputSecurityGroup(client *medialive.MediaLive) (r resourceSliceError) {
-	r.err = client.ListInputSecurityGroupsPages(&medialive.ListInputSecurityGroupsInput{}, func(page *medialive.ListInputSecurityGroupsOutput, lastPage bool) bool {
+func getMediaLiveInputSecurityGroup(client *medialive.Client) (r resourceSliceError) {
+	req := client.ListInputSecurityGroupsRequest(&medialive.ListInputSecurityGroupsInput{})
+	p := medialive.NewListInputSecurityGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.InputSecurityGroups {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

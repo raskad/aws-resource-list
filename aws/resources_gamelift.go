@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/gamelift"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/gamelift"
 )
 
-func getGameLift(session *session.Session) (resources resourceMap) {
-	client := gamelift.New(session)
+func getGameLift(config aws.Config) (resources resourceMap) {
+	client := gamelift.New(config)
 	resources = reduce(
 		getGameLiftAlias(client).unwrap(gameLiftAlias),
 		getGameLiftBuild(client).unwrap(gameLiftBuild),
@@ -19,10 +21,10 @@ func getGameLift(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getGameLiftAlias(client *gamelift.GameLift) (r resourceSliceError) {
+func getGameLiftAlias(client *gamelift.Client) (r resourceSliceError) {
 	input := gamelift.ListAliasesInput{}
 	for {
-		page, err := client.ListAliases(&input)
+		page, err := client.ListAliasesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -37,10 +39,10 @@ func getGameLiftAlias(client *gamelift.GameLift) (r resourceSliceError) {
 	}
 }
 
-func getGameLiftBuild(client *gamelift.GameLift) (r resourceSliceError) {
+func getGameLiftBuild(client *gamelift.Client) (r resourceSliceError) {
 	input := gamelift.ListBuildsInput{}
 	for {
-		page, err := client.ListBuilds(&input)
+		page, err := client.ListBuildsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -55,16 +57,16 @@ func getGameLiftBuild(client *gamelift.GameLift) (r resourceSliceError) {
 	}
 }
 
-func getGameLiftFleet(client *gamelift.GameLift) (r resourceSliceError) {
+func getGameLiftFleet(client *gamelift.Client) (r resourceSliceError) {
 	input := gamelift.ListFleetsInput{}
 	for {
-		page, err := client.ListFleets(&input)
+		page, err := client.ListFleetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
 		}
 		for _, resource := range page.FleetIds {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
 		if page.NextToken == nil {
 			return
@@ -73,10 +75,10 @@ func getGameLiftFleet(client *gamelift.GameLift) (r resourceSliceError) {
 	}
 }
 
-func getGameLiftGameSessionQueue(client *gamelift.GameLift) (r resourceSliceError) {
+func getGameLiftGameSessionQueue(client *gamelift.Client) (r resourceSliceError) {
 	input := gamelift.DescribeGameSessionQueuesInput{}
 	for {
-		page, err := client.DescribeGameSessionQueues(&input)
+		page, err := client.DescribeGameSessionQueuesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -91,10 +93,10 @@ func getGameLiftGameSessionQueue(client *gamelift.GameLift) (r resourceSliceErro
 	}
 }
 
-func getGameLiftMatchmakingConfiguration(client *gamelift.GameLift) (r resourceSliceError) {
+func getGameLiftMatchmakingConfiguration(client *gamelift.Client) (r resourceSliceError) {
 	input := gamelift.DescribeMatchmakingConfigurationsInput{}
 	for {
-		page, err := client.DescribeMatchmakingConfigurations(&input)
+		page, err := client.DescribeMatchmakingConfigurationsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -109,10 +111,10 @@ func getGameLiftMatchmakingConfiguration(client *gamelift.GameLift) (r resourceS
 	}
 }
 
-func getGameLiftMatchmakingRuleSet(client *gamelift.GameLift) (r resourceSliceError) {
+func getGameLiftMatchmakingRuleSet(client *gamelift.Client) (r resourceSliceError) {
 	input := gamelift.DescribeMatchmakingRuleSetsInput{}
 	for {
-		page, err := client.DescribeMatchmakingRuleSets(&input)
+		page, err := client.DescribeMatchmakingRuleSetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -127,10 +129,10 @@ func getGameLiftMatchmakingRuleSet(client *gamelift.GameLift) (r resourceSliceEr
 	}
 }
 
-func getGameLiftScript(client *gamelift.GameLift) (r resourceSliceError) {
+func getGameLiftScript(client *gamelift.Client) (r resourceSliceError) {
 	input := gamelift.ListScriptsInput{}
 	for {
-		page, err := client.ListScripts(&input)
+		page, err := client.ListScriptsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
