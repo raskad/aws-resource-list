@@ -151,6 +151,7 @@ func getRealState(session *session.Session) (resources resourceMap) {
 	go run(getFsx, session, c, &wg)
 	go run(getGameLift, session, c, &wg)
 	go run(getGlue, session, c, &wg)
+	go run(getGroundStation, session, c, &wg)
 	go run(getGuardDuty, session, c, &wg)
 	go run(getIam, session, c, &wg)
 	go run(getInspector, session, c, &wg)

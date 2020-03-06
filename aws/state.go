@@ -268,6 +268,9 @@ const (
 	glueTable                                 resourceType = "glueTable"
 	glueTrigger                               resourceType = "glueTrigger"
 	glueWorkflow                              resourceType = "glueWorkflow"
+	groundStationConfig                       resourceType = "groundStationConfig"
+	groundStationDataflowEndpointGroup        resourceType = "groundStationDataflowEndpointGroup"
+	groundStationMissionProfile               resourceType = "groundStationMissionProfile"
 	guardDutyDetector                         resourceType = "guardDutyDetector"
 	iamAccessKey                              resourceType = "iamAccessKey"
 	iamGroup                                  resourceType = "iamGroup"
@@ -611,6 +614,9 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Glue::Table":                                 glueTable,
 		"AWS::Glue::Trigger":                               glueTrigger,
 		"AWS::Glue::Workflow":                              glueWorkflow,
+		"AWS::GroundStation::Config":                       groundStationConfig,
+		"AWS::GroundStation::DataflowEndpointGroup":        groundStationDataflowEndpointGroup,
+		"AWS::GroundStation::MissionProfile":               groundStationMissionProfile,
 		"AWS::GuardDuty::Detector":                         guardDutyDetector,
 		"AWS::IAM::AccessKey":                              iamAccessKey,
 		"AWS::IAM::Group":                                  iamGroup,

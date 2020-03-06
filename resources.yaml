@@ -734,6 +734,18 @@ glueWorkflow:
   implemented: true
   identifier: Name
   cloudformation: AWS::Glue::Workflow
+groundStationConfig:
+  implemented: true
+  identifier: Id
+  cloudformation: AWS::GroundStation::Config
+groundStationDataflowEndpointGroup:
+  implemented: true
+  identifier: Id
+  cloudformation: AWS::GroundStation::DataflowEndpointGroup
+groundStationMissionProfile:
+  implemented: true
+  identifier: Id
+  cloudformation: AWS::GroundStation::MissionProfile
 guardDutyDetector:
   implemented: true
   identifier: Id
