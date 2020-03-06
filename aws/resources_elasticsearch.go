@@ -1,20 +1,22 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/elasticsearchservice"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 )
 
-func getElasticsearch(session *session.Session) (resources resourceMap) {
-	client := elasticsearchservice.New(session)
+func getElasticsearch(config aws.Config) (resources resourceMap) {
+	client := elasticsearchservice.New(config)
 	resources = reduce(
 		getElasticsearchDomain(client).unwrap(elasticsearchDomain),
 	)
 	return
 }
 
-func getElasticsearchDomain(client *elasticsearchservice.ElasticsearchService) (r resourceSliceError) {
-	page, err := client.ListDomainNames(&elasticsearchservice.ListDomainNamesInput{})
+func getElasticsearchDomain(client *elasticsearchservice.Client) (r resourceSliceError) {
+	page, err := client.ListDomainNamesRequest(&elasticsearchservice.ListDomainNamesInput{}).Send(context.Background())
 	if err != nil {
 		r.err = err
 		return

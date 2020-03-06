@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ecs"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ecs"
 )
 
-func getEcs(session *session.Session) (resources resourceMap) {
-	client := ecs.New(session)
+func getEcs(config aws.Config) (resources resourceMap) {
+	client := ecs.New(config)
 
 	ecsClusterResourceMap := getEcsCluster(client).unwrap(ecsCluster)
 	ecsClusterNames := ecsClusterResourceMap[ecsCluster]
@@ -20,36 +21,45 @@ func getEcs(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getEcsCluster(client *ecs.ECS) (r resourceSliceError) {
-	r.err = client.ListClustersPages(&ecs.ListClustersInput{}, func(page *ecs.ListClustersOutput, lastPage bool) bool {
+func getEcsCluster(client *ecs.Client) (r resourceSliceError) {
+	req := client.ListClustersRequest(&ecs.ListClustersInput{})
+	p := ecs.NewListClustersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ClusterArns {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEcsService(client *ecs.ECS, clusterNames []string) (r resourceSliceError) {
+func getEcsService(client *ecs.Client, clusterNames []string) (r resourceSliceError) {
 	for _, clusterName := range clusterNames {
-		r.err = client.ListServicesPages(&ecs.ListServicesInput{
+		req := client.ListServicesRequest(&ecs.ListServicesInput{
 			Cluster: aws.String(clusterName),
-		}, func(page *ecs.ListServicesOutput, lastPage bool) bool {
-			for _, resource := range page.ServiceArns {
-				r.resources = append(r.resources, *resource)
-			}
-			return true
 		})
+		p := ecs.NewListServicesPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
+			for _, resource := range page.ServiceArns {
+				r.resources = append(r.resources, resource)
+			}
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getEcsTaskDefinition(client *ecs.ECS) (r resourceSliceError) {
-	r.err = client.ListTaskDefinitionsPages(&ecs.ListTaskDefinitionsInput{}, func(page *ecs.ListTaskDefinitionsOutput, lastPage bool) bool {
+func getEcsTaskDefinition(client *ecs.Client) (r resourceSliceError) {
+	req := client.ListTaskDefinitionsRequest(&ecs.ListTaskDefinitionsInput{})
+	p := ecs.NewListTaskDefinitionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.TaskDefinitionArns {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

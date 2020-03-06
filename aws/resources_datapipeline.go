@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/datapipeline"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/datapipeline"
 )
 
-func getDataPipeline(session *session.Session) (resources resourceMap) {
-	client := datapipeline.New(session)
+func getDataPipeline(config aws.Config) (resources resourceMap) {
+	client := datapipeline.New(config)
 	resources = reduce(
 		getDataPipelinePipeline(client).unwrap(dataPipelinePipeline),
 	)
 	return
 }
 
-func getDataPipelinePipeline(client *datapipeline.DataPipeline) (r resourceSliceError) {
-	r.err = client.ListPipelinesPages(&datapipeline.ListPipelinesInput{}, func(page *datapipeline.ListPipelinesOutput, lastPage bool) bool {
+func getDataPipelinePipeline(client *datapipeline.Client) (r resourceSliceError) {
+	req := client.ListPipelinesRequest(&datapipeline.ListPipelinesInput{})
+	p := datapipeline.NewListPipelinesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.PipelineIdList {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudwatch"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
-func getCloudWatch(session *session.Session) (resources resourceMap) {
-	client := cloudwatch.New(session)
+func getCloudWatch(config aws.Config) (resources resourceMap) {
+	client := cloudwatch.New(config)
 	resources = reduce(
 		getCloudWatchAlarm(client).unwrap(cloudWatchAlarm),
 		getCloudWatchDashboard(client).unwrap(cloudWatchDashboard),
@@ -15,32 +17,41 @@ func getCloudWatch(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getCloudWatchAlarm(client *cloudwatch.CloudWatch) (r resourceSliceError) {
-	r.err = client.DescribeAlarmsPages(&cloudwatch.DescribeAlarmsInput{}, func(page *cloudwatch.DescribeAlarmsOutput, lastPage bool) bool {
+func getCloudWatchAlarm(client *cloudwatch.Client) (r resourceSliceError) {
+	req := client.DescribeAlarmsRequest(&cloudwatch.DescribeAlarmsInput{})
+	p := cloudwatch.NewDescribeAlarmsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.MetricAlarms {
 			r.resources = append(r.resources, *resource.AlarmName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getCloudWatchDashboard(client *cloudwatch.CloudWatch) (r resourceSliceError) {
-	r.err = client.ListDashboardsPages(&cloudwatch.ListDashboardsInput{}, func(page *cloudwatch.ListDashboardsOutput, lastPage bool) bool {
+func getCloudWatchDashboard(client *cloudwatch.Client) (r resourceSliceError) {
+	req := client.ListDashboardsRequest(&cloudwatch.ListDashboardsInput{})
+	p := cloudwatch.NewListDashboardsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DashboardEntries {
 			r.resources = append(r.resources, *resource.DashboardName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getCloudWatchInsightRule(client *cloudwatch.CloudWatch) (r resourceSliceError) {
-	r.err = client.DescribeInsightRulesPages(&cloudwatch.DescribeInsightRulesInput{}, func(page *cloudwatch.DescribeInsightRulesOutput, lastPage bool) bool {
+func getCloudWatchInsightRule(client *cloudwatch.Client) (r resourceSliceError) {
+	req := client.DescribeInsightRulesRequest(&cloudwatch.DescribeInsightRulesInput{})
+	p := cloudwatch.NewDescribeInsightRulesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.InsightRules {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

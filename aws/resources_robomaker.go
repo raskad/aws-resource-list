@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/robomaker"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/robomaker"
 )
 
-func getRoboMaker(session *session.Session) (resources resourceMap) {
-	client := robomaker.New(session)
+func getRoboMaker(config aws.Config) (resources resourceMap) {
+	client := robomaker.New(config)
 	resources = reduce(
 		getRoboMakerFleet(client).unwrap(roboMakerFleet),
 		getRoboMakerRobot(client).unwrap(roboMakerRobot),
@@ -16,42 +18,54 @@ func getRoboMaker(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getRoboMakerFleet(client *robomaker.RoboMaker) (r resourceSliceError) {
-	r.err = client.ListFleetsPages(&robomaker.ListFleetsInput{}, func(page *robomaker.ListFleetsOutput, lastPage bool) bool {
+func getRoboMakerFleet(client *robomaker.Client) (r resourceSliceError) {
+	req := client.ListFleetsRequest(&robomaker.ListFleetsInput{})
+	p := robomaker.NewListFleetsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.FleetDetails {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRoboMakerRobot(client *robomaker.RoboMaker) (r resourceSliceError) {
-	r.err = client.ListRobotsPages(&robomaker.ListRobotsInput{}, func(page *robomaker.ListRobotsOutput, lastPage bool) bool {
+func getRoboMakerRobot(client *robomaker.Client) (r resourceSliceError) {
+	req := client.ListRobotsRequest(&robomaker.ListRobotsInput{})
+	p := robomaker.NewListRobotsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Robots {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRoboMakerRobotApplication(client *robomaker.RoboMaker) (r resourceSliceError) {
-	r.err = client.ListRobotApplicationsPages(&robomaker.ListRobotApplicationsInput{}, func(page *robomaker.ListRobotApplicationsOutput, lastPage bool) bool {
+func getRoboMakerRobotApplication(client *robomaker.Client) (r resourceSliceError) {
+	req := client.ListRobotApplicationsRequest(&robomaker.ListRobotApplicationsInput{})
+	p := robomaker.NewListRobotApplicationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.RobotApplicationSummaries {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRoboMakerSimulationApplication(client *robomaker.RoboMaker) (r resourceSliceError) {
-	r.err = client.ListSimulationApplicationsPages(&robomaker.ListSimulationApplicationsInput{}, func(page *robomaker.ListSimulationApplicationsOutput, lastPage bool) bool {
+func getRoboMakerSimulationApplication(client *robomaker.Client) (r resourceSliceError) {
+	req := client.ListSimulationApplicationsRequest(&robomaker.ListSimulationApplicationsInput{})
+	p := robomaker.NewListSimulationApplicationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.SimulationApplicationSummaries {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

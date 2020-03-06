@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/appstream"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/appstream"
 )
 
-func getAppStream(session *session.Session) (resources resourceMap) {
-	client := appstream.New(session)
+func getAppStream(config aws.Config) (resources resourceMap) {
+	client := appstream.New(config)
 	resources = reduce(
 		getAppStreamDirectoryConfig(client).unwrap(appStreamDirectoryConfig),
 		getAppStreamFleet(client).unwrap(appStreamFleet),
@@ -16,10 +18,10 @@ func getAppStream(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getAppStreamDirectoryConfig(client *appstream.AppStream) (r resourceSliceError) {
+func getAppStreamDirectoryConfig(client *appstream.Client) (r resourceSliceError) {
 	input := appstream.DescribeDirectoryConfigsInput{}
 	for {
-		page, err := client.DescribeDirectoryConfigs(&input)
+		page, err := client.DescribeDirectoryConfigsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -34,10 +36,10 @@ func getAppStreamDirectoryConfig(client *appstream.AppStream) (r resourceSliceEr
 	}
 }
 
-func getAppStreamFleet(client *appstream.AppStream) (r resourceSliceError) {
+func getAppStreamFleet(client *appstream.Client) (r resourceSliceError) {
 	input := appstream.DescribeFleetsInput{}
 	for {
-		page, err := client.DescribeFleets(&input)
+		page, err := client.DescribeFleetsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -52,10 +54,10 @@ func getAppStreamFleet(client *appstream.AppStream) (r resourceSliceError) {
 	}
 }
 
-func getAppStreamImageBuilder(client *appstream.AppStream) (r resourceSliceError) {
+func getAppStreamImageBuilder(client *appstream.Client) (r resourceSliceError) {
 	input := appstream.DescribeImageBuildersInput{}
 	for {
-		page, err := client.DescribeImageBuilders(&input)
+		page, err := client.DescribeImageBuildersRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -70,10 +72,10 @@ func getAppStreamImageBuilder(client *appstream.AppStream) (r resourceSliceError
 	}
 }
 
-func getAppStreamStack(client *appstream.AppStream) (r resourceSliceError) {
+func getAppStreamStack(client *appstream.Client) (r resourceSliceError) {
 	input := appstream.DescribeStacksInput{}
 	for {
-		page, err := client.DescribeStacks(&input)
+		page, err := client.DescribeStacksRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

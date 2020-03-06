@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/schemas"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/schemas"
 )
 
-func getSchemas(session *session.Session) (resources resourceMap) {
-	client := schemas.New(session)
+func getSchemas(config aws.Config) (resources resourceMap) {
+	client := schemas.New(config)
 	resources = reduce(
 		getEventSchemasDiscoverer(client).unwrap(eventSchemasDiscoverer),
 		getEventSchemasRegistry(client).unwrap(eventSchemasRegistry),
@@ -14,22 +16,28 @@ func getSchemas(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getEventSchemasDiscoverer(client *schemas.Schemas) (r resourceSliceError) {
-	r.err = client.ListDiscoverersPages(&schemas.ListDiscoverersInput{}, func(page *schemas.ListDiscoverersOutput, lastPage bool) bool {
+func getEventSchemasDiscoverer(client *schemas.Client) (r resourceSliceError) {
+	req := client.ListDiscoverersRequest(&schemas.ListDiscoverersInput{})
+	p := schemas.NewListDiscoverersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Discoverers {
 			r.resources = append(r.resources, *resource.DiscovererId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getEventSchemasRegistry(client *schemas.Schemas) (r resourceSliceError) {
-	r.err = client.ListRegistriesPages(&schemas.ListRegistriesInput{}, func(page *schemas.ListRegistriesOutput, lastPage bool) bool {
+func getEventSchemasRegistry(client *schemas.Client) (r resourceSliceError) {
+	req := client.ListRegistriesRequest(&schemas.ListRegistriesInput{})
+	p := schemas.NewListRegistriesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Registries {
 			r.resources = append(r.resources, *resource.RegistryName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

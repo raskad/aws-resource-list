@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudtrail"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 )
 
-func getCloudTrail(session *session.Session) (resources resourceMap) {
-	client := cloudtrail.New(session)
+func getCloudTrail(config aws.Config) (resources resourceMap) {
+	client := cloudtrail.New(config)
 	resources = reduce(
 		getCloudTrailTrail(client).unwrap(cloudTrailTrail),
 	)
 	return
 }
 
-func getCloudTrailTrail(client *cloudtrail.CloudTrail) (r resourceSliceError) {
-	r.err = client.ListTrailsPages(&cloudtrail.ListTrailsInput{}, func(page *cloudtrail.ListTrailsOutput, lastPage bool) bool {
+func getCloudTrailTrail(client *cloudtrail.Client) (r resourceSliceError) {
+	req := client.ListTrailsRequest(&cloudtrail.ListTrailsInput{})
+	p := cloudtrail.NewListTrailsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Trails {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

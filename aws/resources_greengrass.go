@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/greengrass"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/greengrass"
 )
 
-func getGreengrass(session *session.Session) (resources resourceMap) {
-	client := greengrass.New(session)
+func getGreengrass(config aws.Config) (resources resourceMap) {
+	client := greengrass.New(config)
 	resources = reduce(
 		getGreengrassConnectorDefinition(client).unwrap(greengrassConnectorDefinition),
 		getGreengrassConnectorDefinitionVersion(client).unwrap(greengrassConnectorDefinitionVersion),
@@ -28,10 +30,10 @@ func getGreengrass(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getGreengrassConnectorDefinition(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassConnectorDefinition(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListConnectorDefinitionsInput{}
 	for {
-		page, err := client.ListConnectorDefinitions(&input)
+		page, err := client.ListConnectorDefinitionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -46,10 +48,10 @@ func getGreengrassConnectorDefinition(client *greengrass.Greengrass) (r resource
 	}
 }
 
-func getGreengrassConnectorDefinitionVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassConnectorDefinitionVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListConnectorDefinitionVersionsInput{}
 	for {
-		page, err := client.ListConnectorDefinitionVersions(&input)
+		page, err := client.ListConnectorDefinitionVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -64,10 +66,10 @@ func getGreengrassConnectorDefinitionVersion(client *greengrass.Greengrass) (r r
 	}
 }
 
-func getGreengrassCoreDefinition(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassCoreDefinition(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListCoreDefinitionsInput{}
 	for {
-		page, err := client.ListCoreDefinitions(&input)
+		page, err := client.ListCoreDefinitionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -82,10 +84,10 @@ func getGreengrassCoreDefinition(client *greengrass.Greengrass) (r resourceSlice
 	}
 }
 
-func getGreengrassCoreDefinitionVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassCoreDefinitionVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListCoreDefinitionVersionsInput{}
 	for {
-		page, err := client.ListCoreDefinitionVersions(&input)
+		page, err := client.ListCoreDefinitionVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -100,10 +102,10 @@ func getGreengrassCoreDefinitionVersion(client *greengrass.Greengrass) (r resour
 	}
 }
 
-func getGreengrassDeviceDefinition(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassDeviceDefinition(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListDeviceDefinitionsInput{}
 	for {
-		page, err := client.ListDeviceDefinitions(&input)
+		page, err := client.ListDeviceDefinitionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -118,10 +120,10 @@ func getGreengrassDeviceDefinition(client *greengrass.Greengrass) (r resourceSli
 	}
 }
 
-func getGreengrassDeviceDefinitionVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassDeviceDefinitionVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListDeviceDefinitionVersionsInput{}
 	for {
-		page, err := client.ListDeviceDefinitionVersions(&input)
+		page, err := client.ListDeviceDefinitionVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -136,10 +138,10 @@ func getGreengrassDeviceDefinitionVersion(client *greengrass.Greengrass) (r reso
 	}
 }
 
-func getGreengrassFunctionDefinition(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassFunctionDefinition(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListFunctionDefinitionsInput{}
 	for {
-		page, err := client.ListFunctionDefinitions(&input)
+		page, err := client.ListFunctionDefinitionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -154,10 +156,10 @@ func getGreengrassFunctionDefinition(client *greengrass.Greengrass) (r resourceS
 	}
 }
 
-func getGreengrassFunctionDefinitionVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassFunctionDefinitionVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListFunctionDefinitionVersionsInput{}
 	for {
-		page, err := client.ListFunctionDefinitionVersions(&input)
+		page, err := client.ListFunctionDefinitionVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -172,10 +174,10 @@ func getGreengrassFunctionDefinitionVersion(client *greengrass.Greengrass) (r re
 	}
 }
 
-func getGreengrassGroup(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassGroup(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListGroupsInput{}
 	for {
-		page, err := client.ListGroups(&input)
+		page, err := client.ListGroupsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -190,10 +192,10 @@ func getGreengrassGroup(client *greengrass.Greengrass) (r resourceSliceError) {
 	}
 }
 
-func getGreengrassGroupVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassGroupVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListGroupVersionsInput{}
 	for {
-		page, err := client.ListGroupVersions(&input)
+		page, err := client.ListGroupVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -208,10 +210,10 @@ func getGreengrassGroupVersion(client *greengrass.Greengrass) (r resourceSliceEr
 	}
 }
 
-func getGreengrassLoggerDefinition(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassLoggerDefinition(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListLoggerDefinitionsInput{}
 	for {
-		page, err := client.ListLoggerDefinitions(&input)
+		page, err := client.ListLoggerDefinitionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -226,10 +228,10 @@ func getGreengrassLoggerDefinition(client *greengrass.Greengrass) (r resourceSli
 	}
 }
 
-func getGreengrassLoggerDefinitionVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassLoggerDefinitionVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListLoggerDefinitionVersionsInput{}
 	for {
-		page, err := client.ListLoggerDefinitionVersions(&input)
+		page, err := client.ListLoggerDefinitionVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -244,10 +246,10 @@ func getGreengrassLoggerDefinitionVersion(client *greengrass.Greengrass) (r reso
 	}
 }
 
-func getGreengrassResourceDefinition(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassResourceDefinition(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListResourceDefinitionsInput{}
 	for {
-		page, err := client.ListResourceDefinitions(&input)
+		page, err := client.ListResourceDefinitionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -262,10 +264,10 @@ func getGreengrassResourceDefinition(client *greengrass.Greengrass) (r resourceS
 	}
 }
 
-func getGreengrassResourceDefinitionVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassResourceDefinitionVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListResourceDefinitionVersionsInput{}
 	for {
-		page, err := client.ListResourceDefinitionVersions(&input)
+		page, err := client.ListResourceDefinitionVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -280,10 +282,10 @@ func getGreengrassResourceDefinitionVersion(client *greengrass.Greengrass) (r re
 	}
 }
 
-func getGreengrassSubscriptionDefinition(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassSubscriptionDefinition(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListSubscriptionDefinitionsInput{}
 	for {
-		page, err := client.ListSubscriptionDefinitions(&input)
+		page, err := client.ListSubscriptionDefinitionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -298,10 +300,10 @@ func getGreengrassSubscriptionDefinition(client *greengrass.Greengrass) (r resou
 	}
 }
 
-func getGreengrassSubscriptionDefinitionVersion(client *greengrass.Greengrass) (r resourceSliceError) {
+func getGreengrassSubscriptionDefinitionVersion(client *greengrass.Client) (r resourceSliceError) {
 	input := greengrass.ListSubscriptionDefinitionVersionsInput{}
 	for {
-		page, err := client.ListSubscriptionDefinitionVersions(&input)
+		page, err := client.ListSubscriptionDefinitionVersionsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

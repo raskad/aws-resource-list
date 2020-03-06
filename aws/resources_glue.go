@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/glue"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/glue"
 )
 
-func getGlue(session *session.Session) (resources resourceMap) {
-	client := glue.New(session)
+func getGlue(config aws.Config) (resources resourceMap) {
+	client := glue.New(config)
 
 	glueDatabaseResourceMap := getGlueDatabase(client).unwrap(glueDatabase)
 	glueDatabaseNames := glueDatabaseResourceMap[glueDatabase]
@@ -27,106 +28,136 @@ func getGlue(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getGlueConnection(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetConnectionsPages(&glue.GetConnectionsInput{}, func(page *glue.GetConnectionsOutput, lastPage bool) bool {
+func getGlueConnection(client *glue.Client) (r resourceSliceError) {
+	req := client.GetConnectionsRequest(&glue.GetConnectionsInput{})
+	p := glue.NewGetConnectionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ConnectionList {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueCrawler(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetCrawlersPages(&glue.GetCrawlersInput{}, func(page *glue.GetCrawlersOutput, lastPage bool) bool {
+func getGlueCrawler(client *glue.Client) (r resourceSliceError) {
+	req := client.GetCrawlersRequest(&glue.GetCrawlersInput{})
+	p := glue.NewGetCrawlersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Crawlers {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueDatabase(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetDatabasesPages(&glue.GetDatabasesInput{}, func(page *glue.GetDatabasesOutput, lastPage bool) bool {
+func getGlueDatabase(client *glue.Client) (r resourceSliceError) {
+	req := client.GetDatabasesRequest(&glue.GetDatabasesInput{})
+	p := glue.NewGetDatabasesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DatabaseList {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueDevEndpoint(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetDevEndpointsPages(&glue.GetDevEndpointsInput{}, func(page *glue.GetDevEndpointsOutput, lastPage bool) bool {
+func getGlueDevEndpoint(client *glue.Client) (r resourceSliceError) {
+	req := client.GetDevEndpointsRequest(&glue.GetDevEndpointsInput{})
+	p := glue.NewGetDevEndpointsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DevEndpoints {
 			r.resources = append(r.resources, *resource.EndpointName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueJob(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetJobsPages(&glue.GetJobsInput{}, func(page *glue.GetJobsOutput, lastPage bool) bool {
+func getGlueJob(client *glue.Client) (r resourceSliceError) {
+	req := client.GetJobsRequest(&glue.GetJobsInput{})
+	p := glue.NewGetJobsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Jobs {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueMLTransform(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetMLTransformsPages(&glue.GetMLTransformsInput{}, func(page *glue.GetMLTransformsOutput, lastPage bool) bool {
+func getGlueMLTransform(client *glue.Client) (r resourceSliceError) {
+	req := client.GetMLTransformsRequest(&glue.GetMLTransformsInput{})
+	p := glue.NewGetMLTransformsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Transforms {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueSecurityConfiguration(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetSecurityConfigurationsPages(&glue.GetSecurityConfigurationsInput{}, func(page *glue.GetSecurityConfigurationsOutput, lastPage bool) bool {
+func getGlueSecurityConfiguration(client *glue.Client) (r resourceSliceError) {
+	req := client.GetSecurityConfigurationsRequest(&glue.GetSecurityConfigurationsInput{})
+	p := glue.NewGetSecurityConfigurationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.SecurityConfigurations {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueTable(client *glue.Glue, databaseNames []string) (r resourceSliceError) {
+func getGlueTable(client *glue.Client, databaseNames []string) (r resourceSliceError) {
 	for _, databaseName := range databaseNames {
-		r.err = client.GetTablesPages(&glue.GetTablesInput{
+		req := client.GetTablesRequest(&glue.GetTablesInput{
 			DatabaseName: aws.String(databaseName),
-		}, func(page *glue.GetTablesOutput, lastPage bool) bool {
+		})
+		p := glue.NewGetTablesPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.TableList {
 				r.resources = append(r.resources, *resource.Name)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getGlueTrigger(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.GetTriggersPages(&glue.GetTriggersInput{}, func(page *glue.GetTriggersOutput, lastPage bool) bool {
+func getGlueTrigger(client *glue.Client) (r resourceSliceError) {
+	req := client.GetTriggersRequest(&glue.GetTriggersInput{})
+	p := glue.NewGetTriggersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Triggers {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGlueWorkflow(client *glue.Glue) (r resourceSliceError) {
-	r.err = client.ListWorkflowsPages(&glue.ListWorkflowsInput{}, func(page *glue.ListWorkflowsOutput, lastPage bool) bool {
+func getGlueWorkflow(client *glue.Client) (r resourceSliceError) {
+	req := client.ListWorkflowsRequest(&glue.ListWorkflowsInput{})
+	p := glue.NewListWorkflowsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Workflows {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

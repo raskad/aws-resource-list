@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dax"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/dax"
 )
 
-func getDAX(session *session.Session) (resources resourceMap) {
-	client := dax.New(session)
+func getDAX(config aws.Config) (resources resourceMap) {
+	client := dax.New(config)
 	resources = reduce(
 		getDaxCluster(client).unwrap(daxCluster),
 		getDaxParameterGroup(client).unwrap(daxParameterGroup),
@@ -15,10 +17,10 @@ func getDAX(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
+func getDaxCluster(client *dax.Client) (r resourceSliceError) {
 	input := dax.DescribeClustersInput{}
 	for {
-		page, err := client.DescribeClusters(&input)
+		page, err := client.DescribeClustersRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -33,10 +35,10 @@ func getDaxCluster(client *dax.DAX) (r resourceSliceError) {
 	}
 }
 
-func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
+func getDaxParameterGroup(client *dax.Client) (r resourceSliceError) {
 	input := dax.DescribeParameterGroupsInput{}
 	for {
-		page, err := client.DescribeParameterGroups(&input)
+		page, err := client.DescribeParameterGroupsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -51,10 +53,10 @@ func getDaxParameterGroup(client *dax.DAX) (r resourceSliceError) {
 	}
 }
 
-func getDaxSubnetGroup(client *dax.DAX) (r resourceSliceError) {
+func getDaxSubnetGroup(client *dax.Client) (r resourceSliceError) {
 	input := dax.DescribeSubnetGroupsInput{}
 	for {
-		page, err := client.DescribeSubnetGroups(&input)
+		page, err := client.DescribeSubnetGroupsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

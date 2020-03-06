@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 )
 
-func getCognitoIdentityProvider(session *session.Session) (resources resourceMap) {
-	client := cognitoidentityprovider.New(session)
+func getCognitoIdentityProvider(config aws.Config) (resources resourceMap) {
+	client := cognitoidentityprovider.New(config)
 
 	userPoolResourceMap := getCognitoUserPool(client).unwrap(cognitoUserPool)
 	userPoolIDs := userPoolResourceMap[cognitoUserPool]
@@ -23,85 +24,102 @@ func getCognitoIdentityProvider(session *session.Session) (resources resourceMap
 	return
 }
 
-func getCognitoUserPool(client *cognitoidentityprovider.CognitoIdentityProvider) (r resourceSliceError) {
-	r.err = client.ListUserPoolsPages(&cognitoidentityprovider.ListUserPoolsInput{
+func getCognitoUserPool(client *cognitoidentityprovider.Client) (r resourceSliceError) {
+	req := client.ListUserPoolsRequest(&cognitoidentityprovider.ListUserPoolsInput{
 		MaxResults: aws.Int64(16),
-	}, func(page *cognitoidentityprovider.ListUserPoolsOutput, lastPage bool) bool {
+	})
+	p := cognitoidentityprovider.NewListUserPoolsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.UserPools {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getCognitoUserPoolClient(client *cognitoidentityprovider.CognitoIdentityProvider, userPoolIDs []string) (r resourceSliceError) {
+func getCognitoUserPoolClient(client *cognitoidentityprovider.Client, userPoolIDs []string) (r resourceSliceError) {
 	for _, useruserPoolID := range userPoolIDs {
-		r.err = client.ListUserPoolClientsPages(&cognitoidentityprovider.ListUserPoolClientsInput{
+		req := client.ListUserPoolClientsRequest(&cognitoidentityprovider.ListUserPoolClientsInput{
 			UserPoolId: aws.String(useruserPoolID),
-		}, func(page *cognitoidentityprovider.ListUserPoolClientsOutput, lastPage bool) bool {
+		})
+		p := cognitoidentityprovider.NewListUserPoolClientsPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.UserPoolClients {
 				r.resources = append(r.resources, *resource.ClientName)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getCognitoUserPoolGroup(client *cognitoidentityprovider.CognitoIdentityProvider, userPoolIDs []string) (r resourceSliceError) {
+func getCognitoUserPoolGroup(client *cognitoidentityprovider.Client, userPoolIDs []string) (r resourceSliceError) {
 	for _, useruserPoolID := range userPoolIDs {
-		r.err = client.ListGroupsPages(&cognitoidentityprovider.ListGroupsInput{
+		req := client.ListGroupsRequest(&cognitoidentityprovider.ListGroupsInput{
 			UserPoolId: aws.String(useruserPoolID),
-		}, func(page *cognitoidentityprovider.ListGroupsOutput, lastPage bool) bool {
+		})
+		p := cognitoidentityprovider.NewListGroupsPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.Groups {
 				r.resources = append(r.resources, *resource.GroupName)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getCognitoUserPoolIdentityProvider(client *cognitoidentityprovider.CognitoIdentityProvider, userPoolIDs []string) (r resourceSliceError) {
+func getCognitoUserPoolIdentityProvider(client *cognitoidentityprovider.Client, userPoolIDs []string) (r resourceSliceError) {
 	for _, useruserPoolID := range userPoolIDs {
-		r.err = client.ListIdentityProvidersPages(&cognitoidentityprovider.ListIdentityProvidersInput{
+		req := client.ListIdentityProvidersRequest(&cognitoidentityprovider.ListIdentityProvidersInput{
 			UserPoolId: aws.String(useruserPoolID),
-		}, func(page *cognitoidentityprovider.ListIdentityProvidersOutput, lastPage bool) bool {
+		})
+		p := cognitoidentityprovider.NewListIdentityProvidersPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.Providers {
 				r.resources = append(r.resources, *resource.ProviderName)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getCognitoUserPoolResourceServer(client *cognitoidentityprovider.CognitoIdentityProvider, userPoolIDs []string) (r resourceSliceError) {
+func getCognitoUserPoolResourceServer(client *cognitoidentityprovider.Client, userPoolIDs []string) (r resourceSliceError) {
 	for _, useruserPoolID := range userPoolIDs {
-		r.err = client.ListResourceServersPages(&cognitoidentityprovider.ListResourceServersInput{
+		req := client.ListResourceServersRequest(&cognitoidentityprovider.ListResourceServersInput{
 			UserPoolId: aws.String(useruserPoolID),
-			MaxResults: aws.Int64(16),
-		}, func(page *cognitoidentityprovider.ListResourceServersOutput, lastPage bool) bool {
+		})
+		p := cognitoidentityprovider.NewListResourceServersPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.ResourceServers {
 				r.resources = append(r.resources, *resource.Name)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
 	}
 	return
 }
 
-func getCognitoUserPoolUser(client *cognitoidentityprovider.CognitoIdentityProvider, userPoolIDs []string) (r resourceSliceError) {
+func getCognitoUserPoolUser(client *cognitoidentityprovider.Client, userPoolIDs []string) (r resourceSliceError) {
 	for _, useruserPoolID := range userPoolIDs {
-		r.err = client.ListUsersPages(&cognitoidentityprovider.ListUsersInput{
+		req := client.ListUsersRequest(&cognitoidentityprovider.ListUsersInput{
 			UserPoolId: aws.String(useruserPoolID),
-		}, func(page *cognitoidentityprovider.ListUsersOutput, lastPage bool) bool {
+		})
+		p := cognitoidentityprovider.NewListUsersPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.Users {
 				r.resources = append(r.resources, *resource.Username)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
 	}
 	return
 }

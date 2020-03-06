@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/kms"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/kms"
 )
 
-func getKms(session *session.Session) (resources resourceMap) {
-	client := kms.New(session)
+func getKms(config aws.Config) (resources resourceMap) {
+	client := kms.New(config)
 	resources = reduce(
 		getkmsAlias(client).unwrap(kmsAlias),
 		getkmsKey(client).unwrap(kmsKey),
@@ -14,22 +16,28 @@ func getKms(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getkmsAlias(client *kms.KMS) (r resourceSliceError) {
-	r.err = client.ListAliasesPages(&kms.ListAliasesInput{}, func(page *kms.ListAliasesOutput, lastPage bool) bool {
+func getkmsAlias(client *kms.Client) (r resourceSliceError) {
+	req := client.ListAliasesRequest(&kms.ListAliasesInput{})
+	p := kms.NewListAliasesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Aliases {
 			r.resources = append(r.resources, *resource.AliasName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getkmsKey(client *kms.KMS) (r resourceSliceError) {
-	r.err = client.ListKeysPages(&kms.ListKeysInput{}, func(page *kms.ListKeysOutput, lastPage bool) bool {
+func getkmsKey(client *kms.Client) (r resourceSliceError) {
+	req := client.ListKeysRequest(&kms.ListKeysInput{})
+	p := kms.NewListKeysPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Keys {
 			r.resources = append(r.resources, *resource.KeyId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

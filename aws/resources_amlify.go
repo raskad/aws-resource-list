@@ -1,22 +1,24 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/amplify"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/amplify"
 )
 
-func getAmplify(session *session.Session) (resources resourceMap) {
-	client := amplify.New(session)
+func getAmplify(config aws.Config) (resources resourceMap) {
+	client := amplify.New(config)
 	resources = reduce(
 		getAmplifyApp(client).unwrap(amplifyApp),
 	)
 	return
 }
 
-func getAmplifyApp(client *amplify.Amplify) (r resourceSliceError) {
+func getAmplifyApp(client *amplify.Client) (r resourceSliceError) {
 	input := amplify.ListAppsInput{}
 	for {
-		page, err := client.ListApps(&input)
+		page, err := client.ListAppsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

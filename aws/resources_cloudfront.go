@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudfront"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
 )
 
-func getCloudfront(session *session.Session) (resources resourceMap) {
-	client := cloudfront.New(session)
+func getCloudfront(config aws.Config) (resources resourceMap) {
+	client := cloudfront.New(config)
 	resources = reduce(
 		getCloudFrontCloudFrontOriginAccessIdentity(client).unwrap(cloudFrontCloudFrontOriginAccessIdentity),
 		getCloudFrontDistribution(client).unwrap(cloudFrontDistribution),
@@ -15,32 +17,41 @@ func getCloudfront(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getCloudFrontCloudFrontOriginAccessIdentity(client *cloudfront.CloudFront) (r resourceSliceError) {
-	r.err = client.ListCloudFrontOriginAccessIdentitiesPages(&cloudfront.ListCloudFrontOriginAccessIdentitiesInput{}, func(page *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, lastPage bool) bool {
+func getCloudFrontCloudFrontOriginAccessIdentity(client *cloudfront.Client) (r resourceSliceError) {
+	req := client.ListCloudFrontOriginAccessIdentitiesRequest(&cloudfront.ListCloudFrontOriginAccessIdentitiesInput{})
+	p := cloudfront.NewListCloudFrontOriginAccessIdentitiesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.CloudFrontOriginAccessIdentityList.Items {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getCloudFrontDistribution(client *cloudfront.CloudFront) (r resourceSliceError) {
-	r.err = client.ListDistributionsPages(&cloudfront.ListDistributionsInput{}, func(page *cloudfront.ListDistributionsOutput, lastPage bool) bool {
+func getCloudFrontDistribution(client *cloudfront.Client) (r resourceSliceError) {
+	req := client.ListDistributionsRequest(&cloudfront.ListDistributionsInput{})
+	p := cloudfront.NewListDistributionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DistributionList.Items {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getCloudFrontStreamingDistribution(client *cloudfront.CloudFront) (r resourceSliceError) {
-	r.err = client.ListStreamingDistributionsPages(&cloudfront.ListStreamingDistributionsInput{}, func(page *cloudfront.ListStreamingDistributionsOutput, lastPage bool) bool {
+func getCloudFrontStreamingDistribution(client *cloudfront.Client) (r resourceSliceError) {
+	req := client.ListStreamingDistributionsRequest(&cloudfront.ListStreamingDistributionsInput{})
+	p := cloudfront.NewListStreamingDistributionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.StreamingDistributionList.Items {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

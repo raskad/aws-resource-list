@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/route53resolver"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/route53resolver"
 )
 
-func getRoute53Resolver(session *session.Session) (resources resourceMap) {
-	client := route53resolver.New(session)
+func getRoute53Resolver(config aws.Config) (resources resourceMap) {
+	client := route53resolver.New(config)
 	resources = reduce(
 		getRoute53ResolverResolverEndpoint(client).unwrap(route53ResolverResolverEndpoint),
 		getRoute53ResolverResolverRule(client).unwrap(route53ResolverResolverRule),
@@ -15,32 +17,41 @@ func getRoute53Resolver(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getRoute53ResolverResolverEndpoint(client *route53resolver.Route53Resolver) (r resourceSliceError) {
-	r.err = client.ListResolverEndpointsPages(&route53resolver.ListResolverEndpointsInput{}, func(page *route53resolver.ListResolverEndpointsOutput, lastPage bool) bool {
+func getRoute53ResolverResolverEndpoint(client *route53resolver.Client) (r resourceSliceError) {
+	req := client.ListResolverEndpointsRequest(&route53resolver.ListResolverEndpointsInput{})
+	p := route53resolver.NewListResolverEndpointsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ResolverEndpoints {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRoute53ResolverResolverRule(client *route53resolver.Route53Resolver) (r resourceSliceError) {
-	r.err = client.ListResolverRulesPages(&route53resolver.ListResolverRulesInput{}, func(page *route53resolver.ListResolverRulesOutput, lastPage bool) bool {
+func getRoute53ResolverResolverRule(client *route53resolver.Client) (r resourceSliceError) {
+	req := client.ListResolverRulesRequest(&route53resolver.ListResolverRulesInput{})
+	p := route53resolver.NewListResolverRulesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ResolverRules {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRoute53ResolverResolverRuleAssociation(client *route53resolver.Route53Resolver) (r resourceSliceError) {
-	r.err = client.ListResolverRuleAssociationsPages(&route53resolver.ListResolverRuleAssociationsInput{}, func(page *route53resolver.ListResolverRuleAssociationsOutput, lastPage bool) bool {
+func getRoute53ResolverResolverRuleAssociation(client *route53resolver.Client) (r resourceSliceError) {
+	req := client.ListResolverRuleAssociationsRequest(&route53resolver.ListResolverRuleAssociationsInput{})
+	p := route53resolver.NewListResolverRuleAssociationsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ResolverRuleAssociations {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

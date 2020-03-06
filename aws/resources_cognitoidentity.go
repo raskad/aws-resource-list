@@ -1,25 +1,26 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cognitoidentity"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentity"
 )
 
-func getCognitoIdentity(session *session.Session) (resources resourceMap) {
-	client := cognitoidentity.New(session)
+func getCognitoIdentity(config aws.Config) (resources resourceMap) {
+	client := cognitoidentity.New(config)
 	resources = reduce(
 		getCognitoIdentityPool(client).unwrap(cognitoIdentityPool),
 	)
 	return
 }
 
-func getCognitoIdentityPool(client *cognitoidentity.CognitoIdentity) (r resourceSliceError) {
+func getCognitoIdentityPool(client *cognitoidentity.Client) (r resourceSliceError) {
 	input := cognitoidentity.ListIdentityPoolsInput{
 		MaxResults: aws.Int64(16),
 	}
 	for {
-		page, err := client.ListIdentityPools(&input)
+		page, err := client.ListIdentityPoolsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

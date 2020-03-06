@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/mq"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/mq"
 )
 
-func getMq(session *session.Session) (resources resourceMap) {
-	client := mq.New(session)
+func getMq(config aws.Config) (resources resourceMap) {
+	client := mq.New(config)
 	resources = reduce(
 		getAmazonMQBroker(client).unwrap(amazonMQBroker),
 		getAmazonMQConfiguration(client).unwrap(amazonMQConfiguration),
@@ -14,10 +16,10 @@ func getMq(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getAmazonMQBroker(client *mq.MQ) (r resourceSliceError) {
+func getAmazonMQBroker(client *mq.Client) (r resourceSliceError) {
 	input := mq.ListBrokersInput{}
 	for {
-		page, err := client.ListBrokers(&input)
+		page, err := client.ListBrokersRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -32,10 +34,10 @@ func getAmazonMQBroker(client *mq.MQ) (r resourceSliceError) {
 	}
 }
 
-func getAmazonMQConfiguration(client *mq.MQ) (r resourceSliceError) {
+func getAmazonMQConfiguration(client *mq.Client) (r resourceSliceError) {
 	input := mq.ListConfigurationsInput{}
 	for {
-		page, err := client.ListConfigurations(&input)
+		page, err := client.ListConfigurationsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

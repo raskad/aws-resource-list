@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/servicediscovery"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/servicediscovery"
 )
 
-func getServiceDiscovery(session *session.Session) (resources resourceMap) {
-	client := servicediscovery.New(session)
+func getServiceDiscovery(config aws.Config) (resources resourceMap) {
+	client := servicediscovery.New(config)
 
 	serviceDiscoveryServiceResourceMap := getServiceDiscoveryService(client).unwrap(serviceDiscoveryService)
 	serviceDiscoveryServiceIDs := serviceDiscoveryServiceResourceMap[serviceDiscoveryService]
@@ -22,62 +23,78 @@ func getServiceDiscovery(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getServiceDiscoveryHTTPNamespace(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
-	r.err = client.ListNamespacesPages(&servicediscovery.ListNamespacesInput{}, func(page *servicediscovery.ListNamespacesOutput, lastPage bool) bool {
+func getServiceDiscoveryHTTPNamespace(client *servicediscovery.Client) (r resourceSliceError) {
+	req := client.ListNamespacesRequest(&servicediscovery.ListNamespacesInput{})
+	p := servicediscovery.NewListNamespacesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Namespaces {
-			if *resource.Type == "HTTP" {
+			if resource.Type == servicediscovery.NamespaceTypeHttp {
 				r.resources = append(r.resources, *resource.Name)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getServiceDiscoveryInstance(client *servicediscovery.ServiceDiscovery, serviceIDs []string) (r resourceSliceError) {
+func getServiceDiscoveryInstance(client *servicediscovery.Client, serviceIDs []string) (r resourceSliceError) {
 	for _, serviceID := range serviceIDs {
-		r.err = client.ListInstancesPages(&servicediscovery.ListInstancesInput{
+		req := client.ListInstancesRequest(&servicediscovery.ListInstancesInput{
 			ServiceId: aws.String(serviceID),
-		}, func(page *servicediscovery.ListInstancesOutput, lastPage bool) bool {
+		})
+		p := servicediscovery.NewListInstancesPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
 			for _, resource := range page.Instances {
 				r.resources = append(r.resources, *resource.Id)
 			}
-			return true
-		})
+		}
+		r.err = p.Err()
+		return
 	}
 	return
 }
 
-func getServiceDiscoveryPrivateDNSNamespace(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
-	r.err = client.ListNamespacesPages(&servicediscovery.ListNamespacesInput{}, func(page *servicediscovery.ListNamespacesOutput, lastPage bool) bool {
+func getServiceDiscoveryPrivateDNSNamespace(client *servicediscovery.Client) (r resourceSliceError) {
+	req := client.ListNamespacesRequest(&servicediscovery.ListNamespacesInput{})
+	p := servicediscovery.NewListNamespacesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Namespaces {
-			if *resource.Type == "DNS_PRIVATE" {
+			if resource.Type == servicediscovery.NamespaceTypeDnsPrivate {
 				r.resources = append(r.resources, *resource.Name)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getServiceDiscoveryPublicDNSNamespace(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
-	r.err = client.ListNamespacesPages(&servicediscovery.ListNamespacesInput{}, func(page *servicediscovery.ListNamespacesOutput, lastPage bool) bool {
+func getServiceDiscoveryPublicDNSNamespace(client *servicediscovery.Client) (r resourceSliceError) {
+	req := client.ListNamespacesRequest(&servicediscovery.ListNamespacesInput{})
+	p := servicediscovery.NewListNamespacesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Namespaces {
-			if *resource.Type == "DNS_PUBLIC" {
+			if resource.Type == servicediscovery.NamespaceTypeDnsPublic {
 				r.resources = append(r.resources, *resource.Name)
 			}
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getServiceDiscoveryService(client *servicediscovery.ServiceDiscovery) (r resourceSliceError) {
-	r.err = client.ListServicesPages(&servicediscovery.ListServicesInput{}, func(page *servicediscovery.ListServicesOutput, lastPage bool) bool {
+func getServiceDiscoveryService(client *servicediscovery.Client) (r resourceSliceError) {
+	req := client.ListServicesRequest(&servicediscovery.ListServicesInput{})
+	p := servicediscovery.NewListServicesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Services {
 			r.resources = append(r.resources, *resource.Id)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

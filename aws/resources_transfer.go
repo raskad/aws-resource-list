@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/transfer"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/transfer"
 )
 
-func getTransfer(session *session.Session) (resources resourceMap) {
-	client := transfer.New(session)
+func getTransfer(config aws.Config) (resources resourceMap) {
+	client := transfer.New(config)
 	resources = reduce(
 		getTransferServer(client).unwrap(transferServer),
 	)
 	return
 }
 
-func getTransferServer(client *transfer.Transfer) (r resourceSliceError) {
-	r.err = client.ListServersPages(&transfer.ListServersInput{}, func(page *transfer.ListServersOutput, lastPage bool) bool {
+func getTransferServer(client *transfer.Client) (r resourceSliceError) {
+	req := client.ListServersRequest(&transfer.ListServersInput{})
+	p := transfer.NewListServersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Servers {
 			r.resources = append(r.resources, *resource.ServerId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

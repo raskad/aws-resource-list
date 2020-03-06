@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/rds"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
 
-func getRds(session *session.Session) (resources resourceMap) {
-	client := rds.New(session)
+func getRds(config aws.Config) (resources resourceMap) {
+	client := rds.New(config)
 	resources = reduce(
 		getRdsDBCluster(client).unwrap(rdsDBCluster),
 		getRdsDBClusterParameterGroup(client).unwrap(rdsDBClusterParameterGroup),
@@ -20,20 +22,23 @@ func getRds(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getRdsDBCluster(client *rds.RDS) (r resourceSliceError) {
-	r.err = client.DescribeDBClustersPages(&rds.DescribeDBClustersInput{}, func(page *rds.DescribeDBClustersOutput, lastPage bool) bool {
+func getRdsDBCluster(client *rds.Client) (r resourceSliceError) {
+	req := client.DescribeDBClustersRequest(&rds.DescribeDBClustersInput{})
+	p := rds.NewDescribeDBClustersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBClusters {
 			r.resources = append(r.resources, *resource.DBClusterIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRdsDBClusterParameterGroup(client *rds.RDS) (r resourceSliceError) {
+func getRdsDBClusterParameterGroup(client *rds.Client) (r resourceSliceError) {
 	input := rds.DescribeDBClusterParameterGroupsInput{}
 	for {
-		page, err := client.DescribeDBClusterParameterGroups(&input)
+		page, err := client.DescribeDBClusterParameterGroupsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -48,62 +53,80 @@ func getRdsDBClusterParameterGroup(client *rds.RDS) (r resourceSliceError) {
 	}
 }
 
-func getRdsDBInstance(client *rds.RDS) (r resourceSliceError) {
-	r.err = client.DescribeDBInstancesPages(&rds.DescribeDBInstancesInput{}, func(page *rds.DescribeDBInstancesOutput, lastPage bool) bool {
+func getRdsDBInstance(client *rds.Client) (r resourceSliceError) {
+	req := client.DescribeDBInstancesRequest(&rds.DescribeDBInstancesInput{})
+	p := rds.NewDescribeDBInstancesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBInstances {
 			r.resources = append(r.resources, *resource.DBInstanceIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRdsDBParameterGroup(client *rds.RDS) (r resourceSliceError) {
-	r.err = client.DescribeDBParameterGroupsPages(&rds.DescribeDBParameterGroupsInput{}, func(page *rds.DescribeDBParameterGroupsOutput, lastPage bool) bool {
+func getRdsDBParameterGroup(client *rds.Client) (r resourceSliceError) {
+	req := client.DescribeDBParameterGroupsRequest(&rds.DescribeDBParameterGroupsInput{})
+	p := rds.NewDescribeDBParameterGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBParameterGroups {
 			r.resources = append(r.resources, *resource.DBParameterGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRdsDBSecurityGroup(client *rds.RDS) (r resourceSliceError) {
-	r.err = client.DescribeDBSecurityGroupsPages(&rds.DescribeDBSecurityGroupsInput{}, func(page *rds.DescribeDBSecurityGroupsOutput, lastPage bool) bool {
+func getRdsDBSecurityGroup(client *rds.Client) (r resourceSliceError) {
+	req := client.DescribeDBSecurityGroupsRequest(&rds.DescribeDBSecurityGroupsInput{})
+	p := rds.NewDescribeDBSecurityGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBSecurityGroups {
 			r.resources = append(r.resources, *resource.DBSecurityGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRdsDBSubnetGroup(client *rds.RDS) (r resourceSliceError) {
-	r.err = client.DescribeDBSubnetGroupsPages(&rds.DescribeDBSubnetGroupsInput{}, func(page *rds.DescribeDBSubnetGroupsOutput, lastPage bool) bool {
+func getRdsDBSubnetGroup(client *rds.Client) (r resourceSliceError) {
+	req := client.DescribeDBSubnetGroupsRequest(&rds.DescribeDBSubnetGroupsInput{})
+	p := rds.NewDescribeDBSubnetGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DBSubnetGroups {
 			r.resources = append(r.resources, *resource.DBSubnetGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRdsEventSubscription(client *rds.RDS) (r resourceSliceError) {
-	r.err = client.DescribeEventSubscriptionsPages(&rds.DescribeEventSubscriptionsInput{}, func(page *rds.DescribeEventSubscriptionsOutput, lastPage bool) bool {
+func getRdsEventSubscription(client *rds.Client) (r resourceSliceError) {
+	req := client.DescribeEventSubscriptionsRequest(&rds.DescribeEventSubscriptionsInput{})
+	p := rds.NewDescribeEventSubscriptionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.EventSubscriptionsList {
 			r.resources = append(r.resources, *resource.CustSubscriptionId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getRdsOptionGroup(client *rds.RDS) (r resourceSliceError) {
-	r.err = client.DescribeOptionGroupsPages(&rds.DescribeOptionGroupsInput{}, func(page *rds.DescribeOptionGroupsOutput, lastPage bool) bool {
+func getRdsOptionGroup(client *rds.Client) (r resourceSliceError) {
+	req := client.DescribeOptionGroupsRequest(&rds.DescribeOptionGroupsInput{})
+	p := rds.NewDescribeOptionGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.OptionGroupsList {
 			r.resources = append(r.resources, *resource.OptionGroupName)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

@@ -1,23 +1,34 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/kinesisanalytics"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/kinesisanalytics"
 )
 
-func getKinesisAnalytics(session *session.Session) (resources resourceMap) {
-	client := kinesisanalytics.New(session)
+func getKinesisAnalytics(config aws.Config) (resources resourceMap) {
+	client := kinesisanalytics.New(config)
 	resources = reduce(
 		getKinesisAnalyticsApplication(client).unwrap(kinesisAnalyticsApplication),
 	)
 	return
 }
 
-func getKinesisAnalyticsApplication(client *kinesisanalytics.KinesisAnalytics) (r resourceSliceError) {
-	page, err := client.ListApplications(&kinesisanalytics.ListApplicationsInput{})
-	for _, resource := range page.ApplicationSummaries {
-		r.resources = append(r.resources, *resource.ApplicationName)
+func getKinesisAnalyticsApplication(client *kinesisanalytics.Client) (r resourceSliceError) {
+	input := kinesisanalytics.ListApplicationsInput{}
+	for {
+		page, err := client.ListApplicationsRequest(&input).Send(context.Background())
+		if err != nil {
+			r.err = err
+			return
+		}
+		for _, resource := range page.ApplicationSummaries {
+			r.resources = append(r.resources, *resource.ApplicationName)
+		}
+		if !*page.HasMoreApplications {
+			return
+		}
+		input.ExclusiveStartApplicationName = page.ApplicationSummaries[len(page.ApplicationSummaries)-1].ApplicationName
 	}
-	r.err = err
-	return
 }

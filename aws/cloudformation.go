@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudformation"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 )
 
-func getCloudForamtionState(session *session.Session) (resources resourceMap, err error) {
-	client := cloudformation.New(session)
+func getCloudForamtionState(config aws.Config) (resources resourceMap, err error) {
+	client := cloudformation.New(config)
 	stackIDs, err := getCloudformationActiveStackIDs(client)
 	if err != nil {
 		return resources, err
@@ -26,59 +27,63 @@ func getCloudForamtionState(session *session.Session) (resources resourceMap, er
 	return resources, nil
 }
 
-func getCloudformationActiveStackIDs(client *cloudformation.CloudFormation) (stackIDs []*string, err error) {
+func getCloudformationActiveStackIDs(client *cloudformation.Client) (stackIDs []*string, err error) {
 	logDebug("Listing CloudformationActiveStackID resources")
-	err = client.ListStacksPages(&cloudformation.ListStacksInput{
-		StackStatusFilter: aws.StringSlice([]string{
-			"CREATE_FAILED",
-			"CREATE_COMPLETE",
-			"ROLLBACK_IN_PROGRESS",
-			"ROLLBACK_FAILED",
-			"ROLLBACK_COMPLETE",
-			"DELETE_IN_PROGRESS",
-			"DELETE_FAILED",
-			"UPDATE_IN_PROGRESS",
-			"UPDATE_COMPLETE_CLEANUP_IN_PROGRESS",
-			"UPDATE_COMPLETE",
-			"UPDATE_ROLLBACK_IN_PROGRESS",
-			"UPDATE_ROLLBACK_FAILED",
-			"UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS",
-			"UPDATE_ROLLBACK_COMPLETE",
-			"REVIEW_IN_PROGRESS",
-			"IMPORT_IN_PROGRESS",
-			"IMPORT_COMPLETE",
-			"IMPORT_ROLLBACK_IN_PROGRESS",
-			"IMPORT_ROLLBACK_FAILED",
-			"IMPORT_ROLLBACK_COMPLETE",
-		})},
-		func(page *cloudformation.ListStacksOutput, lastPage bool) bool {
-			for _, resource := range page.StackSummaries {
-				logDebug("Got CloudformationActiveStackID resource with PhysicalResourceId", *resource.StackId)
-				stackIDs = append(stackIDs, (resource.StackId))
-			}
-			return true
-		})
-	if err != nil {
+	req := client.ListStacksRequest(&cloudformation.ListStacksInput{
+		StackStatusFilter: []cloudformation.StackStatus{
+			cloudformation.StackStatusCreateInProgress,
+			cloudformation.StackStatusCreateComplete,
+			cloudformation.StackStatusRollbackInProgress,
+			cloudformation.StackStatusRollbackFailed,
+			cloudformation.StackStatusRollbackComplete,
+			cloudformation.StackStatusDeleteInProgress,
+			cloudformation.StackStatusDeleteFailed,
+			cloudformation.StackStatusUpdateInProgress,
+			cloudformation.StackStatusUpdateCompleteCleanupInProgress,
+			cloudformation.StackStatusUpdateComplete,
+			cloudformation.StackStatusUpdateRollbackInProgress,
+			cloudformation.StackStatusUpdateRollbackFailed,
+			cloudformation.StackStatusUpdateRollbackCompleteCleanupInProgress,
+			cloudformation.StackStatusUpdateRollbackComplete,
+			cloudformation.StackStatusReviewInProgress,
+			cloudformation.StackStatusImportInProgress,
+			cloudformation.StackStatusImportComplete,
+			cloudformation.StackStatusImportRollbackInProgress,
+			cloudformation.StackStatusImportRollbackFailed,
+			cloudformation.StackStatusImportRollbackComplete,
+		},
+	})
+	p := cloudformation.NewListStacksPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
+		for _, resource := range page.StackSummaries {
+			logDebug("Got CloudformationActiveStackID resource with PhysicalResourceId", *resource.StackId)
+			stackIDs = append(stackIDs, (resource.StackId))
+		}
+	}
+	if err = p.Err(); err != nil {
 		return stackIDs, err
 	}
 	return stackIDs, nil
 }
 
-func getCloudformationResources(client *cloudformation.CloudFormation, stackIDs []*string) (resources map[string][]string, err error) {
+func getCloudformationResources(client *cloudformation.Client, stackIDs []*string) (resources map[string][]string, err error) {
 	logDebug("Listing CloudformationResources resources")
 	resources = make(map[string][]string)
+
 	for _, stackID := range stackIDs {
-		err := client.ListStackResourcesPages(&cloudformation.ListStackResourcesInput{
+		req := client.ListStackResourcesRequest(&cloudformation.ListStackResourcesInput{
 			StackName: stackID,
-		},
-			func(page *cloudformation.ListStackResourcesOutput, lastPage bool) bool {
-				for _, resource := range page.StackResourceSummaries {
-					logDebug("Got cloudformation resource with ResourceType", *resource.ResourceType, "and PhysicalResourceId", *resource.PhysicalResourceId)
-					resources[*resource.ResourceType] = append(resources[*resource.ResourceType], *resource.PhysicalResourceId)
-				}
-				return true
-			})
-		if err != nil {
+		})
+		p := cloudformation.NewListStackResourcesPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
+			for _, resource := range page.StackResourceSummaries {
+				logDebug("Got cloudformation resource with ResourceType", *resource.ResourceType, "and PhysicalResourceId", *resource.PhysicalResourceId)
+				resources[*resource.ResourceType] = append(resources[*resource.ResourceType], *resource.PhysicalResourceId)
+			}
+		}
+		if err = p.Err(); err != nil {
 			return resources, err
 		}
 	}

@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/databasemigrationservice"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 )
 
-func getDms(session *session.Session) (resources resourceMap) {
-	client := databasemigrationservice.New(session)
+func getDms(config aws.Config) (resources resourceMap) {
+	client := databasemigrationservice.New(config)
 	resources = reduce(
 		getDmsCertificate(client).unwrap(dmsCertificate),
 		getDmsEndpoint(client).unwrap(dmsEndpoint),
@@ -18,62 +20,80 @@ func getDms(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getDmsCertificate(client *databasemigrationservice.DatabaseMigrationService) (r resourceSliceError) {
-	r.err = client.DescribeCertificatesPages(&databasemigrationservice.DescribeCertificatesInput{}, func(page *databasemigrationservice.DescribeCertificatesOutput, lastPage bool) bool {
+func getDmsCertificate(client *databasemigrationservice.Client) (r resourceSliceError) {
+	req := client.DescribeCertificatesRequest(&databasemigrationservice.DescribeCertificatesInput{})
+	p := databasemigrationservice.NewDescribeCertificatesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Certificates {
 			r.resources = append(r.resources, *resource.CertificateIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getDmsEndpoint(client *databasemigrationservice.DatabaseMigrationService) (r resourceSliceError) {
-	r.err = client.DescribeEndpointsPages(&databasemigrationservice.DescribeEndpointsInput{}, func(page *databasemigrationservice.DescribeEndpointsOutput, lastPage bool) bool {
+func getDmsEndpoint(client *databasemigrationservice.Client) (r resourceSliceError) {
+	req := client.DescribeEndpointsRequest(&databasemigrationservice.DescribeEndpointsInput{})
+	p := databasemigrationservice.NewDescribeEndpointsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Endpoints {
 			r.resources = append(r.resources, *resource.EndpointIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getDmsEventSubscription(client *databasemigrationservice.DatabaseMigrationService) (r resourceSliceError) {
-	r.err = client.DescribeEventSubscriptionsPages(&databasemigrationservice.DescribeEventSubscriptionsInput{}, func(page *databasemigrationservice.DescribeEventSubscriptionsOutput, lastPage bool) bool {
+func getDmsEventSubscription(client *databasemigrationservice.Client) (r resourceSliceError) {
+	req := client.DescribeEventSubscriptionsRequest(&databasemigrationservice.DescribeEventSubscriptionsInput{})
+	p := databasemigrationservice.NewDescribeEventSubscriptionsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.EventSubscriptionsList {
 			r.resources = append(r.resources, *resource.CustSubscriptionId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getDmsReplicationInstance(client *databasemigrationservice.DatabaseMigrationService) (r resourceSliceError) {
-	r.err = client.DescribeReplicationInstancesPages(&databasemigrationservice.DescribeReplicationInstancesInput{}, func(page *databasemigrationservice.DescribeReplicationInstancesOutput, lastPage bool) bool {
+func getDmsReplicationInstance(client *databasemigrationservice.Client) (r resourceSliceError) {
+	req := client.DescribeReplicationInstancesRequest(&databasemigrationservice.DescribeReplicationInstancesInput{})
+	p := databasemigrationservice.NewDescribeReplicationInstancesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ReplicationInstances {
 			r.resources = append(r.resources, *resource.ReplicationInstanceIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getDmsReplicationSubnetGroup(client *databasemigrationservice.DatabaseMigrationService) (r resourceSliceError) {
-	r.err = client.DescribeReplicationSubnetGroupsPages(&databasemigrationservice.DescribeReplicationSubnetGroupsInput{}, func(page *databasemigrationservice.DescribeReplicationSubnetGroupsOutput, lastPage bool) bool {
+func getDmsReplicationSubnetGroup(client *databasemigrationservice.Client) (r resourceSliceError) {
+	req := client.DescribeReplicationSubnetGroupsRequest(&databasemigrationservice.DescribeReplicationSubnetGroupsInput{})
+	p := databasemigrationservice.NewDescribeReplicationSubnetGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ReplicationSubnetGroups {
 			r.resources = append(r.resources, *resource.ReplicationSubnetGroupIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getDmsReplicationTask(client *databasemigrationservice.DatabaseMigrationService) (r resourceSliceError) {
-	r.err = client.DescribeReplicationTasksPages(&databasemigrationservice.DescribeReplicationTasksInput{}, func(page *databasemigrationservice.DescribeReplicationTasksOutput, lastPage bool) bool {
+func getDmsReplicationTask(client *databasemigrationservice.Client) (r resourceSliceError) {
+	req := client.DescribeReplicationTasksRequest(&databasemigrationservice.DescribeReplicationTasksInput{})
+	p := databasemigrationservice.NewDescribeReplicationTasksPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ReplicationTasks {
 			r.resources = append(r.resources, *resource.ReplicationTaskIdentifier)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

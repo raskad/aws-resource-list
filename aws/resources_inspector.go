@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/inspector"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/inspector"
 )
 
-func getInspector(session *session.Session) (resources resourceMap) {
-	client := inspector.New(session)
+func getInspector(config aws.Config) (resources resourceMap) {
+	client := inspector.New(config)
 	resources = reduce(
 		getInspectorAssessmentTarget(client).unwrap(inspectorAssessmentTarget),
 		getInspectorAssessmentTemplate(client).unwrap(inspectorAssessmentTemplate),
@@ -14,22 +16,28 @@ func getInspector(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getInspectorAssessmentTarget(client *inspector.Inspector) (r resourceSliceError) {
-	r.err = client.ListAssessmentTargetsPages(&inspector.ListAssessmentTargetsInput{}, func(page *inspector.ListAssessmentTargetsOutput, lastPage bool) bool {
+func getInspectorAssessmentTarget(client *inspector.Client) (r resourceSliceError) {
+	req := client.ListAssessmentTargetsRequest(&inspector.ListAssessmentTargetsInput{})
+	p := inspector.NewListAssessmentTargetsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.AssessmentTargetArns {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getInspectorAssessmentTemplate(client *inspector.Inspector) (r resourceSliceError) {
-	r.err = client.ListAssessmentTemplatesPages(&inspector.ListAssessmentTemplatesInput{}, func(page *inspector.ListAssessmentTemplatesOutput, lastPage bool) bool {
+func getInspectorAssessmentTemplate(client *inspector.Client) (r resourceSliceError) {
+	req := client.ListAssessmentTemplatesRequest(&inspector.ListAssessmentTemplatesInput{})
+	p := inspector.NewListAssessmentTemplatesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.AssessmentTemplateArns {
-			r.resources = append(r.resources, *resource)
+			r.resources = append(r.resources, resource)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

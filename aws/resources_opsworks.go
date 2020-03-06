@@ -1,13 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/opsworks"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/opsworks"
 )
 
-func getOpsWorks(session *session.Session) (resources resourceMap) {
-	client := opsworks.New(session)
+func getOpsWorks(config aws.Config) (resources resourceMap) {
+	client := opsworks.New(config)
 
 	opsWorksStackResourceMap := getOpsWorksStack(client).unwrap(opsWorksStack)
 	opsWorksStackIDs := opsWorksStackResourceMap[opsWorksStack]
@@ -23,11 +24,11 @@ func getOpsWorks(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getOpsWorksApp(client *opsworks.OpsWorks, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksApp(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
 	for _, stackID := range stackIDs {
-		output, err := client.DescribeApps(&opsworks.DescribeAppsInput{
+		output, err := client.DescribeAppsRequest(&opsworks.DescribeAppsInput{
 			StackId: aws.String(stackID),
-		})
+		}).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -39,11 +40,11 @@ func getOpsWorksApp(client *opsworks.OpsWorks, stackIDs []string) (r resourceSli
 	return
 }
 
-func getOpsWorksInstance(client *opsworks.OpsWorks, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksInstance(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
 	for _, stackID := range stackIDs {
-		output, err := client.DescribeInstances(&opsworks.DescribeInstancesInput{
+		output, err := client.DescribeInstancesRequest(&opsworks.DescribeInstancesInput{
 			StackId: aws.String(stackID),
-		})
+		}).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -55,11 +56,11 @@ func getOpsWorksInstance(client *opsworks.OpsWorks, stackIDs []string) (r resour
 	return
 }
 
-func getOpsWorksLayer(client *opsworks.OpsWorks, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksLayer(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
 	for _, stackID := range stackIDs {
-		output, err := client.DescribeLayers(&opsworks.DescribeLayersInput{
+		output, err := client.DescribeLayersRequest(&opsworks.DescribeLayersInput{
 			StackId: aws.String(stackID),
-		})
+		}).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -71,8 +72,8 @@ func getOpsWorksLayer(client *opsworks.OpsWorks, stackIDs []string) (r resourceS
 	return
 }
 
-func getOpsWorksStack(client *opsworks.OpsWorks) (r resourceSliceError) {
-	output, err := client.DescribeStacks(&opsworks.DescribeStacksInput{})
+func getOpsWorksStack(client *opsworks.Client) (r resourceSliceError) {
+	output, err := client.DescribeStacksRequest(&opsworks.DescribeStacksInput{}).Send(context.Background())
 	if err != nil {
 		r.err = err
 		return
@@ -83,8 +84,8 @@ func getOpsWorksStack(client *opsworks.OpsWorks) (r resourceSliceError) {
 	return
 }
 
-func getOpsWorksUserProfile(client *opsworks.OpsWorks) (r resourceSliceError) {
-	output, err := client.DescribeUserProfiles(&opsworks.DescribeUserProfilesInput{})
+func getOpsWorksUserProfile(client *opsworks.Client) (r resourceSliceError) {
+	output, err := client.DescribeUserProfilesRequest(&opsworks.DescribeUserProfilesInput{}).Send(context.Background())
 	if err != nil {
 		r.err = err
 		return
@@ -95,11 +96,11 @@ func getOpsWorksUserProfile(client *opsworks.OpsWorks) (r resourceSliceError) {
 	return
 }
 
-func getOpsWorksVolume(client *opsworks.OpsWorks, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksVolume(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
 	for _, stackID := range stackIDs {
-		output, err := client.DescribeVolumes(&opsworks.DescribeVolumesInput{
+		output, err := client.DescribeVolumesRequest(&opsworks.DescribeVolumesInput{
 			StackId: aws.String(stackID),
-		})
+		}).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

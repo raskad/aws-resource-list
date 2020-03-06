@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/groundstation"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/groundstation"
 )
 
-func getGroundStation(session *session.Session) (resources resourceMap) {
-	client := groundstation.New(session)
+func getGroundStation(config aws.Config) (resources resourceMap) {
+	client := groundstation.New(config)
 
 	resources = reduce(
 		getGroundStationConfig(client).unwrap(groundStationConfig),
@@ -16,32 +18,41 @@ func getGroundStation(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getGroundStationConfig(client *groundstation.GroundStation) (r resourceSliceError) {
-	r.err = client.ListConfigsPages(&groundstation.ListConfigsInput{}, func(page *groundstation.ListConfigsOutput, lastPage bool) bool {
+func getGroundStationConfig(client *groundstation.Client) (r resourceSliceError) {
+	req := client.ListConfigsRequest(&groundstation.ListConfigsInput{})
+	p := groundstation.NewListConfigsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ConfigList {
 			r.resources = append(r.resources, *resource.ConfigId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGroundStationDataflowEndpointGroup(client *groundstation.GroundStation) (r resourceSliceError) {
-	r.err = client.ListDataflowEndpointGroupsPages(&groundstation.ListDataflowEndpointGroupsInput{}, func(page *groundstation.ListDataflowEndpointGroupsOutput, lastPage bool) bool {
+func getGroundStationDataflowEndpointGroup(client *groundstation.Client) (r resourceSliceError) {
+	req := client.ListDataflowEndpointGroupsRequest(&groundstation.ListDataflowEndpointGroupsInput{})
+	p := groundstation.NewListDataflowEndpointGroupsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.DataflowEndpointGroupList {
 			r.resources = append(r.resources, *resource.DataflowEndpointGroupId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getGroundStationMissionProfile(client *groundstation.GroundStation) (r resourceSliceError) {
-	r.err = client.ListMissionProfilesPages(&groundstation.ListMissionProfilesInput{}, func(page *groundstation.ListMissionProfilesOutput, lastPage bool) bool {
+func getGroundStationMissionProfile(client *groundstation.Client) (r resourceSliceError) {
+	req := client.ListMissionProfilesRequest(&groundstation.ListMissionProfilesInput{})
+	p := groundstation.NewListMissionProfilesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.MissionProfileList {
 			r.resources = append(r.resources, *resource.MissionProfileId)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

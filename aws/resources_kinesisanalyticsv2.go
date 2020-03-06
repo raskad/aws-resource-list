@@ -1,22 +1,24 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/kinesisanalyticsv2"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/kinesisanalyticsv2"
 )
 
-func getKinesisAnalyticsV2(session *session.Session) (resources resourceMap) {
-	client := kinesisanalyticsv2.New(session)
+func getKinesisAnalyticsV2(config aws.Config) (resources resourceMap) {
+	client := kinesisanalyticsv2.New(config)
 	resources = reduce(
 		getKinesisAnalyticsV2Application(client).unwrap(kinesisAnalyticsV2Application),
 	)
 	return
 }
 
-func getKinesisAnalyticsV2Application(client *kinesisanalyticsv2.KinesisAnalyticsV2) (r resourceSliceError) {
+func getKinesisAnalyticsV2Application(client *kinesisanalyticsv2.Client) (r resourceSliceError) {
 	input := kinesisanalyticsv2.ListApplicationsInput{}
 	for {
-		page, err := client.ListApplications(&input)
+		page, err := client.ListApplicationsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return

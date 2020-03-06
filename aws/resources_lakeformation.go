@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/lakeformation"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/lakeformation"
 )
 
-func getLakeFormation(session *session.Session) (resources resourceMap) {
-	client := lakeformation.New(session)
+func getLakeFormation(config aws.Config) (resources resourceMap) {
+	client := lakeformation.New(config)
 	resources = reduce(
 		getLakeFormationResource(client).unwrap(lakeFormationResource),
 	)
 	return
 }
 
-func getLakeFormationResource(client *lakeformation.LakeFormation) (r resourceSliceError) {
-	r.err = client.ListResourcesPages(&lakeformation.ListResourcesInput{}, func(page *lakeformation.ListResourcesOutput, lastPage bool) bool {
+func getLakeFormationResource(client *lakeformation.Client) (r resourceSliceError) {
+	req := client.ListResourcesRequest(&lakeformation.ListResourcesInput{})
+	p := lakeformation.NewListResourcesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.ResourceInfoList {
 			r.resources = append(r.resources, *resource.ResourceArn)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

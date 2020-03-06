@@ -1,24 +1,29 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/qldb"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/qldb"
 )
 
-func getQLDB(session *session.Session) (resources resourceMap) {
-	client := qldb.New(session)
+func getQLDB(config aws.Config) (resources resourceMap) {
+	client := qldb.New(config)
 	resources = reduce(
 		getQLDBLedger(client).unwrap(qLDBLedger),
 	)
 	return
 }
 
-func getQLDBLedger(client *qldb.QLDB) (r resourceSliceError) {
-	r.err = client.ListLedgersPages(&qldb.ListLedgersInput{}, func(page *qldb.ListLedgersOutput, lastPage bool) bool {
+func getQLDBLedger(client *qldb.Client) (r resourceSliceError) {
+	req := client.ListLedgersRequest(&qldb.ListLedgersInput{})
+	p := qldb.NewListLedgersPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Ledgers {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

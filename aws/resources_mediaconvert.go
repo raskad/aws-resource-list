@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/mediaconvert"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/mediaconvert"
 )
 
-func getMediaConvert(session *session.Session) (resources resourceMap) {
-	client := mediaconvert.New(session)
+func getMediaConvert(config aws.Config) (resources resourceMap) {
+	client := mediaconvert.New(config)
 	resources = reduce(
 		getMediaConvertJobTemplate(client).unwrap(mediaConvertJobTemplate),
 		getMediaConvertPreset(client).unwrap(mediaConvertPreset),
@@ -15,32 +17,41 @@ func getMediaConvert(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getMediaConvertJobTemplate(client *mediaconvert.MediaConvert) (r resourceSliceError) {
-	r.err = client.ListJobTemplatesPages(&mediaconvert.ListJobTemplatesInput{}, func(page *mediaconvert.ListJobTemplatesOutput, lastPage bool) bool {
+func getMediaConvertJobTemplate(client *mediaconvert.Client) (r resourceSliceError) {
+	req := client.ListJobTemplatesRequest(&mediaconvert.ListJobTemplatesInput{})
+	p := mediaconvert.NewListJobTemplatesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.JobTemplates {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getMediaConvertPreset(client *mediaconvert.MediaConvert) (r resourceSliceError) {
-	r.err = client.ListPresetsPages(&mediaconvert.ListPresetsInput{}, func(page *mediaconvert.ListPresetsOutput, lastPage bool) bool {
+func getMediaConvertPreset(client *mediaconvert.Client) (r resourceSliceError) {
+	req := client.ListPresetsRequest(&mediaconvert.ListPresetsInput{})
+	p := mediaconvert.NewListPresetsPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Presets {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }
 
-func getMediaConvertQueue(client *mediaconvert.MediaConvert) (r resourceSliceError) {
-	r.err = client.ListQueuesPages(&mediaconvert.ListQueuesInput{}, func(page *mediaconvert.ListQueuesOutput, lastPage bool) bool {
+func getMediaConvertQueue(client *mediaconvert.Client) (r resourceSliceError) {
+	req := client.ListQueuesRequest(&mediaconvert.ListQueuesInput{})
+	p := mediaconvert.NewListQueuesPaginator(req)
+	for p.Next(context.Background()) {
+		page := p.CurrentPage()
 		for _, resource := range page.Queues {
 			r.resources = append(r.resources, *resource.Name)
 		}
-		return true
-	})
+	}
+	r.err = p.Err()
 	return
 }

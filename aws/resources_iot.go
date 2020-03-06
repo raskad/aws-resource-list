@@ -1,12 +1,14 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/iot"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/iot"
 )
 
-func getIoT(session *session.Session) (resources resourceMap) {
-	client := iot.New(session)
+func getIoT(config aws.Config) (resources resourceMap) {
+	client := iot.New(config)
 	resources = reduce(
 		getIoTCertificate(client).unwrap(ioTCertificate),
 		getIoTPolicy(client).unwrap(ioTPolicy),
@@ -16,10 +18,10 @@ func getIoT(session *session.Session) (resources resourceMap) {
 	return
 }
 
-func getIoTCertificate(client *iot.IoT) (r resourceSliceError) {
+func getIoTCertificate(client *iot.Client) (r resourceSliceError) {
 	input := iot.ListCertificatesInput{}
 	for {
-		page, err := client.ListCertificates(&input)
+		page, err := client.ListCertificatesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -34,10 +36,10 @@ func getIoTCertificate(client *iot.IoT) (r resourceSliceError) {
 	}
 }
 
-func getIoTPolicy(client *iot.IoT) (r resourceSliceError) {
+func getIoTPolicy(client *iot.Client) (r resourceSliceError) {
 	input := iot.ListPoliciesInput{}
 	for {
-		page, err := client.ListPolicies(&input)
+		page, err := client.ListPoliciesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -52,10 +54,10 @@ func getIoTPolicy(client *iot.IoT) (r resourceSliceError) {
 	}
 }
 
-func getIoTThing(client *iot.IoT) (r resourceSliceError) {
+func getIoTThing(client *iot.Client) (r resourceSliceError) {
 	input := iot.ListThingsInput{}
 	for {
-		page, err := client.ListThings(&input)
+		page, err := client.ListThingsRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
@@ -70,10 +72,10 @@ func getIoTThing(client *iot.IoT) (r resourceSliceError) {
 	}
 }
 
-func getIoTTopicRule(client *iot.IoT) (r resourceSliceError) {
+func getIoTTopicRule(client *iot.Client) (r resourceSliceError) {
 	input := iot.ListTopicRulesInput{}
 	for {
-		page, err := client.ListTopicRules(&input)
+		page, err := client.ListTopicRulesRequest(&input).Send(context.Background())
 		if err != nil {
 			r.err = err
 			return
