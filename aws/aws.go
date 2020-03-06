@@ -66,7 +66,7 @@ func Start(gitTag string, gitCommit string) {
 			logFatal("Cli argument", cliArgs[1], "invalid")
 		}
 	case "compare":
-		state.filter(cfn, real).print()
+		state.filter(real, cfn).print()
 	case "version":
 		fmt.Println(gitTag, "@", gitCommit)
 	default:

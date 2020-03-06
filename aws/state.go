@@ -773,21 +773,20 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 	return value, ok
 }
 
+// Gather all resources that are in the `from` state but not in the `to` state
 func (state state) filter(from resourceSource, to resourceSource) (r resourceMap) {
-	logInfo("Filter all resources that are in the", from, "state out of the", to, "state")
 	r = make(map[resourceType][]string)
 	for resourceType, resourceIDs := range state[from] {
 		for _, resourceID := range resourceIDs {
 			if !contains(state[to][resourceType], resourceID) {
-				logDebug("State", "does not contain resource of type", resourceType, "with identifier", resourceID)
 				r[resourceType] = append(r[resourceType], resourceID)
 			}
-			logDebug("State", to, "contains resource of type", resourceType, "with identifier", resourceID)
 		}
 	}
 	return
 }
 
+// Test if a string is in a slice of strings
 func contains(arr []string, str string) bool {
 	for _, a := range arr {
 		if a == str {
