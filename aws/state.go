@@ -324,7 +324,6 @@ const (
 	lambdaFunction                            resourceType = "lambdaFunction"
 	lambdaLayer                               resourceType = "lambdaLayer"
 	lambdaLayerVersion                        resourceType = "lambdaLayerVersion"
-	lambdaPermission                          resourceType = "lambdaPermission"
 	mediaConvertJobTemplate                   resourceType = "mediaConvertJobTemplate"
 	mediaConvertPreset                        resourceType = "mediaConvertPreset"
 	mediaConvertQueue                         resourceType = "mediaConvertQueue"
@@ -669,7 +668,6 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::Lambda::Alias":                               lambdaAlias,
 		"AWS::Lambda::Function":                            lambdaFunction,
 		"AWS::Lambda::LayerVersion":                        lambdaLayerVersion,
-		"AWS::Lambda::Permission":                          lambdaPermission,
 		"AWS::MediaConvert::JobTemplate":                   mediaConvertJobTemplate,
 		"AWS::MediaConvert::Preset":                        mediaConvertPreset,
 		"AWS::MediaConvert::Queue":                         mediaConvertQueue,

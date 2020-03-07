@@ -312,7 +312,7 @@ configOrganizationConformancePack:
   cloudformation: AWS::Config::OrganizationConformancePack
 configRemediationConfiguration:
   implemented: true
-  identifier: Arn
+  identifier: ConfigRuleName
   cloudformation: AWS::Config::RemediationConfiguration
 dataPipelinePipeline:
   implemented: true
@@ -1172,7 +1172,7 @@ sageMakerWorkteam:
   cloudformation: AWS::SageMaker::Workteam
 secretsManagerSecret:
   implemented: true
-  identifier: Name
+  identifier: Arn
   cloudformation: AWS::SecretsManager::Secret
 sesConfigurationSet:
   implemented: true

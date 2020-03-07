@@ -21,7 +21,7 @@ func getSecretsManagerSecret(client *secretsmanager.Client) (r resourceSliceErro
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.SecretList {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.ARN)
 		}
 	}
 	r.err = p.Err()

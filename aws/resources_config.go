@@ -168,7 +168,7 @@ func getConfigRemediationConfiguration(client *configservice.Client, configRuleN
 		return
 	}
 	for _, resource := range page.RemediationConfigurations {
-		r.resources = append(r.resources, *resource.Arn)
+		r.resources = append(r.resources, *resource.ConfigRuleName)
 	}
 	return
 }

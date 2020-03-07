@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
@@ -22,7 +23,9 @@ func getkmsAlias(client *kms.Client) (r resourceSliceError) {
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.Aliases {
-			r.resources = append(r.resources, *resource.AliasName)
+			if !strings.HasPrefix(*resource.AliasName, "alias/aws/") {
+				r.resources = append(r.resources, *resource.AliasName)
+			}
 		}
 	}
 	r.err = p.Err()
