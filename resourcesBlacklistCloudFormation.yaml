@@ -93,12 +93,16 @@ resources:
     reason: No physical identifier found
   - name: AWS::Budgets::Budget
     reason: No physical identifier found
+  - name: AWS::Chatbot::SlackChannelConfiguration
+    reason: Not in the v2 sdk yet
   - name: AWS::CodePipeline::CustomActionType
     reason: No physical identifier found
   - name: AWS::CodeStar::GitHubRepository
     reason: No physical identifier found
   - name: AWS::CodeStarNotifications::NotificationRule
     reason: No physical identifier found
+  - name: AWS::CodeStarConnections::Connection
+    reason: Not in the v2 sdk yet
   - name: AWS::Cognito::IdentityPoolRoleAttachment
     reason: No physical identifier found
   - name: AWS::Cognito::UserPoolDomain

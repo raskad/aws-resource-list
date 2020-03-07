@@ -104,6 +104,7 @@ const (
 	appStreamStack                            resourceType = "appStreamStack"
 	appSyncGraphQLApi                         resourceType = "appSyncGraphQLApi"
 	athenaNamedQuery                          resourceType = "athenaNamedQuery"
+	athenaWorkGroup                           resourceType = "athenaWorkGroup"
 	autoScalingPlansScalingPlan               resourceType = "autoScalingPlansScalingPlan"
 	autoScalingAutoScalingGroup               resourceType = "autoScalingAutoScalingGroup"
 	autoScalingLaunchConfiguration            resourceType = "autoScalingLaunchConfiguration"
@@ -449,6 +450,7 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::AppStream::Stack":                            appStreamStack,
 		"AWS::AppSync::GraphQLApi":                         appSyncGraphQLApi,
 		"AWS::Athena::NamedQuery":                          athenaNamedQuery,
+		"AWS::Athena::WorkGroup":                           athenaWorkGroup,
 		"AWS::AutoScalingPlans::ScalingPlan":               autoScalingPlansScalingPlan,
 		"AWS::AutoScaling::AutoScalingGroup":               autoScalingAutoScalingGroup,
 		"AWS::AutoScaling::LaunchConfiguration":            autoScalingLaunchConfiguration,
