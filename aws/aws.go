@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
+	"github.com/urfave/cli/v2"
 )
 
 var accountID = ""
@@ -34,45 +35,83 @@ func Start(gitTag string, gitCommit string) {
 		logError("Could not read state from disk", err)
 	}
 
-	if len(cliArgs) == 0 {
-		cliArgs = append(cliArgs, "help")
+	app := &cli.App{
+		Name:     "aws-resource-list",
+		Usage:    "list all your aws resources",
+		HelpName: "aws-resource-list",
+		Commands: []*cli.Command{
+			{
+				Name:  "refresh",
+				Usage: "Refresh aws resources",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "real",
+						Usage: "Refresh currently deployed aws resources",
+						Action: func(c *cli.Context) error {
+							config := awsStart()
+							state[real] = getRealState(config)
+							return nil
+						},
+					},
+					{
+						Name:  "cfn",
+						Usage: "Refresh aws resources that are deployed through cloudformation",
+						Action: func(c *cli.Context) error {
+							config := awsStart()
+							cfnState, err := getCloudForamtionState(config)
+							if err != nil {
+								logFatal("Could not fetch cloudformation resources:", err)
+							}
+							state[cfn] = cfnState
+							return nil
+						},
+					},
+				},
+			},
+			{
+				Name:  "print",
+				Usage: "Print aws resources",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "real",
+						Usage: "Print currently deployed aws resources",
+						Action: func(c *cli.Context) error {
+							state[real].print()
+							return nil
+						},
+					},
+					{
+						Name:  "cfn",
+						Usage: "Print aws resources that are deployed through cloudformation",
+						Action: func(c *cli.Context) error {
+							state[cfn].print()
+							return nil
+						},
+					},
+				},
+			},
+			{
+				Name:  "compare",
+				Usage: "Print resources that exist in reality but not in IaC",
+				Action: func(c *cli.Context) error {
+					state.filter(real, cfn).print()
+					return nil
+				},
+			},
+			{
+				Name:  "version",
+				Usage: "Show version information",
+				Action: func(c *cli.Context) error {
+					fmt.Println(gitTag, "@", gitCommit)
+					return nil
+				},
+			},
+		},
 	}
 
-	switch cliArgs[0] {
-	case "refresh":
-		switch cliArgs[1] {
-		case "cfn":
-			config := awsStart()
-			cfnState, err := getCloudForamtionState(config)
-			if err != nil {
-				logFatal("Could not fetch cloudformation resources:", err)
-			}
-			state[cfn] = cfnState
-		case "real":
-			config := awsStart()
-			state[real] = getRealState(config)
-		default:
-			logFatal("Cli argument", cliArgs[1], "invalid")
-		}
-	case "print":
-		switch cliArgs[1] {
-		case "real":
-			state[real].print()
-		case "cfn":
-			state[cfn].print()
-		case "tf":
-			state[tf].print()
-		default:
-			logFatal("Cli argument", cliArgs[1], "invalid")
-		}
-	case "compare":
-		state.filter(real, cfn).print()
-	case "version":
-		fmt.Println(gitTag, "@", gitCommit)
-	default:
-		fmt.Println("Refresh aws resources: aws-resource-list refresh [cfn/real]")
-		fmt.Println("Print resources: aws-resource-list print [cfn/real]")
-		fmt.Println("Print resources that exist in reality but not in IaC : aws-resource-list compare")
+	err = app.Run(os.Args)
+	if err != nil {
+		logFatal(err)
 	}
 
 	// Write state to disk
