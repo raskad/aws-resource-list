@@ -90,6 +90,10 @@ athenaNamedQuery:
   implemented: true
   identifier: Id
   cloudformation: AWS::Athena::NamedQuery
+athenaWorkGroup:
+  implemented: true
+  identifier: Name
+  cloudformation: AWS::Athena::WorkGroup
 autoScalingPlansScalingPlan:
   implemented: true
   identifier: Name
