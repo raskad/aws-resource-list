@@ -3,10 +3,6 @@ resources:
     reason: No way to list all certificates at the moment https://github.com/aws/aws-cli/issues/3243
   - name: AWS::ACMPCA::CertificateAuthorityActivation
     reason: No physical identifier found
-  - name: AWS::Amplify::Branch
-    reason: No physical identifier found
-  - name: AWS::Amplify::Domain
-    reason: No physical identifier found
   - name: AWS::AmazonMQ::ConfigurationAssociation
     reason: No physical identifier found
   - name: AWS::ApiGateway::Account
@@ -334,10 +330,6 @@ resources:
   - name: AWS::SNS::TopicPolicy
     reason: No physical identifier found
   - name: AWS::SQS::QueuePolicy
-    reason: No physical identifier found
-  - name: AWS::SSM::ResourceDataSync
-    reason: No physical identifier found
-  - name: AWS::Transfer::User
     reason: No physical identifier found
   - name: AWS::WAFRegional::WebACLAssociation
     reason: No physical identifier found

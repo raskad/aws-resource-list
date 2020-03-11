@@ -20,8 +20,16 @@ amazonMQConfiguration:
   cloudformation: AWS::AmazonMQ::Configuration
 amplifyApp:
   implemented: true
-  identifier: Name
+  identifier: Id
   cloudformation: AWS::Amplify::App
+amplifyBranch:
+  implemented: true
+  identifier: Name
+  cloudformation: AWS::Amplify::Branch
+amplifyDomain:
+  implemented: true
+  identifier: Name
+  cloudformation: AWS::Amplify::Domain
 apiGatewayAPIKey:
   implemented: true
   identifier: Name
@@ -1246,10 +1254,18 @@ ssmPatchBaseline:
   implemented: true
   identifier: Id
   cloudformation: AWS::SSM::PatchBaseline
+ssmResourceDataSync:
+  implemented: true
+  identifier: Name
+  cloudformation: AWS::SSM::ResourceDataSync
 transferServer:
   implemented: true
   identifier: Id
   cloudformation: AWS::Transfer::Server
+transferUser:
+  implemented: true
+  identifier: Arn
+  cloudformation: AWS::Transfer::User
 wafByteMatchSet:
   implemented: true
   identifier: Id

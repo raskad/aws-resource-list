@@ -87,6 +87,8 @@ const (
 	amazonMQBroker                            resourceType = "amazonMQBroker"
 	amazonMQConfiguration                     resourceType = "amazonMQConfiguration"
 	amplifyApp                                resourceType = "amplifyApp"
+	amplifyBranch                             resourceType = "amplifyBranch"
+	amplifyDomain                             resourceType = "amplifyDomain"
 	apiGatewayAPIKey                          resourceType = "apiGatewayAPIKey"
 	apiGatewayClientCertificate               resourceType = "apiGatewayClientCertificate"
 	apiGatewayDomainName                      resourceType = "apiGatewayDomainName"
@@ -400,7 +402,9 @@ const (
 	ssmMaintenanceWindowTask                  resourceType = "ssmMaintenanceWindowTask"
 	ssmParameter                              resourceType = "ssmParameter"
 	ssmPatchBaseline                          resourceType = "ssmPatchBaseline"
+	ssmResourceDataSync                       resourceType = "ssmResourceDataSync"
 	transferServer                            resourceType = "transferServer"
+	transferUser                              resourceType = "transferUser"
 	wafByteMatchSet                           resourceType = "wafByteMatchSet"
 	wafIPSet                                  resourceType = "wafIPSet"
 	wafRule                                   resourceType = "wafRule"
@@ -433,6 +437,8 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::AmazonMQ::Broker":                            amazonMQBroker,
 		"AWS::AmazonMQ::Configuration":                     amazonMQConfiguration,
 		"AWS::Amplify::App":                                amplifyApp,
+		"AWS::Amplify::Branch":                             amplifyBranch,
+		"AWS::Amplify::Domain":                             amplifyDomain,
 		"AWS::ApiGateway::ApiKey":                          apiGatewayAPIKey,
 		"AWS::ApiGateway::ClientCertificate":               apiGatewayClientCertificate,
 		"AWS::ApiGateway::DomainName":                      apiGatewayDomainName,
@@ -745,7 +751,9 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 		"AWS::SSM::MaintenanceWindowTask":                  ssmMaintenanceWindowTask,
 		"AWS::SSM::Parameter":                              ssmParameter,
 		"AWS::SSM::PatchBaseline":                          ssmPatchBaseline,
+		"AWS::SSM::ResourceDataSync":                       ssmResourceDataSync,
 		"AWS::Transfer::Server":                            transferServer,
+		"AWS::Transfer::User":                              transferUser,
 		"AWS::WAF::ByteMatchSet":                           wafByteMatchSet,
 		"AWS::WAF::IPSet":                                  wafIPSet,
 		"AWS::WAF::Rule":                                   wafRule,

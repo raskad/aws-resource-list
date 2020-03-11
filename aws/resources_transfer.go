@@ -9,8 +9,13 @@ import (
 
 func getTransfer(config aws.Config) (resources resourceMap) {
 	client := transfer.New(config)
+
+	transferServerResourceMap := getTransferServer(client).unwrap(transferServer)
+	transferServerIDs := transferServerResourceMap[transferServer]
+
 	resources = reduce(
-		getTransferServer(client).unwrap(transferServer),
+		transferServerResourceMap,
+		getTransferUser(client, transferServerIDs).unwrap(transferUser),
 	)
 	return
 }
@@ -25,5 +30,22 @@ func getTransferServer(client *transfer.Client) (r resourceSliceError) {
 		}
 	}
 	r.err = p.Err()
+	return
+}
+
+func getTransferUser(client *transfer.Client, serverIDs []string) (r resourceSliceError) {
+	for _, serverID := range serverIDs {
+		req := client.ListUsersRequest(&transfer.ListUsersInput{
+			ServerId: aws.String(serverID),
+		})
+		p := transfer.NewListUsersPaginator(req)
+		for p.Next(context.Background()) {
+			page := p.CurrentPage()
+			for _, resource := range page.Users {
+				r.resources = append(r.resources, *resource.Arn)
+			}
+		}
+		r.err = p.Err()
+	}
 	return
 }

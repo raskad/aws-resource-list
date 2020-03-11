@@ -21,6 +21,7 @@ func getSsm(config aws.Config) (resources resourceMap) {
 		getSsmMaintenanceWindowTask(client, ssmMaintenanceWindowIDs).unwrap(ssmMaintenanceWindowTask),
 		getSsmParameter(client).unwrap(ssmParameter),
 		getSsmPatchBaseline(client).unwrap(ssmPatchBaseline),
+		getSsmResourceDataSync(client).unwrap(ssmResourceDataSync),
 	)
 	return
 }
@@ -138,6 +139,24 @@ func getSsmPatchBaseline(client *ssm.Client) (r resourceSliceError) {
 		}
 		for _, resource := range page.BaselineIdentities {
 			r.resources = append(r.resources, *resource.BaselineId)
+		}
+		if page.NextToken == nil {
+			return
+		}
+		input.NextToken = page.NextToken
+	}
+}
+
+func getSsmResourceDataSync(client *ssm.Client) (r resourceSliceError) {
+	input := ssm.ListResourceDataSyncInput{}
+	for {
+		page, err := client.ListResourceDataSyncRequest(&input).Send(context.Background())
+		if err != nil {
+			r.err = err
+			return
+		}
+		for _, resource := range page.ResourceDataSyncItems {
+			r.resources = append(r.resources, *resource.SyncName)
 		}
 		if page.NextToken == nil {
 			return
