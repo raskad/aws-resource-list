@@ -49,6 +49,10 @@ resources:
     reason: No physical identifier found
   - name: AWS::ApiGatewayV2::Stage
     reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::ApiGatewayManagedOverrides
+    reason: No physical identifier found
+  - name: AWS::ApiGatewayV2::VpcLink
+    reason: Not in the v2 sdk yet
   - name: AWS::AppConfig::ConfigurationProfile
     reason: No physical identifier found
   - name: AWS::AppConfig::Deployment
