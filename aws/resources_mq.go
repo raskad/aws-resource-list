@@ -25,7 +25,7 @@ func getAmazonMQBroker(client *mq.Client) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.BrokerSummaries {
-			r.resources = append(r.resources, *resource.BrokerName)
+			r.resources = append(r.resources, *resource.BrokerId)
 		}
 		if page.NextToken == nil {
 			return
@@ -43,7 +43,7 @@ func getAmazonMQConfiguration(client *mq.Client) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.Configurations {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.Id)
 		}
 		if page.NextToken == nil {
 			return

@@ -24,7 +24,7 @@ func getAppSyncGraphQLApi(client *appsync.Client) (r resourceSliceError) {
 			return
 		}
 		for _, resource := range page.GraphqlApis {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.ApiId)
 		}
 		if page.NextToken == nil {
 			return

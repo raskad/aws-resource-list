@@ -34,7 +34,7 @@ func getOpsWorksApp(client *opsworks.Client, stackIDs []string) (r resourceSlice
 			return
 		}
 		for _, resource := range output.Apps {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.AppId)
 		}
 	}
 	return
@@ -91,7 +91,7 @@ func getOpsWorksUserProfile(client *opsworks.Client) (r resourceSliceError) {
 		return
 	}
 	for _, resource := range output.UserProfiles {
-		r.resources = append(r.resources, *resource.Name)
+		r.resources = append(r.resources, *resource.IamUserArn)
 	}
 	return
 }

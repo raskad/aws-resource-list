@@ -9,9 +9,16 @@ import (
 
 func getDirectoryService(config aws.Config) (resources resourceMap) {
 	client := directoryservice.New(config)
+
+	directoryServiceMicrosoftADResourceMap := getDirectoryServiceMicrosoftAD(client).unwrap(directoryServiceMicrosoftAD)
+	directoryServiceSimpleADResourceMap := getDirectoryServiceSimpleAD(client).unwrap(directoryServiceSimpleAD)
+	directoryServiceMicrosoftADIDs := directoryServiceMicrosoftADResourceMap[directoryServiceMicrosoftAD]
+	directoryServiceSimpleADIDs := directoryServiceSimpleADResourceMap[directoryServiceSimpleAD]
+
 	resources = reduce(
-		getDirectoryServiceMicrosoftAD(client).unwrap(directoryServiceMicrosoftAD),
-		getDirectoryServiceSimpleAD(client).unwrap(directoryServiceSimpleAD),
+		resourceMap{directoryServiceDirectory: append(directoryServiceMicrosoftADIDs, directoryServiceSimpleADIDs...)},
+		directoryServiceMicrosoftADResourceMap,
+		directoryServiceSimpleADResourceMap,
 	)
 	return
 }

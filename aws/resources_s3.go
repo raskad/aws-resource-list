@@ -11,7 +11,6 @@ func getS3(config aws.Config) (resources resourceMap) {
 	client := s3.New(config)
 	resources = reduce(
 		getS3Bucket(client).unwrap(s3Bucket),
-		getS3Bucket(client).unwrap(s3BucketPolicy),
 	)
 	return
 }

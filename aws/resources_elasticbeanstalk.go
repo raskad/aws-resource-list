@@ -40,7 +40,7 @@ func getElasticBeanstalkApplicationVersion(client *elasticbeanstalk.Client) (r r
 			return
 		}
 		for _, resource := range page.ApplicationVersions {
-			r.resources = append(r.resources, *resource.VersionLabel)
+			r.resources = append(r.resources, *resource.ApplicationVersionArn)
 		}
 		if page.NextToken == nil {
 			return
