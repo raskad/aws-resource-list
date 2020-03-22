@@ -7,27 +7,27 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Check out aws-cloudformation-resource-types
+    - name: Check out aws-terraform-resource-types
       uses: actions/checkout@v2
       with:
-        repository: raskad/aws-cloudformation-resource-types
+        repository: raskad/aws-terraform-resource-types
     - name: Check out this repository
       uses: actions/checkout@v2
       with:
         path: this
-    - name: Get all current CloudFormation resources
+    - name: Get all current Terraform resources
       run: go run main.go > resources
     - name: Filter out resources in scope
       run: |
-        while read cfnResource; do
-            if grep -q $cfnResource "this/resources.yaml"; then
-                echo [OK] $cfnResource
+        while read tfResource; do
+            if grep -q $tfResource "this/resources.yaml"; then
+                echo [OK] $tfResource
             else
-                if grep -q $cfnResource "this/resourcesBlacklist.yaml"; then
-                    echo [OK] $cfnResource
+                if grep -q $tfResource "this/resourcesBlacklist.yaml"; then
+                    echo [OK] $tfResource
                 else
-                    echo [MISS] $cfnResource
-                    echo $cfnResource >> missing
+                    echo [MISS] $tfResource
+                    echo $tfResource >> missing
                 fi
             fi
         done <resources
@@ -42,7 +42,7 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Missing CloudFormation resources',
+              title: 'Missing Terraform resources',
               body: missing
             })
           }

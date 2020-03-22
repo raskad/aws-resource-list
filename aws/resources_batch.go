@@ -36,7 +36,7 @@ func getBatchJobDefinition(client *batch.Client) (r resourceSliceError) {
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.JobDefinitions {
-			r.resources = append(r.resources, *resource.JobDefinitionName)
+			r.resources = append(r.resources, *resource.JobDefinitionArn)
 		}
 	}
 	r.err = p.Err()
@@ -49,7 +49,7 @@ func getBatchJobQueue(client *batch.Client) (r resourceSliceError) {
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.JobQueues {
-			r.resources = append(r.resources, *resource.JobQueueName)
+			r.resources = append(r.resources, *resource.JobQueueArn)
 		}
 	}
 	r.err = p.Err()

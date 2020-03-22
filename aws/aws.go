@@ -27,6 +27,7 @@ func Start(gitTag string, gitCommit string) {
 	var state = state{
 		real: resourceMap{},
 		cfn:  resourceMap{},
+		tf:   resourceMap{},
 	}
 
 	// Read state from disk
@@ -36,9 +37,10 @@ func Start(gitTag string, gitCommit string) {
 	}
 
 	app := &cli.App{
-		Name:     "aws-resource-list",
-		Usage:    "list all your aws resources",
-		HelpName: "aws-resource-list",
+		Name:                 "aws-resource-list",
+		Usage:                "list all your aws resources",
+		HelpName:             "aws-resource-list",
+		EnableBashCompletion: true,
 		Commands: []*cli.Command{
 			{
 				Name:  "refresh",
@@ -66,6 +68,20 @@ func Start(gitTag string, gitCommit string) {
 							return nil
 						},
 					},
+					{
+						Name:      "tf",
+						Usage:     "Refresh aws resources that are deployed through terraform",
+						ArgsUsage: "['terraform show -json' output file]",
+						Action: func(c *cli.Context) error {
+							tfjsonFile := c.Args().Get(0)
+							cfnState, err := getTerraformState(tfjsonFile)
+							if err != nil {
+								logFatal("Could not fetch terraform resources:", err)
+							}
+							state[tf] = cfnState
+							return nil
+						},
+					},
 				},
 			},
 			{
@@ -88,6 +104,14 @@ func Start(gitTag string, gitCommit string) {
 							return nil
 						},
 					},
+					{
+						Name:  "tf",
+						Usage: "Print aws resources that are deployed through terraform",
+						Action: func(c *cli.Context) error {
+							state[tf].print()
+							return nil
+						},
+					},
 				},
 			},
 			{
@@ -95,6 +119,7 @@ func Start(gitTag string, gitCommit string) {
 				Usage: "Print resources that exist in reality but not in IaC",
 				Action: func(c *cli.Context) error {
 					state.filter(real, cfn).print()
+					state.filter(real, tf).print()
 					return nil
 				},
 			},

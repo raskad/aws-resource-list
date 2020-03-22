@@ -105,7 +105,7 @@ func getSsmMaintenanceWindowTask(client *ssm.Client, windowIDs []string) (r reso
 				return
 			}
 			for _, resource := range page.Tasks {
-				r.resources = append(r.resources, *resource.Name)
+				r.resources = append(r.resources, *resource.WindowTaskId)
 			}
 			if page.NextToken == nil {
 				return

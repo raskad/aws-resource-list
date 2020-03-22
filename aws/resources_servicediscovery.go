@@ -10,15 +10,11 @@ import (
 func getServiceDiscovery(config aws.Config) (resources resourceMap) {
 	client := servicediscovery.New(config)
 
-	serviceDiscoveryServiceResourceMap := getServiceDiscoveryService(client).unwrap(serviceDiscoveryService)
-	serviceDiscoveryServiceIDs := serviceDiscoveryServiceResourceMap[serviceDiscoveryService]
-
 	resources = reduce(
 		getServiceDiscoveryHTTPNamespace(client).unwrap(serviceDiscoveryHTTPNamespace),
-		getServiceDiscoveryInstance(client, serviceDiscoveryServiceIDs).unwrap(serviceDiscoveryInstance),
 		getServiceDiscoveryPrivateDNSNamespace(client).unwrap(serviceDiscoveryPrivateDNSNamespace),
 		getServiceDiscoveryPublicDNSNamespace(client).unwrap(serviceDiscoveryPublicDNSNamespace),
-		serviceDiscoveryServiceResourceMap,
+		getServiceDiscoveryService(client).unwrap(serviceDiscoveryService),
 	)
 	return
 }
@@ -35,24 +31,6 @@ func getServiceDiscoveryHTTPNamespace(client *servicediscovery.Client) (r resour
 		}
 	}
 	r.err = p.Err()
-	return
-}
-
-func getServiceDiscoveryInstance(client *servicediscovery.Client, serviceIDs []string) (r resourceSliceError) {
-	for _, serviceID := range serviceIDs {
-		req := client.ListInstancesRequest(&servicediscovery.ListInstancesInput{
-			ServiceId: aws.String(serviceID),
-		})
-		p := servicediscovery.NewListInstancesPaginator(req)
-		for p.Next(context.Background()) {
-			page := p.CurrentPage()
-			for _, resource := range page.Instances {
-				r.resources = append(r.resources, *resource.Id)
-			}
-		}
-		r.err = p.Err()
-		return
-	}
 	return
 }
 

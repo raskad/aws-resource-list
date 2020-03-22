@@ -13,7 +13,7 @@ You can run the project, by either downloading the latest binary from the [relea
 
 A list of resources and their implementation status is located at [resources.yaml](resources.yaml)  
 Currently the list of resources is populated by all available CloudFormation resources.  
-CloudFormation resources that cannot / will not be implemented are noted in [resourcesBlacklistCloudFormation.yaml](resourcesBlacklistCloudFormation.yaml)
+CloudFormation resources that cannot / will not be implemented are noted in [resourcesBlacklist.yaml](resourcesBlacklist.yaml)
 
 ## Contributing
 

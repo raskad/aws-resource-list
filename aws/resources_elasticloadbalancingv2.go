@@ -18,7 +18,6 @@ func getElasticLoadBalancingV2(config aws.Config) (resources resourceMap) {
 
 	resources = reduce(
 		getElasticLoadBalancingV2Listener(client, LoadBalancerArns).unwrap(elasticLoadBalancingV2Listener),
-		getElasticLoadBalancingV2ListenerCertificate(client, ListenerArns).unwrap(elasticLoadBalancingV2ListenerCertificate),
 		getElasticLoadBalancingV2ListenerRule(client, ListenerArns).unwrap(elasticLoadBalancingV2ListenerRule),
 		LoadBalancerResourceMap,
 		getElasticLoadBalancingV2TargetGroup(client).unwrap(elasticLoadBalancingV2TargetGroup),
@@ -39,29 +38,6 @@ func getElasticLoadBalancingV2Listener(client *elasticloadbalancingv2.Client, lo
 			}
 		}
 		r.err = p.Err()
-	}
-	return
-}
-
-func getElasticLoadBalancingV2ListenerCertificate(client *elasticloadbalancingv2.Client, ListenerArns []string) (r resourceSliceError) {
-	for _, ListenerArn := range ListenerArns {
-		input := elasticloadbalancingv2.DescribeListenerCertificatesInput{
-			ListenerArn: aws.String(ListenerArn),
-		}
-		for {
-			page, err := client.DescribeListenerCertificatesRequest(&input).Send(context.Background())
-			if err != nil {
-				r.err = err
-				return
-			}
-			for _, resource := range page.Certificates {
-				r.resources = append(r.resources, *resource.CertificateArn)
-			}
-			if page.NextMarker == nil {
-				return
-			}
-			input.Marker = page.NextMarker
-		}
 	}
 	return
 }
@@ -108,7 +84,7 @@ func getElasticLoadBalancingV2TargetGroup(client *elasticloadbalancingv2.Client)
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.TargetGroups {
-			r.resources = append(r.resources, *resource.TargetGroupName)
+			r.resources = append(r.resources, *resource.TargetGroupArn)
 		}
 	}
 	r.err = p.Err()

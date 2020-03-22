@@ -26,7 +26,7 @@ func getAPIGatewayAPIKey(client *apigateway.Client) (r resourceSliceError) {
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.Id)
 		}
 	}
 	r.err = p.Err()
@@ -65,7 +65,7 @@ func getAPIGatewayRestAPI(client *apigateway.Client) (r resourceSliceError) {
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.Id)
 		}
 	}
 	r.err = p.Err()
@@ -78,7 +78,7 @@ func getAPIGatewayUsagePlan(client *apigateway.Client) (r resourceSliceError) {
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.Id)
 		}
 	}
 	r.err = p.Err()
@@ -91,7 +91,7 @@ func getAPIGatewayVpcLink(client *apigateway.Client) (r resourceSliceError) {
 	for p.Next(context.Background()) {
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Name)
+			r.resources = append(r.resources, *resource.Id)
 		}
 	}
 	r.err = p.Err()
