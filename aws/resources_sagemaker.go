@@ -9,105 +9,114 @@ import (
 
 func getSageMaker(config aws.Config) (resources resourceMap) {
 	client := sagemaker.New(config)
-	resources = reduce(
-		getSageMakerCodeRepository(client).unwrap(sageMakerCodeRepository),
-		getSageMakerEndpoint(client).unwrap(sageMakerEndpoint),
-		getSageMakerEndpointConfig(client).unwrap(sageMakerEndpointConfig),
-		getSageMakerModel(client).unwrap(sageMakerModel),
-		getSageMakerNotebookInstance(client).unwrap(sageMakerNotebookInstance),
-		getSageMakerNotebookInstanceLifecycleConfig(client).unwrap(sageMakerNotebookInstanceLifecycleConfig),
-		getSageMakerWorkteam(client).unwrap(sageMakerWorkteam),
-	)
+
+	sageMakerCodeRepositoryNames := getSageMakerCodeRepositoryNames(client)
+	sageMakerEndpointNames := getSageMakerEndpointNames(client)
+	sageMakerEndpointConfigNames := getSageMakerEndpointConfigNames(client)
+	sageMakerModelNames := getSageMakerModelNames(client)
+	sageMakerNotebookInstanceNames := getSageMakerNotebookInstanceNames(client)
+	sageMakerNotebookInstanceLifecycleConfigNames := getSageMakerNotebookInstanceLifecycleConfigNames(client)
+	sageMakerWorkteamNames := getSageMakerWorkteamNames(client)
+
+	resources = resourceMap{
+		sageMakerCodeRepository:                  sageMakerCodeRepositoryNames,
+		sageMakerEndpoint:                        sageMakerEndpointNames,
+		sageMakerEndpointConfig:                  sageMakerEndpointConfigNames,
+		sageMakerModel:                           sageMakerModelNames,
+		sageMakerNotebookInstance:                sageMakerNotebookInstanceNames,
+		sageMakerNotebookInstanceLifecycleConfig: sageMakerNotebookInstanceLifecycleConfigNames,
+		sageMakerWorkteam:                        sageMakerWorkteamNames,
+	}
 	return
 }
 
-func getSageMakerCodeRepository(client *sagemaker.Client) (r resourceSliceError) {
+func getSageMakerCodeRepositoryNames(client *sagemaker.Client) (resources []string) {
 	req := client.ListCodeRepositoriesRequest(&sagemaker.ListCodeRepositoriesInput{})
 	p := sagemaker.NewListCodeRepositoriesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.CodeRepositorySummaryList {
-			r.resources = append(r.resources, *resource.CodeRepositoryName)
+			resources = append(resources, *resource.CodeRepositoryName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getSageMakerEndpoint(client *sagemaker.Client) (r resourceSliceError) {
+func getSageMakerEndpointNames(client *sagemaker.Client) (resources []string) {
 	req := client.ListEndpointsRequest(&sagemaker.ListEndpointsInput{})
 	p := sagemaker.NewListEndpointsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Endpoints {
-			r.resources = append(r.resources, *resource.EndpointName)
+			resources = append(resources, *resource.EndpointName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getSageMakerEndpointConfig(client *sagemaker.Client) (r resourceSliceError) {
+func getSageMakerEndpointConfigNames(client *sagemaker.Client) (resources []string) {
 	req := client.ListEndpointConfigsRequest(&sagemaker.ListEndpointConfigsInput{})
 	p := sagemaker.NewListEndpointConfigsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.EndpointConfigs {
-			r.resources = append(r.resources, *resource.EndpointConfigName)
+			resources = append(resources, *resource.EndpointConfigName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getSageMakerModel(client *sagemaker.Client) (r resourceSliceError) {
+func getSageMakerModelNames(client *sagemaker.Client) (resources []string) {
 	req := client.ListModelsRequest(&sagemaker.ListModelsInput{})
 	p := sagemaker.NewListModelsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Models {
-			r.resources = append(r.resources, *resource.ModelName)
+			resources = append(resources, *resource.ModelName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getSageMakerNotebookInstance(client *sagemaker.Client) (r resourceSliceError) {
+func getSageMakerNotebookInstanceNames(client *sagemaker.Client) (resources []string) {
 	req := client.ListNotebookInstancesRequest(&sagemaker.ListNotebookInstancesInput{})
 	p := sagemaker.NewListNotebookInstancesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.NotebookInstances {
-			r.resources = append(r.resources, *resource.NotebookInstanceName)
+			resources = append(resources, *resource.NotebookInstanceName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getSageMakerNotebookInstanceLifecycleConfig(client *sagemaker.Client) (r resourceSliceError) {
+func getSageMakerNotebookInstanceLifecycleConfigNames(client *sagemaker.Client) (resources []string) {
 	req := client.ListNotebookInstanceLifecycleConfigsRequest(&sagemaker.ListNotebookInstanceLifecycleConfigsInput{})
 	p := sagemaker.NewListNotebookInstanceLifecycleConfigsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.NotebookInstanceLifecycleConfigs {
-			r.resources = append(r.resources, *resource.NotebookInstanceLifecycleConfigName)
+			resources = append(resources, *resource.NotebookInstanceLifecycleConfigName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getSageMakerWorkteam(client *sagemaker.Client) (r resourceSliceError) {
+func getSageMakerWorkteamNames(client *sagemaker.Client) (resources []string) {
 	req := client.ListWorkteamsRequest(&sagemaker.ListWorkteamsInput{})
 	p := sagemaker.NewListWorkteamsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Workteams {
-			r.resources = append(r.resources, *resource.WorkteamName)
+			resources = append(resources, *resource.WorkteamName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

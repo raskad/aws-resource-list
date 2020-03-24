@@ -9,22 +9,22 @@ import (
 
 func getAppSync(config aws.Config) (resources resourceMap) {
 	client := appsync.New(config)
-	resources = reduce(
-		getAppSyncGraphQLApi(client).unwrap(appSyncGraphQLApi),
-	)
+
+	appSyncGraphQLApiIDs := getAppSyncGraphQLApiIDs(client)
+
+	resources = resourceMap{
+		appSyncGraphQLApi: appSyncGraphQLApiIDs,
+	}
 	return
 }
 
-func getAppSyncGraphQLApi(client *appsync.Client) (r resourceSliceError) {
+func getAppSyncGraphQLApiIDs(client *appsync.Client) (resources []string) {
 	input := appsync.ListGraphqlApisInput{}
 	for {
 		page, err := client.ListGraphqlApisRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.GraphqlApis {
-			r.resources = append(r.resources, *resource.ApiId)
+			resources = append(resources, *resource.ApiId)
 		}
 		if page.NextToken == nil {
 			return

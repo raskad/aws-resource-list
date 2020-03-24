@@ -9,63 +9,69 @@ import (
 
 func getIoTAnalytics(config aws.Config) (resources resourceMap) {
 	client := iotanalytics.New(config)
-	resources = reduce(
-		getIoTAnalyticsChannel(client).unwrap(ioTAnalyticsChannel),
-		getIoTAnalyticsDataset(client).unwrap(ioTAnalyticsDataset),
-		getIoTAnalyticsDatastore(client).unwrap(ioTAnalyticsDatastore),
-		getIoTAnalyticsPipeline(client).unwrap(ioTAnalyticsPipeline),
-	)
+
+	ioTAnalyticsChannelNames := getIoTAnalyticsChannelNames(client)
+	ioTAnalyticsDatasetNames := getIoTAnalyticsDatasetNames(client)
+	ioTAnalyticsDatastoreNames := getIoTAnalyticsDatastoreNames(client)
+	ioTAnalyticsPipelineNames := getIoTAnalyticsPipelineNames(client)
+
+	resources = resourceMap{
+		ioTAnalyticsChannel:   ioTAnalyticsChannelNames,
+		ioTAnalyticsDataset:   ioTAnalyticsDatasetNames,
+		ioTAnalyticsDatastore: ioTAnalyticsDatastoreNames,
+		ioTAnalyticsPipeline:  ioTAnalyticsPipelineNames,
+	}
 	return
 }
 
-func getIoTAnalyticsChannel(client *iotanalytics.Client) (r resourceSliceError) {
+func getIoTAnalyticsChannelNames(client *iotanalytics.Client) (resources []string) {
 	req := client.ListChannelsRequest(&iotanalytics.ListChannelsInput{})
 	p := iotanalytics.NewListChannelsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ChannelSummaries {
-			r.resources = append(r.resources, *resource.ChannelName)
+			resources = append(resources, *resource.ChannelName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIoTAnalyticsDataset(client *iotanalytics.Client) (r resourceSliceError) {
+func getIoTAnalyticsDatasetNames(client *iotanalytics.Client) (resources []string) {
 	req := client.ListDatasetsRequest(&iotanalytics.ListDatasetsInput{})
 	p := iotanalytics.NewListDatasetsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DatasetSummaries {
-			r.resources = append(r.resources, *resource.DatasetName)
+			resources = append(resources, *resource.DatasetName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIoTAnalyticsDatastore(client *iotanalytics.Client) (r resourceSliceError) {
+func getIoTAnalyticsDatastoreNames(client *iotanalytics.Client) (resources []string) {
 	req := client.ListDatastoresRequest(&iotanalytics.ListDatastoresInput{})
 	p := iotanalytics.NewListDatastoresPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DatastoreSummaries {
-			r.resources = append(r.resources, *resource.DatastoreName)
+			resources = append(resources, *resource.DatastoreName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIoTAnalyticsPipeline(client *iotanalytics.Client) (r resourceSliceError) {
+func getIoTAnalyticsPipelineNames(client *iotanalytics.Client) (resources []string) {
 	req := client.ListPipelinesRequest(&iotanalytics.ListPipelinesInput{})
 	p := iotanalytics.NewListPipelinesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.PipelineSummaries {
-			r.resources = append(r.resources, *resource.PipelineName)
+			resources = append(resources, *resource.PipelineName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

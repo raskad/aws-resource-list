@@ -9,35 +9,39 @@ import (
 
 func getInspector(config aws.Config) (resources resourceMap) {
 	client := inspector.New(config)
-	resources = reduce(
-		getInspectorAssessmentTarget(client).unwrap(inspectorAssessmentTarget),
-		getInspectorAssessmentTemplate(client).unwrap(inspectorAssessmentTemplate),
-	)
+
+	inspectorAssessmentTargetARNs := getInspectorAssessmentTargetARNs(client)
+	inspectorAssessmentTemplateARNs := getInspectorAssessmentTemplateARNs(client)
+
+	resources = resourceMap{
+		inspectorAssessmentTarget:   inspectorAssessmentTargetARNs,
+		inspectorAssessmentTemplate: inspectorAssessmentTemplateARNs,
+	}
 	return
 }
 
-func getInspectorAssessmentTarget(client *inspector.Client) (r resourceSliceError) {
+func getInspectorAssessmentTargetARNs(client *inspector.Client) (resources []string) {
 	req := client.ListAssessmentTargetsRequest(&inspector.ListAssessmentTargetsInput{})
 	p := inspector.NewListAssessmentTargetsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.AssessmentTargetArns {
-			r.resources = append(r.resources, resource)
+			resources = append(resources, resource)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getInspectorAssessmentTemplate(client *inspector.Client) (r resourceSliceError) {
+func getInspectorAssessmentTemplateARNs(client *inspector.Client) (resources []string) {
 	req := client.ListAssessmentTemplatesRequest(&inspector.ListAssessmentTemplatesInput{})
 	p := inspector.NewListAssessmentTemplatesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.AssessmentTemplateArns {
-			r.resources = append(r.resources, resource)
+			resources = append(resources, resource)
 		}
 	}
-	r.err = p.Err()
 	return
 }

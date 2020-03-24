@@ -9,22 +9,22 @@ import (
 
 func getIoT1ClickDevicesService(config aws.Config) (resources resourceMap) {
 	client := iot1clickdevicesservice.New(config)
-	resources = reduce(
-		getIoT1ClickDevice(client).unwrap(ioT1ClickDevice),
-	)
+
+	ioT1ClickDeviceIDs := getIoT1ClickDeviceIDs(client)
+
+	resources = resourceMap{
+		ioT1ClickDevice: ioT1ClickDeviceIDs,
+	}
 	return
 }
 
-func getIoT1ClickDevice(client *iot1clickdevicesservice.Client) (r resourceSliceError) {
+func getIoT1ClickDeviceIDs(client *iot1clickdevicesservice.Client) (resources []string) {
 	input := iot1clickdevicesservice.ListDevicesInput{}
 	for {
 		page, err := client.ListDevicesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Devices {
-			r.resources = append(r.resources, *resource.DeviceId)
+			resources = append(resources, *resource.DeviceId)
 		}
 		if page.NextToken == nil {
 			return

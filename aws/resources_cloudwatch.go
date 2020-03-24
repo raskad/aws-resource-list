@@ -9,49 +9,54 @@ import (
 
 func getCloudWatch(config aws.Config) (resources resourceMap) {
 	client := cloudwatch.New(config)
-	resources = reduce(
-		getCloudWatchAlarm(client).unwrap(cloudWatchAlarm),
-		getCloudWatchDashboard(client).unwrap(cloudWatchDashboard),
-		getCloudWatchInsightRule(client).unwrap(cloudWatchInsightRule),
-	)
+
+	cloudWatchAlarmNames := getCloudWatchAlarmNames(client)
+	cloudWatchDashboardNames := getCloudWatchDashboardNames(client)
+	cloudWatchInsightRuleNames := getCloudWatchInsightRuleNames(client)
+
+	resources = resourceMap{
+		cloudWatchAlarm:       cloudWatchAlarmNames,
+		cloudWatchDashboard:   cloudWatchDashboardNames,
+		cloudWatchInsightRule: cloudWatchInsightRuleNames,
+	}
 	return
 }
 
-func getCloudWatchAlarm(client *cloudwatch.Client) (r resourceSliceError) {
+func getCloudWatchAlarmNames(client *cloudwatch.Client) (resources []string) {
 	req := client.DescribeAlarmsRequest(&cloudwatch.DescribeAlarmsInput{})
 	p := cloudwatch.NewDescribeAlarmsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.MetricAlarms {
-			r.resources = append(r.resources, *resource.AlarmName)
+			resources = append(resources, *resource.AlarmName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getCloudWatchDashboard(client *cloudwatch.Client) (r resourceSliceError) {
+func getCloudWatchDashboardNames(client *cloudwatch.Client) (resources []string) {
 	req := client.ListDashboardsRequest(&cloudwatch.ListDashboardsInput{})
 	p := cloudwatch.NewListDashboardsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DashboardEntries {
-			r.resources = append(r.resources, *resource.DashboardName)
+			resources = append(resources, *resource.DashboardName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getCloudWatchInsightRule(client *cloudwatch.Client) (r resourceSliceError) {
+func getCloudWatchInsightRuleNames(client *cloudwatch.Client) (resources []string) {
 	req := client.DescribeInsightRulesRequest(&cloudwatch.DescribeInsightRulesInput{})
 	p := cloudwatch.NewDescribeInsightRulesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.InsightRules {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

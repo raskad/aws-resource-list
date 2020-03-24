@@ -10,76 +10,77 @@ import (
 func getLambda(config aws.Config) (resources resourceMap) {
 	client := lambda.New(config)
 
-	lambdaFunctionResourceMap := getLambdaFunction(client).unwrap(lambdaFunction)
-	lambdaFunctionNames := lambdaFunctionResourceMap[lambdaFunction]
-	lambdaLayerResourcesMap := getLambdaLayer(client).unwrap(lambdaLayer)
-	lambdaLayerNames := lambdaLayerResourcesMap[lambdaLayer]
+	lambdaFunctionNames := getLambdaFunctionNames(client)
+	lambdaLayerNames := getLambdaLayerNames(client)
+	lambdaAliasNames := getLambdaAliasNames(client, lambdaFunctionNames)
+	lambdaLayerVersionARNs := getLambdaLayerVersionARNs(client, lambdaLayerNames)
 
-	resources = reduce(
-		lambdaFunctionResourceMap,
-		getLambdaAlias(client, lambdaFunctionNames).unwrap(lambdaAlias),
-		getLambdaLayerVersion(client, lambdaLayerNames).unwrap(lambdaLayerVersion),
-	)
+	resources = resourceMap{
+		lambdaFunction:     lambdaFunctionNames,
+		lambdaLayer:        lambdaLayerNames,
+		lambdaAlias:        lambdaAliasNames,
+		lambdaLayerVersion: lambdaLayerVersionARNs,
+	}
 	return
 }
 
-func getLambdaFunction(client *lambda.Client) (r resourceSliceError) {
+func getLambdaFunctionNames(client *lambda.Client) (resources []string) {
 	req := client.ListFunctionsRequest(&lambda.ListFunctionsInput{})
 	p := lambda.NewListFunctionsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Functions {
-			r.resources = append(r.resources, *resource.FunctionName)
+			resources = append(resources, *resource.FunctionName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getLambdaAlias(client *lambda.Client, lambdaFunctionNames []string) (r resourceSliceError) {
+func getLambdaAliasNames(client *lambda.Client, lambdaFunctionNames []string) (resources []string) {
 	for _, lambdaFunctionName := range lambdaFunctionNames {
 		req := client.ListAliasesRequest(&lambda.ListAliasesInput{
 			FunctionName: aws.String(lambdaFunctionName),
 		})
 		p := lambda.NewListAliasesPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.Aliases {
-				r.resources = append(r.resources, *resource.Name)
+				resources = append(resources, *resource.Name)
 			}
 		}
-		r.err = p.Err()
 		return
 	}
 	return
 }
 
-func getLambdaLayer(client *lambda.Client) (r resourceSliceError) {
+func getLambdaLayerNames(client *lambda.Client) (resources []string) {
 	req := client.ListLayersRequest(&lambda.ListLayersInput{})
 	p := lambda.NewListLayersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Layers {
-			r.resources = append(r.resources, *resource.LayerName)
+			resources = append(resources, *resource.LayerName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getLambdaLayerVersion(client *lambda.Client, lambdaLayerNames []string) (r resourceSliceError) {
+func getLambdaLayerVersionARNs(client *lambda.Client, lambdaLayerNames []string) (resources []string) {
 	for _, lambdaLayerName := range lambdaLayerNames {
 		req := client.ListLayerVersionsRequest(&lambda.ListLayerVersionsInput{
 			LayerName: aws.String(lambdaLayerName),
 		})
 		p := lambda.NewListLayerVersionsPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.LayerVersions {
-				r.resources = append(r.resources, *resource.LayerVersionArn)
+				resources = append(resources, *resource.LayerVersionArn)
 			}
 		}
-		r.err = p.Err()
 		return
 	}
 	return

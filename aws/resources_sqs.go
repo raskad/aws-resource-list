@@ -9,20 +9,20 @@ import (
 
 func getSqs(config aws.Config) (resources resourceMap) {
 	client := sqs.New(config)
-	resources = reduce(
-		getSqsQueue(client).unwrap(sqsQueue),
-	)
+
+	sqsQueueNames := getSqsQueueNames(client)
+
+	resources = resourceMap{
+		sqsQueue: sqsQueueNames,
+	}
 	return
 }
 
-func getSqsQueue(client *sqs.Client) (r resourceSliceError) {
+func getSqsQueueNames(client *sqs.Client) (resources []string) {
 	page, err := client.ListQueuesRequest(&sqs.ListQueuesInput{}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.QueueUrls {
-		r.resources = append(r.resources, resource)
+		resources = append(resources, resource)
 	}
 	return
 }

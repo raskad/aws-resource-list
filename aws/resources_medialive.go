@@ -9,49 +9,54 @@ import (
 
 func getMediaLive(config aws.Config) (resources resourceMap) {
 	client := medialive.New(config)
-	resources = reduce(
-		getMediaLiveChannel(client).unwrap(mediaLiveChannel),
-		getMediaLiveInput(client).unwrap(mediaLiveInput),
-		getMediaLiveInputSecurityGroup(client).unwrap(mediaLiveInputSecurityGroup),
-	)
+
+	mediaLiveChannelNames := getMediaLiveChannelNames(client)
+	mediaLiveInputNames := getMediaLiveInputNames(client)
+	mediaLiveInputSecurityGroupIDs := getMediaLiveInputSecurityGroupIDs(client)
+
+	resources = resourceMap{
+		mediaLiveChannel:            mediaLiveChannelNames,
+		mediaLiveInput:              mediaLiveInputNames,
+		mediaLiveInputSecurityGroup: mediaLiveInputSecurityGroupIDs,
+	}
 	return
 }
 
-func getMediaLiveChannel(client *medialive.Client) (r resourceSliceError) {
+func getMediaLiveChannelNames(client *medialive.Client) (resources []string) {
 	req := client.ListChannelsRequest(&medialive.ListChannelsInput{})
 	p := medialive.NewListChannelsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Channels {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getMediaLiveInput(client *medialive.Client) (r resourceSliceError) {
+func getMediaLiveInputNames(client *medialive.Client) (resources []string) {
 	req := client.ListInputsRequest(&medialive.ListInputsInput{})
 	p := medialive.NewListInputsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Inputs {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getMediaLiveInputSecurityGroup(client *medialive.Client) (r resourceSliceError) {
+func getMediaLiveInputSecurityGroupIDs(client *medialive.Client) (resources []string) {
 	req := client.ListInputSecurityGroupsRequest(&medialive.ListInputSecurityGroupsInput{})
 	p := medialive.NewListInputSecurityGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.InputSecurityGroups {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }

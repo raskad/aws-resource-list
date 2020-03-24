@@ -9,25 +9,28 @@ import (
 
 func getSes(config aws.Config) (resources resourceMap) {
 	client := ses.New(config)
-	resources = reduce(
-		getSesConfigurationSet(client).unwrap(sesConfigurationSet),
-		getSesReceiptFilter(client).unwrap(sesReceiptFilter),
-		getSesReceiptRuleSet(client).unwrap(sesReceiptRuleSet),
-		getSesTemplate(client).unwrap(sesTemplate),
-	)
+
+	sesConfigurationSetNames := getSesConfigurationSetNames(client)
+	sesReceiptFilterNames := getSesReceiptFilterNames(client)
+	sesReceiptRuleSetNames := getSesReceiptRuleSetNames(client)
+	sesTemplateNames := getSesTemplateNames(client)
+
+	resources = resourceMap{
+		sesConfigurationSet: sesConfigurationSetNames,
+		sesReceiptFilter:    sesReceiptFilterNames,
+		sesReceiptRuleSet:   sesReceiptRuleSetNames,
+		sesTemplate:         sesTemplateNames,
+	}
 	return
 }
 
-func getSesConfigurationSet(client *ses.Client) (r resourceSliceError) {
+func getSesConfigurationSetNames(client *ses.Client) (resources []string) {
 	input := ses.ListConfigurationSetsInput{}
 	for {
 		page, err := client.ListConfigurationSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ConfigurationSets {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return
@@ -36,28 +39,22 @@ func getSesConfigurationSet(client *ses.Client) (r resourceSliceError) {
 	}
 }
 
-func getSesReceiptFilter(client *ses.Client) (r resourceSliceError) {
+func getSesReceiptFilterNames(client *ses.Client) (resources []string) {
 	page, err := client.ListReceiptFiltersRequest(&ses.ListReceiptFiltersInput{}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.Filters {
-		r.resources = append(r.resources, *resource.Name)
+		resources = append(resources, *resource.Name)
 	}
 	return
 }
 
-func getSesReceiptRuleSet(client *ses.Client) (r resourceSliceError) {
+func getSesReceiptRuleSetNames(client *ses.Client) (resources []string) {
 	input := ses.ListReceiptRuleSetsInput{}
 	for {
 		page, err := client.ListReceiptRuleSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.RuleSets {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return
@@ -66,16 +63,13 @@ func getSesReceiptRuleSet(client *ses.Client) (r resourceSliceError) {
 	}
 }
 
-func getSesTemplate(client *ses.Client) (r resourceSliceError) {
+func getSesTemplateNames(client *ses.Client) (resources []string) {
 	input := ses.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.TemplatesMetadata {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return

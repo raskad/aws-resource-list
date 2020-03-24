@@ -11,139 +11,142 @@ import (
 func getIam(config aws.Config) (resources resourceMap) {
 	client := iam.New(config)
 
-	iamUserResourceMap := getIamUser(client).unwrap(iamUser)
-	iamUserNames := iamUserResourceMap[iamUser]
+	iamUserNames := getIamUserNames(client)
+	iamAccessKeyIDs := getIamAccessKeyIDs(client, iamUserNames)
+	iamGroupNames := getIamGroupNames(client)
+	iamInstanceProfileNames := getIamInstanceProfileNames(client)
+	iamPolicyNames := getIamPolicyNames(client)
+	iamRoleNames := getIamRoleNames(client)
+	iamRolePolicyNames := getIamRolePolicyNames(client, iamRoleNames)
+	iamServiceLinkedRoleNames := getIamServiceLinkedRoleNames(client)
 
-	iamRoleResourceMap := getIamRole(client).unwrap(iamRole)
-	iamRoleNames := iamRoleResourceMap[iamRole]
-
-	resources = reduce(
-		getIamAccessKey(client, iamUserNames).unwrap(iamAccessKey),
-		getIamGroup(client).unwrap(iamGroup),
-		getIamInstanceProfile(client).unwrap(iamInstanceProfile),
-		getIamPolicy(client).unwrap(iamPolicy),
-		iamRoleResourceMap,
-		getIamRolePolicy(client, iamRoleNames).unwrap(iamRolePolicy),
-		getIamServiceLinkedRole(client).unwrap(iamServiceLinkedRole),
-		iamUserResourceMap,
-	)
+	resources = resourceMap{
+		iamAccessKey:         iamAccessKeyIDs,
+		iamGroup:             iamGroupNames,
+		iamInstanceProfile:   iamInstanceProfileNames,
+		iamPolicy:            iamPolicyNames,
+		iamRole:              iamRoleNames,
+		iamRolePolicy:        iamRolePolicyNames,
+		iamServiceLinkedRole: iamServiceLinkedRoleNames,
+		iamUser:              iamUserNames,
+	}
 	return
 }
 
-func getIamAccessKey(client *iam.Client, userNames []string) (r resourceSliceError) {
+func getIamAccessKeyIDs(client *iam.Client, userNames []string) (resources []string) {
 	for _, userName := range userNames {
 		req := client.ListAccessKeysRequest(&iam.ListAccessKeysInput{
 			UserName: aws.String(userName),
 		})
 		p := iam.NewListAccessKeysPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.AccessKeyMetadata {
-				r.resources = append(r.resources, *resource.AccessKeyId)
+				resources = append(resources, *resource.AccessKeyId)
 			}
 		}
-		r.err = p.Err()
 	}
 	return
 }
 
-func getIamGroup(client *iam.Client) (r resourceSliceError) {
+func getIamGroupNames(client *iam.Client) (resources []string) {
 	req := client.ListGroupsRequest(&iam.ListGroupsInput{})
 	p := iam.NewListGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Groups {
-			r.resources = append(r.resources, *resource.GroupName)
+			resources = append(resources, *resource.GroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIamInstanceProfile(client *iam.Client) (r resourceSliceError) {
+func getIamInstanceProfileNames(client *iam.Client) (resources []string) {
 	req := client.ListInstanceProfilesRequest(&iam.ListInstanceProfilesInput{})
 	p := iam.NewListInstanceProfilesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.InstanceProfiles {
-			r.resources = append(r.resources, *resource.InstanceProfileName)
+			resources = append(resources, *resource.InstanceProfileName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIamPolicy(client *iam.Client) (r resourceSliceError) {
+func getIamPolicyNames(client *iam.Client) (resources []string) {
 	req := client.ListPoliciesRequest(&iam.ListPoliciesInput{
 		Scope: iam.PolicyScopeTypeLocal,
 	})
 	p := iam.NewListPoliciesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Policies {
-			r.resources = append(r.resources, *resource.PolicyName)
+			resources = append(resources, *resource.PolicyName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIamRole(client *iam.Client) (r resourceSliceError) {
+func getIamRoleNames(client *iam.Client) (resources []string) {
 	req := client.ListRolesRequest(&iam.ListRolesInput{})
 	p := iam.NewListRolesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Roles {
 			if !strings.HasPrefix(*resource.Path, "/aws-service-role/") {
-				r.resources = append(r.resources, *resource.RoleName)
+				resources = append(resources, *resource.RoleName)
 			}
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIamRolePolicy(client *iam.Client, roleNames []string) (r resourceSliceError) {
+func getIamRolePolicyNames(client *iam.Client, roleNames []string) (resources []string) {
 	for _, roleName := range roleNames {
 		req := client.ListRolePoliciesRequest(&iam.ListRolePoliciesInput{
 			RoleName: aws.String(roleName),
 		})
 		p := iam.NewListRolePoliciesPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.PolicyNames {
-				r.resources = append(r.resources, resource)
+				resources = append(resources, resource)
 			}
 		}
-		r.err = p.Err()
 	}
 	return
 }
 
-func getIamServiceLinkedRole(client *iam.Client) (r resourceSliceError) {
+func getIamServiceLinkedRoleNames(client *iam.Client) (resources []string) {
 	req := client.ListRolesRequest(&iam.ListRolesInput{
 		PathPrefix: aws.String("/aws-service-role/"),
 	})
 	p := iam.NewListRolesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Roles {
-			r.resources = append(r.resources, *resource.RoleName)
+			resources = append(resources, *resource.RoleName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getIamUser(client *iam.Client) (r resourceSliceError) {
+func getIamUserNames(client *iam.Client) (resources []string) {
 	req := client.ListUsersRequest(&iam.ListUsersInput{})
 	p := iam.NewListUsersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Users {
-			r.resources = append(r.resources, *resource.UserName)
+			resources = append(resources, *resource.UserName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

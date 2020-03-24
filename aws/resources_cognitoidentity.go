@@ -9,24 +9,24 @@ import (
 
 func getCognitoIdentity(config aws.Config) (resources resourceMap) {
 	client := cognitoidentity.New(config)
-	resources = reduce(
-		getCognitoIdentityPool(client).unwrap(cognitoIdentityPool),
-	)
+
+	cognitoIdentityPoolNames := getCognitoIdentityPoolNames(client)
+
+	resources = resourceMap{
+		cognitoIdentityPool: cognitoIdentityPoolNames,
+	}
 	return
 }
 
-func getCognitoIdentityPool(client *cognitoidentity.Client) (r resourceSliceError) {
+func getCognitoIdentityPoolNames(client *cognitoidentity.Client) (resources []string) {
 	input := cognitoidentity.ListIdentityPoolsInput{
 		MaxResults: aws.Int64(16),
 	}
 	for {
 		page, err := client.ListIdentityPoolsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.IdentityPools {
-			r.resources = append(r.resources, *resource.IdentityPoolName)
+			resources = append(resources, *resource.IdentityPoolName)
 		}
 		if page.NextToken == nil {
 			return

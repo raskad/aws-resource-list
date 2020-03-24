@@ -9,21 +9,24 @@ import (
 
 func getEcr(config aws.Config) (resources resourceMap) {
 	client := ecr.New(config)
-	resources = reduce(
-		getEcrRepository(client).unwrap(ecrRepository),
-	)
+
+	ecrRepositoryNames := getEcrRepositoryNames(client)
+
+	resources = resourceMap{
+		ecrRepository: ecrRepositoryNames,
+	}
 	return
 }
 
-func getEcrRepository(client *ecr.Client) (r resourceSliceError) {
+func getEcrRepositoryNames(client *ecr.Client) (resources []string) {
 	req := client.DescribeRepositoriesRequest(&ecr.DescribeRepositoriesInput{})
 	p := ecr.NewDescribeRepositoriesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Repositories {
-			r.resources = append(r.resources, *resource.RepositoryName)
+			resources = append(resources, *resource.RepositoryName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

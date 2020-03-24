@@ -9,21 +9,24 @@ import (
 
 func getLakeFormation(config aws.Config) (resources resourceMap) {
 	client := lakeformation.New(config)
-	resources = reduce(
-		getLakeFormationResource(client).unwrap(lakeFormationResource),
-	)
+
+	getLakeFormationResourceARNs := getLakeFormationResourceARNs(client)
+
+	resources = resourceMap{
+		lakeFormationResource: getLakeFormationResourceARNs,
+	}
 	return
 }
 
-func getLakeFormationResource(client *lakeformation.Client) (r resourceSliceError) {
+func getLakeFormationResourceARNs(client *lakeformation.Client) (resources []string) {
 	req := client.ListResourcesRequest(&lakeformation.ListResourcesInput{})
 	p := lakeformation.NewListResourcesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ResourceInfoList {
-			r.resources = append(r.resources, *resource.ResourceArn)
+			resources = append(resources, *resource.ResourceArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }

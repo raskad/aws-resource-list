@@ -9,23 +9,24 @@ import (
 
 func getMq(config aws.Config) (resources resourceMap) {
 	client := mq.New(config)
-	resources = reduce(
-		getAmazonMQBroker(client).unwrap(amazonMQBroker),
-		getAmazonMQConfiguration(client).unwrap(amazonMQConfiguration),
-	)
+
+	amazonMQBrokerIDs := getAmazonMQBrokerIDs(client)
+	amazonMQConfigurationIDs := getAmazonMQConfigurationIDs(client)
+
+	resources = resourceMap{
+		amazonMQBroker:        amazonMQBrokerIDs,
+		amazonMQConfiguration: amazonMQConfigurationIDs,
+	}
 	return
 }
 
-func getAmazonMQBroker(client *mq.Client) (r resourceSliceError) {
+func getAmazonMQBrokerIDs(client *mq.Client) (resources []string) {
 	input := mq.ListBrokersInput{}
 	for {
 		page, err := client.ListBrokersRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.BrokerSummaries {
-			r.resources = append(r.resources, *resource.BrokerId)
+			resources = append(resources, *resource.BrokerId)
 		}
 		if page.NextToken == nil {
 			return
@@ -34,16 +35,13 @@ func getAmazonMQBroker(client *mq.Client) (r resourceSliceError) {
 	}
 }
 
-func getAmazonMQConfiguration(client *mq.Client) (r resourceSliceError) {
+func getAmazonMQConfigurationIDs(client *mq.Client) (resources []string) {
 	input := mq.ListConfigurationsInput{}
 	for {
 		page, err := client.ListConfigurationsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Configurations {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 		if page.NextToken == nil {
 			return

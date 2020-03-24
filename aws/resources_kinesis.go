@@ -10,20 +10,21 @@ import (
 func getKinesis(config aws.Config) (resources resourceMap) {
 	client := kinesis.New(config)
 
-	kinesisStreamResourceMap := getKinesisStream(client).unwrap(kinesisStream)
-	kinesisStreamARNs := kinesisStreamResourceMap[kinesisStream]
+	kinesisStreamARNs := getKinesisStreamARNs(client)
+	kinesisStreamConsumerNames := getKinesisStreamConsumerNames(client, kinesisStreamARNs)
 
-	resources = reduce(
-		kinesisStreamResourceMap,
-		getKinesisStreamConsumer(client, kinesisStreamARNs).unwrap(kinesisStreamConsumer),
-	)
+	resources = resourceMap{
+		kinesisStream:         kinesisStreamARNs,
+		kinesisStreamConsumer: kinesisStreamConsumerNames,
+	}
 	return
 }
 
-func getKinesisStream(client *kinesis.Client) (r resourceSliceError) {
+func getKinesisStreamARNs(client *kinesis.Client) (resources []string) {
 	req := client.ListStreamsRequest(&kinesis.ListStreamsInput{})
 	p := kinesis.NewListStreamsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.StreamNames {
 			req := client.DescribeStreamRequest(&kinesis.DescribeStreamInput{
@@ -31,30 +32,29 @@ func getKinesisStream(client *kinesis.Client) (r resourceSliceError) {
 			})
 			p := kinesis.NewDescribeStreamPaginator(req)
 			for p.Next(context.Background()) {
+				logErr(p.Err())
 				page := p.CurrentPage()
-				r.resources = append(r.resources, *page.StreamDescription.StreamARN)
+				resources = append(resources, *page.StreamDescription.StreamARN)
 			}
-			r.err = p.Err()
 			return
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getKinesisStreamConsumer(client *kinesis.Client, streamARNs []string) (r resourceSliceError) {
+func getKinesisStreamConsumerNames(client *kinesis.Client, streamARNs []string) (resources []string) {
 	for _, streamARN := range streamARNs {
 		req := client.ListStreamConsumersRequest(&kinesis.ListStreamConsumersInput{
 			StreamARN: aws.String(streamARN),
 		})
 		p := kinesis.NewListStreamConsumersPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.Consumers {
-				r.resources = append(r.resources, *resource.ConsumerName)
+				resources = append(resources, *resource.ConsumerName)
 			}
 		}
-		r.err = p.Err()
 		return
 	}
 	return

@@ -9,63 +9,69 @@ import (
 
 func getAutoScaling(config aws.Config) (resources resourceMap) {
 	client := autoscaling.New(config)
-	resources = reduce(
-		getAutoScalingAutoScalingGroup(client).unwrap(autoScalingAutoScalingGroup),
-		getAutoScalingLaunchConfiguration(client).unwrap(autoScalingLaunchConfiguration),
-		getAutoScalingScalingPolicy(client).unwrap(autoScalingScalingPolicy),
-		getAutoScalingScheduledAction(client).unwrap(autoScalingScheduledAction),
-	)
+
+	autoScalingAutoScalingGroupNames := getAutoScalingAutoScalingGroupNames(client)
+	autoScalingLaunchConfigurationNames := getAutoScalingLaunchConfigurationNames(client)
+	autoScalingScalingPolicyNames := getAutoScalingScalingPolicyNames(client)
+	autoScalingScheduledActionNames := getAutoScalingScheduledActionNames(client)
+
+	resources = resourceMap{
+		autoScalingAutoScalingGroup:    autoScalingAutoScalingGroupNames,
+		autoScalingLaunchConfiguration: autoScalingLaunchConfigurationNames,
+		autoScalingScalingPolicy:       autoScalingScalingPolicyNames,
+		autoScalingScheduledAction:     autoScalingScheduledActionNames,
+	}
 	return
 }
 
-func getAutoScalingAutoScalingGroup(client *autoscaling.Client) (r resourceSliceError) {
+func getAutoScalingAutoScalingGroupNames(client *autoscaling.Client) (resources []string) {
 	req := client.DescribeAutoScalingGroupsRequest(&autoscaling.DescribeAutoScalingGroupsInput{})
 	p := autoscaling.NewDescribeAutoScalingGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.AutoScalingGroups {
-			r.resources = append(r.resources, *resource.AutoScalingGroupName)
+			resources = append(resources, *resource.AutoScalingGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAutoScalingLaunchConfiguration(client *autoscaling.Client) (r resourceSliceError) {
+func getAutoScalingLaunchConfigurationNames(client *autoscaling.Client) (resources []string) {
 	req := client.DescribeLaunchConfigurationsRequest(&autoscaling.DescribeLaunchConfigurationsInput{})
 	p := autoscaling.NewDescribeLaunchConfigurationsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.LaunchConfigurations {
-			r.resources = append(r.resources, *resource.LaunchConfigurationName)
+			resources = append(resources, *resource.LaunchConfigurationName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAutoScalingScalingPolicy(client *autoscaling.Client) (r resourceSliceError) {
+func getAutoScalingScalingPolicyNames(client *autoscaling.Client) (resources []string) {
 	req := client.DescribePoliciesRequest(&autoscaling.DescribePoliciesInput{})
 	p := autoscaling.NewDescribePoliciesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ScalingPolicies {
-			r.resources = append(r.resources, *resource.PolicyName)
+			resources = append(resources, *resource.PolicyName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAutoScalingScheduledAction(client *autoscaling.Client) (r resourceSliceError) {
+func getAutoScalingScheduledActionNames(client *autoscaling.Client) (resources []string) {
 	req := client.DescribeScheduledActionsRequest(&autoscaling.DescribeScheduledActionsInput{})
 	p := autoscaling.NewDescribeScheduledActionsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ScheduledUpdateGroupActions {
-			r.resources = append(r.resources, *resource.ScheduledActionName)
+			resources = append(resources, *resource.ScheduledActionName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

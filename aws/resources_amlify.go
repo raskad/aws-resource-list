@@ -10,27 +10,25 @@ import (
 func getAmplify(config aws.Config) (resources resourceMap) {
 	client := amplify.New(config)
 
-	amplifyAppResourceMap := getAmplifyApp(client).unwrap(amplifyApp)
-	amplifyAppIDs := amplifyAppResourceMap[amplifyApp]
+	amplifyAppIDs := getAmplifyAppIDs(client)
+	amplifyBranchNames := getAmplifyBranchNames(client, amplifyAppIDs)
+	amplifyDomainNames := getAmplifyDomainNames(client, amplifyAppIDs)
 
-	resources = reduce(
-		amplifyAppResourceMap,
-		getAmplifyBranch(client, amplifyAppIDs).unwrap(amplifyBranch),
-		getAmplifyDomain(client, amplifyAppIDs).unwrap(amplifyDomain),
-	)
+	resources = resourceMap{
+		amplifyApp:    amplifyAppIDs,
+		amplifyBranch: amplifyBranchNames,
+		amplifyDomain: amplifyDomainNames,
+	}
 	return
 }
 
-func getAmplifyApp(client *amplify.Client) (r resourceSliceError) {
+func getAmplifyAppIDs(client *amplify.Client) (resources []string) {
 	input := amplify.ListAppsInput{}
 	for {
 		page, err := client.ListAppsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Apps {
-			r.resources = append(r.resources, *resource.AppId)
+			resources = append(resources, *resource.AppId)
 		}
 		if page.NextToken == nil {
 			return
@@ -39,19 +37,16 @@ func getAmplifyApp(client *amplify.Client) (r resourceSliceError) {
 	}
 }
 
-func getAmplifyBranch(client *amplify.Client, appIDs []string) (r resourceSliceError) {
+func getAmplifyBranchNames(client *amplify.Client, appIDs []string) (resources []string) {
 	for _, appID := range appIDs {
 		input := amplify.ListBranchesInput{
 			AppId: aws.String(appID),
 		}
 		for {
 			page, err := client.ListBranchesRequest(&input).Send(context.Background())
-			if err != nil {
-				r.err = err
-				return
-			}
+			logErr(err)
 			for _, resource := range page.Branches {
-				r.resources = append(r.resources, *resource.BranchName)
+				resources = append(resources, *resource.BranchName)
 			}
 			if page.NextToken == nil {
 				break
@@ -62,19 +57,16 @@ func getAmplifyBranch(client *amplify.Client, appIDs []string) (r resourceSliceE
 	return
 }
 
-func getAmplifyDomain(client *amplify.Client, appIDs []string) (r resourceSliceError) {
+func getAmplifyDomainNames(client *amplify.Client, appIDs []string) (resources []string) {
 	for _, appID := range appIDs {
 		input := amplify.ListDomainAssociationsInput{
 			AppId: aws.String(appID),
 		}
 		for {
 			page, err := client.ListDomainAssociationsRequest(&input).Send(context.Background())
-			if err != nil {
-				r.err = err
-				return
-			}
+			logErr(err)
 			for _, resource := range page.DomainAssociations {
-				r.resources = append(r.resources, *resource.DomainName)
+				resources = append(resources, *resource.DomainName)
 			}
 			if page.NextToken == nil {
 				break

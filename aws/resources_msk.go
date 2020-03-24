@@ -9,21 +9,24 @@ import (
 
 func getMsk(config aws.Config) (resources resourceMap) {
 	client := kafka.New(config)
-	resources = reduce(
-		getMskCluster(client).unwrap(mskCluster),
-	)
+
+	mskClusterNames := getMskClusterNames(client)
+
+	resources = resourceMap{
+		mskCluster: mskClusterNames,
+	}
 	return
 }
 
-func getMskCluster(client *kafka.Client) (r resourceSliceError) {
+func getMskClusterNames(client *kafka.Client) (resources []string) {
 	req := client.ListClustersRequest(&kafka.ListClustersInput{})
 	p := kafka.NewListClustersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ClusterInfoList {
-			r.resources = append(r.resources, *resource.ClusterName)
+			resources = append(resources, *resource.ClusterName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

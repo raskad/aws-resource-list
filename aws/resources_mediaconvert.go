@@ -9,49 +9,54 @@ import (
 
 func getMediaConvert(config aws.Config) (resources resourceMap) {
 	client := mediaconvert.New(config)
-	resources = reduce(
-		getMediaConvertJobTemplate(client).unwrap(mediaConvertJobTemplate),
-		getMediaConvertPreset(client).unwrap(mediaConvertPreset),
-		getMediaConvertQueue(client).unwrap(mediaConvertQueue),
-	)
+
+	mediaConvertJobTemplateNames := getMediaConvertJobTemplateNames(client)
+	mediaConvertPresetNames := getMediaConvertPresetNames(client)
+	mediaConvertQueueNames := getMediaConvertQueueNames(client)
+
+	resources = resourceMap{
+		mediaConvertJobTemplate: mediaConvertJobTemplateNames,
+		mediaConvertPreset:      mediaConvertPresetNames,
+		mediaConvertQueue:       mediaConvertQueueNames,
+	}
 	return
 }
 
-func getMediaConvertJobTemplate(client *mediaconvert.Client) (r resourceSliceError) {
+func getMediaConvertJobTemplateNames(client *mediaconvert.Client) (resources []string) {
 	req := client.ListJobTemplatesRequest(&mediaconvert.ListJobTemplatesInput{})
 	p := mediaconvert.NewListJobTemplatesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.JobTemplates {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getMediaConvertPreset(client *mediaconvert.Client) (r resourceSliceError) {
+func getMediaConvertPresetNames(client *mediaconvert.Client) (resources []string) {
 	req := client.ListPresetsRequest(&mediaconvert.ListPresetsInput{})
 	p := mediaconvert.NewListPresetsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Presets {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getMediaConvertQueue(client *mediaconvert.Client) (r resourceSliceError) {
+func getMediaConvertQueueNames(client *mediaconvert.Client) (resources []string) {
 	req := client.ListQueuesRequest(&mediaconvert.ListQueuesInput{})
 	p := mediaconvert.NewListQueuesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Queues {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

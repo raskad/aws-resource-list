@@ -9,20 +9,20 @@ import (
 
 func getElasticsearch(config aws.Config) (resources resourceMap) {
 	client := elasticsearchservice.New(config)
-	resources = reduce(
-		getElasticsearchDomain(client).unwrap(elasticsearchDomain),
-	)
+
+	elasticsearchDomainNames := getElasticsearchDomainNames(client)
+
+	resources = resourceMap{
+		elasticsearchDomain: elasticsearchDomainNames,
+	}
 	return
 }
 
-func getElasticsearchDomain(client *elasticsearchservice.Client) (r resourceSliceError) {
+func getElasticsearchDomainNames(client *elasticsearchservice.Client) (resources []string) {
 	page, err := client.ListDomainNamesRequest(&elasticsearchservice.ListDomainNamesInput{}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.DomainNames {
-		r.resources = append(r.resources, *resource.DomainName)
+		resources = append(resources, *resource.DomainName)
 	}
 	return
 }

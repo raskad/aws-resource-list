@@ -9,35 +9,39 @@ import (
 
 func getSns(config aws.Config) (resources resourceMap) {
 	client := sns.New(config)
-	resources = reduce(
-		getSnsSubscription(client).unwrap(snsSubscription),
-		getSnsTopic(client).unwrap(snsTopic),
-	)
+
+	snsSubscriptionARNs := getSnsSubscriptionARNs(client)
+	snsTopicARNs := getSnsTopicARNs(client)
+
+	resources = resourceMap{
+		snsSubscription: snsSubscriptionARNs,
+		snsTopic:        snsTopicARNs,
+	}
 	return
 }
 
-func getSnsSubscription(client *sns.Client) (r resourceSliceError) {
+func getSnsSubscriptionARNs(client *sns.Client) (resources []string) {
 	req := client.ListSubscriptionsRequest(&sns.ListSubscriptionsInput{})
 	p := sns.NewListSubscriptionsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Subscriptions {
-			r.resources = append(r.resources, *resource.SubscriptionArn)
+			resources = append(resources, *resource.SubscriptionArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getSnsTopic(client *sns.Client) (r resourceSliceError) {
+func getSnsTopicARNs(client *sns.Client) (resources []string) {
 	req := client.ListTopicsRequest(&sns.ListTopicsInput{})
 	p := sns.NewListTopicsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Topics {
-			r.resources = append(r.resources, *resource.TopicArn)
+			resources = append(resources, *resource.TopicArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }

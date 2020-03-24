@@ -10,33 +10,37 @@ import (
 func getConfig(config aws.Config) (resources resourceMap) {
 	client := configservice.New(config)
 
-	configConfigRuleResourceMap := getConfigConfigRule(client).unwrap(configConfigRule)
-	configConfigRuleNames := configConfigRuleResourceMap[configConfigRule]
+	configConfigRuleNames := getConfigConfigRuleNames(client)
+	configAggregationAuthorizationARNs := getConfigAggregationAuthorizationARNs(client)
+	configConfigurationAggregatorNames := getConfigConfigurationAggregatorNames(client)
+	configConfigurationRecorderNames := getConfigConfigurationRecorderNames(client)
+	configConformancePackNames := getConfigConformancePackNames(client)
+	configDeliveryChannelNames := getConfigDeliveryChannelNames(client)
+	configOrganizationConfigRuleNames := getConfigOrganizationConfigRuleNames(client)
+	configOrganizationConformancePackNames := getConfigOrganizationConformancePackNames(client)
+	configRemediationConfigurationNames := getConfigRemediationConfigurationNames(client, configConfigRuleNames)
 
-	resources = reduce(
-		getConfigAggregationAuthorization(client).unwrap(configAggregationAuthorization),
-		configConfigRuleResourceMap,
-		getConfigConfigurationAggregator(client).unwrap(configConfigurationAggregator),
-		getConfigConfigurationRecorder(client).unwrap(configConfigurationRecorder),
-		getConfigConformancePack(client).unwrap(configConformancePack),
-		getConfigDeliveryChannel(client).unwrap(configDeliveryChannel),
-		getConfigOrganizationConfigRule(client).unwrap(configOrganizationConfigRule),
-		getConfigOrganizationConformancePack(client).unwrap(configOrganizationConformancePack),
-		getConfigRemediationConfiguration(client, configConfigRuleNames).unwrap(configRemediationConfiguration),
-	)
+	resources = resourceMap{
+		configConfigRule:                  configConfigRuleNames,
+		configAggregationAuthorization:    configAggregationAuthorizationARNs,
+		configConfigurationAggregator:     configConfigurationAggregatorNames,
+		configConfigurationRecorder:       configConfigurationRecorderNames,
+		configConformancePack:             configConformancePackNames,
+		configDeliveryChannel:             configDeliveryChannelNames,
+		configOrganizationConfigRule:      configOrganizationConfigRuleNames,
+		configOrganizationConformancePack: configOrganizationConformancePackNames,
+		configRemediationConfiguration:    configRemediationConfigurationNames,
+	}
 	return
 }
 
-func getConfigAggregationAuthorization(client *configservice.Client) (r resourceSliceError) {
+func getConfigAggregationAuthorizationARNs(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeAggregationAuthorizationsInput{}
 	for {
 		page, err := client.DescribeAggregationAuthorizationsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.AggregationAuthorizations {
-			r.resources = append(r.resources, *resource.AggregationAuthorizationArn)
+			resources = append(resources, *resource.AggregationAuthorizationArn)
 		}
 		if page.NextToken == nil {
 			return
@@ -45,16 +49,13 @@ func getConfigAggregationAuthorization(client *configservice.Client) (r resource
 	}
 }
 
-func getConfigConfigRule(client *configservice.Client) (r resourceSliceError) {
+func getConfigConfigRuleNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeConfigRulesInput{}
 	for {
 		page, err := client.DescribeConfigRulesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ConfigRules {
-			r.resources = append(r.resources, *resource.ConfigRuleName)
+			resources = append(resources, *resource.ConfigRuleName)
 		}
 		if page.NextToken == nil {
 			return
@@ -63,16 +64,13 @@ func getConfigConfigRule(client *configservice.Client) (r resourceSliceError) {
 	}
 }
 
-func getConfigConfigurationAggregator(client *configservice.Client) (r resourceSliceError) {
+func getConfigConfigurationAggregatorNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeConfigurationAggregatorsInput{}
 	for {
 		page, err := client.DescribeConfigurationAggregatorsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ConfigurationAggregators {
-			r.resources = append(r.resources, *resource.ConfigurationAggregatorName)
+			resources = append(resources, *resource.ConfigurationAggregatorName)
 		}
 		if page.NextToken == nil {
 			return
@@ -81,28 +79,22 @@ func getConfigConfigurationAggregator(client *configservice.Client) (r resourceS
 	}
 }
 
-func getConfigConfigurationRecorder(client *configservice.Client) (r resourceSliceError) {
+func getConfigConfigurationRecorderNames(client *configservice.Client) (resources []string) {
 	page, err := client.DescribeConfigurationRecordersRequest(&configservice.DescribeConfigurationRecordersInput{}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.ConfigurationRecorders {
-		r.resources = append(r.resources, *resource.Name)
+		resources = append(resources, *resource.Name)
 	}
 	return
 }
 
-func getConfigConformancePack(client *configservice.Client) (r resourceSliceError) {
+func getConfigConformancePackNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeConformancePacksInput{}
 	for {
 		page, err := client.DescribeConformancePacksRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ConformancePackDetails {
-			r.resources = append(r.resources, *resource.ConformancePackName)
+			resources = append(resources, *resource.ConformancePackName)
 		}
 		if page.NextToken == nil {
 			return
@@ -111,28 +103,22 @@ func getConfigConformancePack(client *configservice.Client) (r resourceSliceErro
 	}
 }
 
-func getConfigDeliveryChannel(client *configservice.Client) (r resourceSliceError) {
+func getConfigDeliveryChannelNames(client *configservice.Client) (resources []string) {
 	page, err := client.DescribeDeliveryChannelsRequest(&configservice.DescribeDeliveryChannelsInput{}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.DeliveryChannels {
-		r.resources = append(r.resources, *resource.Name)
+		resources = append(resources, *resource.Name)
 	}
 	return
 }
 
-func getConfigOrganizationConfigRule(client *configservice.Client) (r resourceSliceError) {
+func getConfigOrganizationConfigRuleNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeOrganizationConfigRulesInput{}
 	for {
 		page, err := client.DescribeOrganizationConfigRulesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.OrganizationConfigRules {
-			r.resources = append(r.resources, *resource.OrganizationConfigRuleName)
+			resources = append(resources, *resource.OrganizationConfigRuleName)
 		}
 		if page.NextToken == nil {
 			return
@@ -141,16 +127,13 @@ func getConfigOrganizationConfigRule(client *configservice.Client) (r resourceSl
 	}
 }
 
-func getConfigOrganizationConformancePack(client *configservice.Client) (r resourceSliceError) {
+func getConfigOrganizationConformancePackNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeOrganizationConformancePacksInput{}
 	for {
 		page, err := client.DescribeOrganizationConformancePacksRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.OrganizationConformancePacks {
-			r.resources = append(r.resources, *resource.OrganizationConformancePackName)
+			resources = append(resources, *resource.OrganizationConformancePackName)
 		}
 		if page.NextToken == nil {
 			return
@@ -159,16 +142,13 @@ func getConfigOrganizationConformancePack(client *configservice.Client) (r resou
 	}
 }
 
-func getConfigRemediationConfiguration(client *configservice.Client, configRuleNames []string) (r resourceSliceError) {
+func getConfigRemediationConfigurationNames(client *configservice.Client, configRuleNames []string) (resources []string) {
 	page, err := client.DescribeRemediationConfigurationsRequest(&configservice.DescribeRemediationConfigurationsInput{
 		ConfigRuleNames: configRuleNames,
 	}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.RemediationConfigurations {
-		r.resources = append(r.resources, *resource.ConfigRuleName)
+		resources = append(resources, *resource.ConfigRuleName)
 	}
 	return
 }

@@ -10,70 +10,72 @@ import (
 func getCloudwatchLogs(config aws.Config) (resources resourceMap) {
 	client := cloudwatchlogs.New(config)
 
-	logsLogGroupResourceMap := getLogsLogGroup(client).unwrap(logsLogGroup)
-	logsLogGroupNames := logsLogGroupResourceMap[logsLogGroup]
+	logsLogGroupNames := getLogsLogGroupNames(client)
+	logsDestinationNames := getLogsDestinationNames(client)
+	logsMetricFilterNames := getLogsMetricFilterNames(client)
+	logsSubscriptionFilterNames := getLogsSubscriptionFilterNames(client, logsLogGroupNames)
 
-	resources = reduce(
-		getLogsDestination(client).unwrap(logsDestination),
-		logsLogGroupResourceMap,
-		getLogsMetricFilter(client).unwrap(logsMetricFilter),
-		getLogsSubscriptionFilter(client, logsLogGroupNames).unwrap(logsSubscriptionFilter),
-	)
+	resources = resourceMap{
+		logsLogGroup:           logsLogGroupNames,
+		logsDestination:        logsDestinationNames,
+		logsMetricFilter:       logsMetricFilterNames,
+		logsSubscriptionFilter: logsSubscriptionFilterNames,
+	}
 	return
 }
 
-func getLogsDestination(client *cloudwatchlogs.Client) (r resourceSliceError) {
+func getLogsDestinationNames(client *cloudwatchlogs.Client) (resources []string) {
 	req := client.DescribeDestinationsRequest(&cloudwatchlogs.DescribeDestinationsInput{})
 	p := cloudwatchlogs.NewDescribeDestinationsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Destinations {
-			r.resources = append(r.resources, *resource.DestinationName)
+			resources = append(resources, *resource.DestinationName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getLogsLogGroup(client *cloudwatchlogs.Client) (r resourceSliceError) {
+func getLogsLogGroupNames(client *cloudwatchlogs.Client) (resources []string) {
 	req := client.DescribeLogGroupsRequest(&cloudwatchlogs.DescribeLogGroupsInput{})
 	p := cloudwatchlogs.NewDescribeLogGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.LogGroups {
-			r.resources = append(r.resources, *resource.LogGroupName)
+			resources = append(resources, *resource.LogGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getLogsMetricFilter(client *cloudwatchlogs.Client) (r resourceSliceError) {
+func getLogsMetricFilterNames(client *cloudwatchlogs.Client) (resources []string) {
 	req := client.DescribeMetricFiltersRequest(&cloudwatchlogs.DescribeMetricFiltersInput{})
 	p := cloudwatchlogs.NewDescribeMetricFiltersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.MetricFilters {
-			r.resources = append(r.resources, *resource.FilterName)
+			resources = append(resources, *resource.FilterName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getLogsSubscriptionFilter(client *cloudwatchlogs.Client, logGroupNames []string) (r resourceSliceError) {
+func getLogsSubscriptionFilterNames(client *cloudwatchlogs.Client, logGroupNames []string) (resources []string) {
 	for _, logGroupName := range logGroupNames {
 		req := client.DescribeSubscriptionFiltersRequest(&cloudwatchlogs.DescribeSubscriptionFiltersInput{
 			LogGroupName: aws.String(logGroupName),
 		})
 		p := cloudwatchlogs.NewDescribeSubscriptionFiltersPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.SubscriptionFilters {
-				r.resources = append(r.resources, *resource.FilterName)
+				resources = append(resources, *resource.FilterName)
 			}
 		}
-		r.err = p.Err()
 		return
 	}
 	return

@@ -9,42 +9,49 @@ import (
 
 func getRds(config aws.Config) (resources resourceMap) {
 	client := rds.New(config)
-	resources = reduce(
-		getRdsDBCluster(client).unwrap(rdsDBCluster),
-		getRdsDBClusterParameterGroup(client).unwrap(rdsDBClusterParameterGroup),
-		getRdsDBInstance(client).unwrap(rdsDBInstance),
-		getRdsDBParameterGroup(client).unwrap(rdsDBParameterGroup),
-		getRdsDBSecurityGroup(client).unwrap(rdsDBSecurityGroup),
-		getRdsDBSubnetGroup(client).unwrap(rdsDBSubnetGroup),
-		getRdsEventSubscription(client).unwrap(rdsEventSubscription),
-		getRdsOptionGroup(client).unwrap(rdsOptionGroup),
-	)
+
+	rdsDBClusterIDs := getRdsDBClusterIDs(client)
+	rdsDBClusterParameterGroupNames := getRdsDBClusterParameterGroupNames(client)
+	rdsDBInstanceIDs := getRdsDBInstanceIDs(client)
+	rdsDBParameterGroupNames := getRdsDBParameterGroupNames(client)
+	rdsDBSecurityGroupNames := getRdsDBSecurityGroupNames(client)
+	rdsDBSubnetGroupNames := getRdsDBSubnetGroupNames(client)
+	rdsEventSubscriptionIDs := getRdsEventSubscriptionIDs(client)
+	rdsOptionGroupNames := getRdsOptionGroupNames(client)
+
+	resources = resourceMap{
+		rdsDBCluster:               rdsDBClusterIDs,
+		rdsDBClusterParameterGroup: rdsDBClusterParameterGroupNames,
+		rdsDBInstance:              rdsDBInstanceIDs,
+		rdsDBParameterGroup:        rdsDBParameterGroupNames,
+		rdsDBSecurityGroup:         rdsDBSecurityGroupNames,
+		rdsDBSubnetGroup:           rdsDBSubnetGroupNames,
+		rdsEventSubscription:       rdsEventSubscriptionIDs,
+		rdsOptionGroup:             rdsOptionGroupNames,
+	}
 	return
 }
 
-func getRdsDBCluster(client *rds.Client) (r resourceSliceError) {
+func getRdsDBClusterIDs(client *rds.Client) (resources []string) {
 	req := client.DescribeDBClustersRequest(&rds.DescribeDBClustersInput{})
 	p := rds.NewDescribeDBClustersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBClusters {
-			r.resources = append(r.resources, *resource.DBClusterIdentifier)
+			resources = append(resources, *resource.DBClusterIdentifier)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRdsDBClusterParameterGroup(client *rds.Client) (r resourceSliceError) {
+func getRdsDBClusterParameterGroupNames(client *rds.Client) (resources []string) {
 	input := rds.DescribeDBClusterParameterGroupsInput{}
 	for {
 		page, err := client.DescribeDBClusterParameterGroupsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.DBClusterParameterGroups {
-			r.resources = append(r.resources, *resource.DBClusterParameterGroupName)
+			resources = append(resources, *resource.DBClusterParameterGroupName)
 		}
 		if page.Marker == nil {
 			return
@@ -53,80 +60,80 @@ func getRdsDBClusterParameterGroup(client *rds.Client) (r resourceSliceError) {
 	}
 }
 
-func getRdsDBInstance(client *rds.Client) (r resourceSliceError) {
+func getRdsDBInstanceIDs(client *rds.Client) (resources []string) {
 	req := client.DescribeDBInstancesRequest(&rds.DescribeDBInstancesInput{})
 	p := rds.NewDescribeDBInstancesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBInstances {
-			r.resources = append(r.resources, *resource.DBInstanceIdentifier)
+			resources = append(resources, *resource.DBInstanceIdentifier)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRdsDBParameterGroup(client *rds.Client) (r resourceSliceError) {
+func getRdsDBParameterGroupNames(client *rds.Client) (resources []string) {
 	req := client.DescribeDBParameterGroupsRequest(&rds.DescribeDBParameterGroupsInput{})
 	p := rds.NewDescribeDBParameterGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBParameterGroups {
-			r.resources = append(r.resources, *resource.DBParameterGroupName)
+			resources = append(resources, *resource.DBParameterGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRdsDBSecurityGroup(client *rds.Client) (r resourceSliceError) {
+func getRdsDBSecurityGroupNames(client *rds.Client) (resources []string) {
 	req := client.DescribeDBSecurityGroupsRequest(&rds.DescribeDBSecurityGroupsInput{})
 	p := rds.NewDescribeDBSecurityGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBSecurityGroups {
-			r.resources = append(r.resources, *resource.DBSecurityGroupName)
+			resources = append(resources, *resource.DBSecurityGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRdsDBSubnetGroup(client *rds.Client) (r resourceSliceError) {
+func getRdsDBSubnetGroupNames(client *rds.Client) (resources []string) {
 	req := client.DescribeDBSubnetGroupsRequest(&rds.DescribeDBSubnetGroupsInput{})
 	p := rds.NewDescribeDBSubnetGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBSubnetGroups {
-			r.resources = append(r.resources, *resource.DBSubnetGroupName)
+			resources = append(resources, *resource.DBSubnetGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRdsEventSubscription(client *rds.Client) (r resourceSliceError) {
+func getRdsEventSubscriptionIDs(client *rds.Client) (resources []string) {
 	req := client.DescribeEventSubscriptionsRequest(&rds.DescribeEventSubscriptionsInput{})
 	p := rds.NewDescribeEventSubscriptionsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.EventSubscriptionsList {
-			r.resources = append(r.resources, *resource.CustSubscriptionId)
+			resources = append(resources, *resource.CustSubscriptionId)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRdsOptionGroup(client *rds.Client) (r resourceSliceError) {
+func getRdsOptionGroupNames(client *rds.Client) (resources []string) {
 	req := client.DescribeOptionGroupsRequest(&rds.DescribeOptionGroupsInput{})
 	p := rds.NewDescribeOptionGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.OptionGroupsList {
-			r.resources = append(r.resources, *resource.OptionGroupName)
+			resources = append(resources, *resource.OptionGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

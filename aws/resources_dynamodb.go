@@ -9,21 +9,24 @@ import (
 
 func getDynamoDB(config aws.Config) (resources resourceMap) {
 	client := dynamodb.New(config)
-	resources = reduce(
-		getDynamoDBTable(client).unwrap(dynamoDBTable),
-	)
+
+	dynamoDBTableNames := getDynamoDBTableNames(client)
+
+	resources = resourceMap{
+		dynamoDBTable: dynamoDBTableNames,
+	}
 	return
 }
 
-func getDynamoDBTable(client *dynamodb.Client) (r resourceSliceError) {
+func getDynamoDBTableNames(client *dynamodb.Client) (resources []string) {
 	req := client.ListTablesRequest(&dynamodb.ListTablesInput{})
 	p := dynamodb.NewListTablesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.TableNames {
-			r.resources = append(r.resources, resource)
+			resources = append(resources, resource)
 		}
 	}
-	r.err = p.Err()
 	return
 }

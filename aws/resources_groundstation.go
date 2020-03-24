@@ -10,49 +10,53 @@ import (
 func getGroundStation(config aws.Config) (resources resourceMap) {
 	client := groundstation.New(config)
 
-	resources = reduce(
-		getGroundStationConfig(client).unwrap(groundStationConfig),
-		getGroundStationDataflowEndpointGroup(client).unwrap(groundStationDataflowEndpointGroup),
-		getGroundStationMissionProfile(client).unwrap(groundStationMissionProfile),
-	)
+	groundStationConfigIDs := getGroundStationConfigIDs(client)
+	groundStationDataflowEndpointGroupIDs := getGroundStationDataflowEndpointGroupIDs(client)
+	groundStationMissionProfileIDs := getGroundStationMissionProfileIDs(client)
+
+	resources = resourceMap{
+		groundStationConfig:                groundStationConfigIDs,
+		groundStationDataflowEndpointGroup: groundStationDataflowEndpointGroupIDs,
+		groundStationMissionProfile:        groundStationMissionProfileIDs,
+	}
 	return
 }
 
-func getGroundStationConfig(client *groundstation.Client) (r resourceSliceError) {
+func getGroundStationConfigIDs(client *groundstation.Client) (resources []string) {
 	req := client.ListConfigsRequest(&groundstation.ListConfigsInput{})
 	p := groundstation.NewListConfigsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ConfigList {
-			r.resources = append(r.resources, *resource.ConfigId)
+			resources = append(resources, *resource.ConfigId)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getGroundStationDataflowEndpointGroup(client *groundstation.Client) (r resourceSliceError) {
+func getGroundStationDataflowEndpointGroupIDs(client *groundstation.Client) (resources []string) {
 	req := client.ListDataflowEndpointGroupsRequest(&groundstation.ListDataflowEndpointGroupsInput{})
 	p := groundstation.NewListDataflowEndpointGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DataflowEndpointGroupList {
-			r.resources = append(r.resources, *resource.DataflowEndpointGroupId)
+			resources = append(resources, *resource.DataflowEndpointGroupId)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getGroundStationMissionProfile(client *groundstation.Client) (r resourceSliceError) {
+func getGroundStationMissionProfileIDs(client *groundstation.Client) (resources []string) {
 	req := client.ListMissionProfilesRequest(&groundstation.ListMissionProfilesInput{})
 	p := groundstation.NewListMissionProfilesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.MissionProfileList {
-			r.resources = append(r.resources, *resource.MissionProfileId)
+			resources = append(resources, *resource.MissionProfileId)
 		}
 	}
-	r.err = p.Err()
 	return
 }

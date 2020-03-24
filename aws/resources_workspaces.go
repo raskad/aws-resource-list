@@ -9,21 +9,25 @@ import (
 
 func getWorkSpaces(config aws.Config) (resources resourceMap) {
 	client := workspaces.New(config)
-	resources = reduce(
-		getWorkSpacesWorkspace(client).unwrap(workSpacesWorkspace),
-	)
+
+	workSpacesWorkspaceIDs := getWorkSpacesWorkspaceIDs(client)
+
+	resources = resourceMap{
+		workSpacesWorkspace: workSpacesWorkspaceIDs,
+	}
+
 	return
 }
 
-func getWorkSpacesWorkspace(client *workspaces.Client) (r resourceSliceError) {
+func getWorkSpacesWorkspaceIDs(client *workspaces.Client) (resources []string) {
 	req := client.DescribeWorkspacesRequest(&workspaces.DescribeWorkspacesInput{})
 	p := workspaces.NewDescribeWorkspacesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Workspaces {
-			r.resources = append(r.resources, *resource.WorkspaceId)
+			resources = append(resources, *resource.WorkspaceId)
 		}
 	}
-	r.err = p.Err()
 	return
 }

@@ -9,23 +9,24 @@ import (
 
 func getAPIGatewayV2(config aws.Config) (resources resourceMap) {
 	client := apigatewayv2.New(config)
-	resources = reduce(
-		getAPIGatewayV2API(client).unwrap(apiGatewayV2Api),
-		getAPIGatewayV2DomainName(client).unwrap(apiGatewayV2DomainName),
-	)
+
+	apiGatewayV2APIIDs := getAPIGatewayV2APIIDs(client)
+	apiGatewayV2DomainNames := getAPIGatewayV2DomainNames(client)
+
+	resources = resourceMap{
+		apiGatewayV2Api:        apiGatewayV2APIIDs,
+		apiGatewayV2DomainName: apiGatewayV2DomainNames,
+	}
 	return
 }
 
-func getAPIGatewayV2API(client *apigatewayv2.Client) (r resourceSliceError) {
+func getAPIGatewayV2APIIDs(client *apigatewayv2.Client) (resources []string) {
 	input := apigatewayv2.GetApisInput{}
 	for {
 		page, err := client.GetApisRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.ApiId)
+			resources = append(resources, *resource.ApiId)
 		}
 		if page.NextToken == nil {
 			return
@@ -34,16 +35,13 @@ func getAPIGatewayV2API(client *apigatewayv2.Client) (r resourceSliceError) {
 	}
 }
 
-func getAPIGatewayV2DomainName(client *apigatewayv2.Client) (r resourceSliceError) {
+func getAPIGatewayV2DomainNames(client *apigatewayv2.Client) (resources []string) {
 	input := apigatewayv2.GetDomainNamesInput{}
 	for {
 		page, err := client.GetDomainNamesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.DomainName)
+			resources = append(resources, *resource.DomainName)
 		}
 		if page.NextToken == nil {
 			return

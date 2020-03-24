@@ -9,21 +9,24 @@ import (
 
 func getAppMesh(config aws.Config) (resources resourceMap) {
 	client := appmesh.New(config)
-	resources = reduce(
-		getAppMeshMesh(client).unwrap(appMeshMesh),
-	)
+
+	appMeshMeshNames := getAppMeshMeshNames(client)
+
+	resources = resourceMap{
+		appMeshMesh: appMeshMeshNames,
+	}
 	return
 }
 
-func getAppMeshMesh(client *appmesh.Client) (r resourceSliceError) {
+func getAppMeshMeshNames(client *appmesh.Client) (resources []string) {
 	req := client.ListMeshesRequest(&appmesh.ListMeshesInput{})
 	p := appmesh.NewListMeshesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Meshes {
-			r.resources = append(r.resources, *resource.MeshName)
+			resources = append(resources, *resource.MeshName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

@@ -9,21 +9,24 @@ import (
 
 func getIoT1ClickProjects(config aws.Config) (resources resourceMap) {
 	client := iot1clickprojects.New(config)
-	resources = reduce(
-		getIoT1ClickProject(client).unwrap(ioT1ClickProject),
-	)
+
+	ioT1ClickProjectNames := getIoT1ClickProjectNames(client)
+
+	resources = resourceMap{
+		ioT1ClickProject: ioT1ClickProjectNames,
+	}
 	return
 }
 
-func getIoT1ClickProject(client *iot1clickprojects.Client) (r resourceSliceError) {
+func getIoT1ClickProjectNames(client *iot1clickprojects.Client) (resources []string) {
 	req := client.ListProjectsRequest(&iot1clickprojects.ListProjectsInput{})
 	p := iot1clickprojects.NewListProjectsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Projects {
-			r.resources = append(r.resources, *resource.ProjectName)
+			resources = append(resources, *resource.ProjectName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

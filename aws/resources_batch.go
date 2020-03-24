@@ -9,49 +9,54 @@ import (
 
 func getBatch(config aws.Config) (resources resourceMap) {
 	client := batch.New(config)
-	resources = reduce(
-		getBatchComputeEnvironment(client).unwrap(batchComputeEnvironment),
-		getBatchJobDefinition(client).unwrap(batchJobDefinition),
-		getBatchJobQueue(client).unwrap(batchJobQueue),
-	)
+
+	batchComputeEnvironmentNames := getBatchComputeEnvironmentNames(client)
+	batchJobDefinitionARNs := getBatchJobDefinitionARNs(client)
+	batchJobQueueARNs := getBatchJobQueueARNs(client)
+
+	resources = resourceMap{
+		batchComputeEnvironment: batchComputeEnvironmentNames,
+		batchJobDefinition:      batchJobDefinitionARNs,
+		batchJobQueue:           batchJobQueueARNs,
+	}
 	return
 }
 
-func getBatchComputeEnvironment(client *batch.Client) (r resourceSliceError) {
+func getBatchComputeEnvironmentNames(client *batch.Client) (resources []string) {
 	req := client.DescribeComputeEnvironmentsRequest(&batch.DescribeComputeEnvironmentsInput{})
 	p := batch.NewDescribeComputeEnvironmentsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ComputeEnvironments {
-			r.resources = append(r.resources, *resource.ComputeEnvironmentName)
+			resources = append(resources, *resource.ComputeEnvironmentName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getBatchJobDefinition(client *batch.Client) (r resourceSliceError) {
+func getBatchJobDefinitionARNs(client *batch.Client) (resources []string) {
 	req := client.DescribeJobDefinitionsRequest(&batch.DescribeJobDefinitionsInput{})
 	p := batch.NewDescribeJobDefinitionsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.JobDefinitions {
-			r.resources = append(r.resources, *resource.JobDefinitionArn)
+			resources = append(resources, *resource.JobDefinitionArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getBatchJobQueue(client *batch.Client) (r resourceSliceError) {
+func getBatchJobQueueARNs(client *batch.Client) (resources []string) {
 	req := client.DescribeJobQueuesRequest(&batch.DescribeJobQueuesInput{})
 	p := batch.NewDescribeJobQueuesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.JobQueues {
-			r.resources = append(r.resources, *resource.JobQueueArn)
+			resources = append(resources, *resource.JobQueueArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }

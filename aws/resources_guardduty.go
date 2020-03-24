@@ -9,21 +9,24 @@ import (
 
 func getGuardDuty(config aws.Config) (resources resourceMap) {
 	client := guardduty.New(config)
-	resources = reduce(
-		getGuardDutyDetector(client).unwrap(guardDutyDetector),
-	)
+
+	guardDutyDetectorIDs := getGuardDutyDetectorIDs(client)
+
+	resources = resourceMap{
+		guardDutyDetector: guardDutyDetectorIDs,
+	}
 	return
 }
 
-func getGuardDutyDetector(client *guardduty.Client) (r resourceSliceError) {
+func getGuardDutyDetectorIDs(client *guardduty.Client) (resources []string) {
 	req := client.ListDetectorsRequest(&guardduty.ListDetectorsInput{})
 	p := guardduty.NewListDetectorsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DetectorIds {
-			r.resources = append(r.resources, resource)
+			resources = append(resources, resource)
 		}
 	}
-	r.err = p.Err()
 	return
 }

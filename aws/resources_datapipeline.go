@@ -9,21 +9,24 @@ import (
 
 func getDataPipeline(config aws.Config) (resources resourceMap) {
 	client := datapipeline.New(config)
-	resources = reduce(
-		getDataPipelinePipeline(client).unwrap(dataPipelinePipeline),
-	)
+
+	dataPipelinePipelineIDs := getDataPipelinePipelineIDs(client)
+
+	resources = resourceMap{
+		dataPipelinePipeline: dataPipelinePipelineIDs,
+	}
 	return
 }
 
-func getDataPipelinePipeline(client *datapipeline.Client) (r resourceSliceError) {
+func getDataPipelinePipelineIDs(client *datapipeline.Client) (resources []string) {
 	req := client.ListPipelinesRequest(&datapipeline.ListPipelinesInput{})
 	p := datapipeline.NewListPipelinesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.PipelineIdList {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }

@@ -9,21 +9,24 @@ import (
 
 func getAcmpca(config aws.Config) (resources resourceMap) {
 	client := acmpca.New(config)
-	resources = reduce(
-		getAcmpcaCertificateAuthority(client).unwrap(acmpcaCertificateAuthority),
-	)
+
+	acmpcaCertificateAuthorityArns := getAcmpcaCertificateAuthorityArns(client)
+
+	resources = resourceMap{
+		acmpcaCertificateAuthority: acmpcaCertificateAuthorityArns,
+	}
 	return
 }
 
-func getAcmpcaCertificateAuthority(client *acmpca.Client) (r resourceSliceError) {
+func getAcmpcaCertificateAuthorityArns(client *acmpca.Client) (resources []string) {
 	req := client.ListCertificateAuthoritiesRequest(&acmpca.ListCertificateAuthoritiesInput{})
 	p := acmpca.NewListCertificateAuthoritiesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.CertificateAuthorities {
-			r.resources = append(r.resources, *resource.Arn)
+			resources = append(resources, *resource.Arn)
 		}
 	}
-	r.err = p.Err()
 	return
 }

@@ -10,56 +10,57 @@ import (
 func getRoute53(config aws.Config) (resources resourceMap) {
 	client := route53.New(config)
 
-	route53HostedZoneResourceMap := getRoute53HostedZone(client).unwrap(route53HostedZone)
-	route53HostedZoneIDs := route53HostedZoneResourceMap[route53HostedZone]
+	route53HostedZoneIDs := getRoute53HostedZoneIDs(client)
+	route53HealthCheckIDs := getRoute53HealthCheckIDs(client)
+	route53RecordSetNames := getRoute53RecordSetNames(client, route53HostedZoneIDs)
 
-	resources = reduce(
-		getRoute53HealthCheck(client).unwrap(route53HealthCheck),
-		route53HostedZoneResourceMap,
-		getRoute53RecordSet(client, route53HostedZoneIDs).unwrap(route53RecordSet),
-	)
+	resources = resourceMap{
+		route53HostedZone:  route53HostedZoneIDs,
+		route53HealthCheck: route53HealthCheckIDs,
+		route53RecordSet:   route53RecordSetNames,
+	}
 	return
 }
 
-func getRoute53HealthCheck(client *route53.Client) (r resourceSliceError) {
+func getRoute53HealthCheckIDs(client *route53.Client) (resources []string) {
 	req := client.ListHealthChecksRequest(&route53.ListHealthChecksInput{})
 	p := route53.NewListHealthChecksPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.HealthChecks {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRoute53HostedZone(client *route53.Client) (r resourceSliceError) {
+func getRoute53HostedZoneIDs(client *route53.Client) (resources []string) {
 	req := client.ListHostedZonesRequest(&route53.ListHostedZonesInput{})
 	p := route53.NewListHostedZonesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.HostedZones {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRoute53RecordSet(client *route53.Client, hostedZoneIDs []string) (r resourceSliceError) {
+func getRoute53RecordSetNames(client *route53.Client, hostedZoneIDs []string) (resources []string) {
 	for _, hostedZoneID := range hostedZoneIDs {
 		req := client.ListResourceRecordSetsRequest(&route53.ListResourceRecordSetsInput{
 			HostedZoneId: aws.String(hostedZoneID),
 		})
 		p := route53.NewListResourceRecordSetsPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.ResourceRecordSets {
-				r.resources = append(r.resources, *resource.Name)
+				resources = append(resources, *resource.Name)
 			}
 		}
-		r.err = p.Err()
 		return
 	}
 	return

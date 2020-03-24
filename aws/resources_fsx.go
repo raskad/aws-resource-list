@@ -10,45 +10,30 @@ import (
 func getFsx(config aws.Config) (resources resourceMap) {
 	client := fsx.New(config)
 
-	fsxFileSystemLustreResourceMap := getFsxFileSystemLustre(client).unwrap(fsxFileSystemLustre)
-	fsxFileSystemWindowsResourceMap := getFsxFileSystemWindows(client).unwrap(fsxFileSystemWindows)
-	fsxFileSystemLustreIDs := fsxFileSystemLustreResourceMap[fsxFileSystemLustre]
-	fsxFileSystemWindowsIDs := fsxFileSystemWindowsResourceMap[fsxFileSystemWindows]
+	fsxFileSystemLustreIDs, fsxFileSystemWindowsIDs := getFsxFileSystemIDs(client)
 
-	resources = reduce(
-		resourceMap{fsxFileSystem: append(fsxFileSystemLustreIDs, fsxFileSystemWindowsIDs...)},
-		fsxFileSystemLustreResourceMap,
-		fsxFileSystemWindowsResourceMap,
-	)
+	resources = resourceMap{
+		fsxFileSystem:        append(fsxFileSystemLustreIDs, fsxFileSystemWindowsIDs...),
+		fsxFileSystemLustre:  fsxFileSystemLustreIDs,
+		fsxFileSystemWindows: fsxFileSystemWindowsIDs,
+	}
 	return
 }
 
-func getFsxFileSystemLustre(client *fsx.Client) (r resourceSliceError) {
+func getFsxFileSystemIDs(client *fsx.Client) (fsxFileSystemLustreIDs []string, fsxFileSystemWindowsIDs []string) {
 	req := client.DescribeFileSystemsRequest(&fsx.DescribeFileSystemsInput{})
 	p := fsx.NewDescribeFileSystemsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.FileSystems {
 			if resource.FileSystemType == fsx.FileSystemTypeLustre {
-				r.resources = append(r.resources, *resource.FileSystemId)
+				fsxFileSystemLustreIDs = append(fsxFileSystemLustreIDs, *resource.FileSystemId)
 			}
-		}
-	}
-	r.err = p.Err()
-	return
-}
-
-func getFsxFileSystemWindows(client *fsx.Client) (r resourceSliceError) {
-	req := client.DescribeFileSystemsRequest(&fsx.DescribeFileSystemsInput{})
-	p := fsx.NewDescribeFileSystemsPaginator(req)
-	for p.Next(context.Background()) {
-		page := p.CurrentPage()
-		for _, resource := range page.FileSystems {
 			if resource.FileSystemType == fsx.FileSystemTypeWindows {
-				r.resources = append(r.resources, *resource.FileSystemId)
+				fsxFileSystemWindowsIDs = append(fsxFileSystemWindowsIDs, *resource.FileSystemId)
 			}
 		}
 	}
-	r.err = p.Err()
 	return
 }

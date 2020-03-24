@@ -9,35 +9,39 @@ import (
 
 func getAppConfig(config aws.Config) (resources resourceMap) {
 	client := appconfig.New(config)
-	resources = reduce(
-		getAppConfigApplication(client).unwrap(appConfigApplication),
-		getAppConfigDeploymentStrategy(client).unwrap(appConfigDeploymentStrategy),
-	)
+
+	appConfigApplicationNames := getAppConfigApplicationNames(client)
+	appConfigDeploymentStrategyNames := getAppConfigDeploymentStrategyNames(client)
+
+	resources = resourceMap{
+		appConfigApplication:        appConfigApplicationNames,
+		appConfigDeploymentStrategy: appConfigDeploymentStrategyNames,
+	}
 	return
 }
 
-func getAppConfigApplication(client *appconfig.Client) (r resourceSliceError) {
+func getAppConfigApplicationNames(client *appconfig.Client) (resources []string) {
 	req := client.ListApplicationsRequest(&appconfig.ListApplicationsInput{})
 	p := appconfig.NewListApplicationsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAppConfigDeploymentStrategy(client *appconfig.Client) (r resourceSliceError) {
+func getAppConfigDeploymentStrategyNames(client *appconfig.Client) (resources []string) {
 	req := client.ListDeploymentStrategiesRequest(&appconfig.ListDeploymentStrategiesInput{})
 	p := appconfig.NewListDeploymentStrategiesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

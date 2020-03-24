@@ -9,17 +9,20 @@ import (
 
 func getS3(config aws.Config) (resources resourceMap) {
 	client := s3.New(config)
-	resources = reduce(
-		getS3Bucket(client).unwrap(s3Bucket),
-	)
+
+	s3BucketNames := getS3BucketNames(client)
+
+	resources = resourceMap{
+		s3Bucket: s3BucketNames,
+	}
 	return
 }
 
-func getS3Bucket(client *s3.Client) (r resourceSliceError) {
+func getS3BucketNames(client *s3.Client) (resources []string) {
 	buckets, err := client.ListBucketsRequest(&s3.ListBucketsInput{}).Send(context.Background())
+	logErr(err)
 	for _, resource := range buckets.Buckets {
-		r.resources = append(r.resources, *resource.Name)
+		resources = append(resources, *resource.Name)
 	}
-	r.err = err
 	return
 }
