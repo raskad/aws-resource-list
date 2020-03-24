@@ -50,7 +50,6 @@ func getLambdaAliasNames(client *lambda.Client, lambdaFunctionNames []string) (r
 				resources = append(resources, *resource.Name)
 			}
 		}
-		return
 	}
 	return
 }
@@ -81,7 +80,6 @@ func getLambdaLayerVersionARNs(client *lambda.Client, lambdaLayerNames []string)
 				resources = append(resources, *resource.LayerVersionArn)
 			}
 		}
-		return
 	}
 	return
 }

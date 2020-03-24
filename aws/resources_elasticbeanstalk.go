@@ -54,9 +54,7 @@ func getElasticBeanstalkConfigurationTemplateNames(client *elasticbeanstalk.Clie
 	page, err := client.DescribeApplicationsRequest(&input).Send(context.Background())
 	logErr(err)
 	for _, resource := range page.Applications {
-		for _, resource := range resource.ConfigurationTemplates {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, resource.ConfigurationTemplates...)
 	}
 	return
 }

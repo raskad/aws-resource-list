@@ -163,9 +163,7 @@ func getGlueWorkflowNames(client *glue.Client) (resources []string) {
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.Workflows {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.Workflows...)
 	}
 	return
 }

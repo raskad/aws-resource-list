@@ -28,9 +28,7 @@ func getEcsClusterARNs(client *ecs.Client) (resources []string) {
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.ClusterArns {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.ClusterArns...)
 	}
 	return
 }
@@ -44,9 +42,7 @@ func getEcsServiceARNs(client *ecs.Client, clusterARNs []string) (resources []st
 		for p.Next(context.Background()) {
 			logErr(p.Err())
 			page := p.CurrentPage()
-			for _, resource := range page.ServiceArns {
-				resources = append(resources, resource)
-			}
+			resources = append(resources, page.ServiceArns...)
 		}
 	}
 	return
@@ -58,9 +54,7 @@ func getEcsTaskDefinitionARNs(client *ecs.Client) (resources []string) {
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.TaskDefinitionArns {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.TaskDefinitionArns...)
 	}
 	return
 }

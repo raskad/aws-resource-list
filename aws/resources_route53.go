@@ -61,7 +61,6 @@ func getRoute53RecordSetNames(client *route53.Client, hostedZoneIDs []string) (r
 				resources = append(resources, *resource.Name)
 			}
 		}
-		return
 	}
 	return
 }

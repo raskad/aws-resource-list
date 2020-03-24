@@ -36,7 +36,6 @@ func getKinesisStreamARNs(client *kinesis.Client) (resources []string) {
 				page := p.CurrentPage()
 				resources = append(resources, *page.StreamDescription.StreamARN)
 			}
-			return
 		}
 	}
 	return
@@ -55,7 +54,6 @@ func getKinesisStreamConsumerNames(client *kinesis.Client, streamARNs []string) 
 				resources = append(resources, *resource.ConsumerName)
 			}
 		}
-		return
 	}
 	return
 }

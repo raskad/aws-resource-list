@@ -26,9 +26,7 @@ func getEksClusterNames(client *eks.Client) (resources []string) {
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.Clusters {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.Clusters...)
 	}
 	return
 }
@@ -42,11 +40,8 @@ func getEksNodegroupNames(client *eks.Client, clusterNames []string) (resources 
 		for p.Next(context.Background()) {
 			logErr(p.Err())
 			page := p.CurrentPage()
-			for _, resource := range page.Nodegroups {
-				resources = append(resources, resource)
-			}
+			resources = append(resources, page.Nodegroups...)
 		}
-		return
 	}
 	return
 }

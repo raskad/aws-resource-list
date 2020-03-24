@@ -24,9 +24,7 @@ func getCloud9EnvironmentEC2IDs(client *cloud9.Client) (resources []string) {
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.EnvironmentIds {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.EnvironmentIds...)
 	}
 	return
 }

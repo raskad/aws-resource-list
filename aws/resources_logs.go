@@ -76,7 +76,6 @@ func getLogsSubscriptionFilterNames(client *cloudwatchlogs.Client, logGroupNames
 				resources = append(resources, *resource.FilterName)
 			}
 		}
-		return
 	}
 	return
 }

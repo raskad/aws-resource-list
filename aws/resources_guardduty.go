@@ -24,9 +24,7 @@ func getGuardDutyDetectorIDs(client *guardduty.Client) (resources []string) {
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.DetectorIds {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.DetectorIds...)
 	}
 	return
 }

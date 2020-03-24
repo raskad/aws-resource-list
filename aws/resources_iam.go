@@ -115,9 +115,7 @@ func getIamRolePolicyNames(client *iam.Client, roleNames []string) (resources []
 		for p.Next(context.Background()) {
 			logErr(p.Err())
 			page := p.CurrentPage()
-			for _, resource := range page.PolicyNames {
-				resources = append(resources, resource)
-			}
+			resources = append(resources, page.PolicyNames...)
 		}
 	}
 	return

@@ -24,9 +24,7 @@ func getDynamoDBTableNames(client *dynamodb.Client) (resources []string) {
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.TableNames {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.TableNames...)
 	}
 	return
 }

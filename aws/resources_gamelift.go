@@ -65,9 +65,7 @@ func getGameLiftFleetIDs(client *gamelift.Client) (resources []string) {
 	for {
 		page, err := client.ListFleetsRequest(&input).Send(context.Background())
 		logErr(err)
-		for _, resource := range page.FleetIds {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.FleetIds...)
 		if page.NextToken == nil {
 			return
 		}

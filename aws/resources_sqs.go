@@ -21,8 +21,6 @@ func getSqs(config aws.Config) (resources resourceMap) {
 func getSqsQueueNames(client *sqs.Client) (resources []string) {
 	page, err := client.ListQueuesRequest(&sqs.ListQueuesInput{}).Send(context.Background())
 	logErr(err)
-	for _, resource := range page.QueueUrls {
-		resources = append(resources, resource)
-	}
+	resources = append(resources, page.QueueUrls...)
 	return
 }

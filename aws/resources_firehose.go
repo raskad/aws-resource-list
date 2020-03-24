@@ -21,8 +21,6 @@ func getFirehose(config aws.Config) (resources resourceMap) {
 func getKinesisFirehoseDeliveryStreamNames(client *firehose.Client) (resources []string) {
 	page, err := client.ListDeliveryStreamsRequest(&firehose.ListDeliveryStreamsInput{}).Send(context.Background())
 	logErr(err)
-	for _, resource := range page.DeliveryStreamNames {
-		resources = append(resources, resource)
-	}
+	resources = append(resources, page.DeliveryStreamNames...)
 	return
 }

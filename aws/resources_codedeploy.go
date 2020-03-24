@@ -28,9 +28,7 @@ func getCodeDeployApplicationNames(client *codedeploy.Client) (resources []strin
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.Applications {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.Applications...)
 	}
 	return
 }
@@ -41,9 +39,7 @@ func getCodeDeployDeploymentConfigNames(client *codedeploy.Client) (resources []
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.DeploymentConfigsList {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.DeploymentConfigsList...)
 	}
 	return
 }
@@ -57,9 +53,7 @@ func getCodeDeployDeploymentGroupNames(client *codedeploy.Client, applicationNam
 		for p.Next(context.Background()) {
 			logErr(p.Err())
 			page := p.CurrentPage()
-			for _, resource := range page.DeploymentGroups {
-				resources = append(resources, resource)
-			}
+			resources = append(resources, page.DeploymentGroups...)
 		}
 	}
 	return

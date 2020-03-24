@@ -26,9 +26,7 @@ func getInspectorAssessmentTargetARNs(client *inspector.Client) (resources []str
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.AssessmentTargetArns {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.AssessmentTargetArns...)
 	}
 	return
 }
@@ -39,9 +37,7 @@ func getInspectorAssessmentTemplateARNs(client *inspector.Client) (resources []s
 	for p.Next(context.Background()) {
 		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.AssessmentTemplateArns {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.AssessmentTemplateArns...)
 	}
 	return
 }

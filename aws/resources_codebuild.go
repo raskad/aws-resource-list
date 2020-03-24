@@ -27,9 +27,7 @@ func getCodeBuildProjectNames(client *codebuild.Client) (resources []string) {
 	for {
 		page, err := client.ListProjectsRequest(&input).Send(context.Background())
 		logErr(err)
-		for _, resource := range page.Projects {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.Projects...)
 		if page.NextToken == nil {
 			return
 		}
@@ -42,9 +40,7 @@ func getCodeBuildReportGroupARNs(client *codebuild.Client) (resources []string) 
 	for {
 		page, err := client.ListReportGroupsRequest(&input).Send(context.Background())
 		logErr(err)
-		for _, resource := range page.ReportGroups {
-			resources = append(resources, resource)
-		}
+		resources = append(resources, page.ReportGroups...)
 		if page.NextToken == nil {
 			return
 		}
