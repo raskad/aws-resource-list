@@ -10,51 +10,47 @@ import (
 func getElasticLoadBalancingV2(config aws.Config) (resources resourceMap) {
 	client := elasticloadbalancingv2.New(config)
 
-	LoadBalancerResourceMap := getElasticLoadBalancingV2LoadBalancer(client).unwrap(elasticLoadBalancingV2LoadBalancer)
-	LoadBalancerArns := LoadBalancerResourceMap[elasticLoadBalancingV2LoadBalancer]
+	elasticLoadBalancingV2LoadBalancerARNs := getElasticLoadBalancingV2LoadBalancerARNs(client)
+	elasticLoadBalancingV2ListenerARNs := getElasticLoadBalancingV2ListenerARNs(client, elasticLoadBalancingV2LoadBalancerARNs)
+	elasticLoadBalancingV2ListenerRuleARNs := getElasticLoadBalancingV2ListenerRuleARNs(client, elasticLoadBalancingV2ListenerARNs)
+	elasticLoadBalancingV2TargetGroupARNs := getElasticLoadBalancingV2TargetGroupARNs(client)
 
-	ListenerResourceMap := getElasticLoadBalancingV2Listener(client, LoadBalancerArns).unwrap(elasticLoadBalancingV2Listener)
-	ListenerArns := ListenerResourceMap[elasticLoadBalancingV2Listener]
-
-	resources = reduce(
-		getElasticLoadBalancingV2Listener(client, LoadBalancerArns).unwrap(elasticLoadBalancingV2Listener),
-		getElasticLoadBalancingV2ListenerRule(client, ListenerArns).unwrap(elasticLoadBalancingV2ListenerRule),
-		LoadBalancerResourceMap,
-		getElasticLoadBalancingV2TargetGroup(client).unwrap(elasticLoadBalancingV2TargetGroup),
-	)
+	resources = resourceMap{
+		elasticLoadBalancingV2LoadBalancer: elasticLoadBalancingV2LoadBalancerARNs,
+		elasticLoadBalancingV2Listener:     elasticLoadBalancingV2ListenerARNs,
+		elasticLoadBalancingV2ListenerRule: elasticLoadBalancingV2ListenerRuleARNs,
+		elasticLoadBalancingV2TargetGroup:  elasticLoadBalancingV2TargetGroupARNs,
+	}
 	return
 }
 
-func getElasticLoadBalancingV2Listener(client *elasticloadbalancingv2.Client, loadBalancerArns []string) (r resourceSliceError) {
+func getElasticLoadBalancingV2ListenerARNs(client *elasticloadbalancingv2.Client, loadBalancerArns []string) (resources []string) {
 	for _, loadBalancerArn := range loadBalancerArns {
 		req := client.DescribeListenersRequest(&elasticloadbalancingv2.DescribeListenersInput{
 			LoadBalancerArn: aws.String(loadBalancerArn),
 		})
 		p := elasticloadbalancingv2.NewDescribeListenersPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.Listeners {
-				r.resources = append(r.resources, *resource.ListenerArn)
+				resources = append(resources, *resource.ListenerArn)
 			}
 		}
-		r.err = p.Err()
 	}
 	return
 }
 
-func getElasticLoadBalancingV2ListenerRule(client *elasticloadbalancingv2.Client, ListenerArns []string) (r resourceSliceError) {
+func getElasticLoadBalancingV2ListenerRuleARNs(client *elasticloadbalancingv2.Client, ListenerArns []string) (resources []string) {
 	for _, ListenerArn := range ListenerArns {
 		input := elasticloadbalancingv2.DescribeRulesInput{
 			ListenerArn: aws.String(ListenerArn),
 		}
 		for {
 			page, err := client.DescribeRulesRequest(&input).Send(context.Background())
-			if err != nil {
-				r.err = err
-				return
-			}
+			logErr(err)
 			for _, resource := range page.Rules {
-				r.resources = append(r.resources, *resource.RuleArn)
+				resources = append(resources, *resource.RuleArn)
 			}
 			if page.NextMarker == nil {
 				return
@@ -65,28 +61,28 @@ func getElasticLoadBalancingV2ListenerRule(client *elasticloadbalancingv2.Client
 	return
 }
 
-func getElasticLoadBalancingV2LoadBalancer(client *elasticloadbalancingv2.Client) (r resourceSliceError) {
+func getElasticLoadBalancingV2LoadBalancerARNs(client *elasticloadbalancingv2.Client) (resources []string) {
 	req := client.DescribeLoadBalancersRequest(&elasticloadbalancingv2.DescribeLoadBalancersInput{})
 	p := elasticloadbalancingv2.NewDescribeLoadBalancersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.LoadBalancers {
-			r.resources = append(r.resources, *resource.LoadBalancerArn)
+			resources = append(resources, *resource.LoadBalancerArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getElasticLoadBalancingV2TargetGroup(client *elasticloadbalancingv2.Client) (r resourceSliceError) {
+func getElasticLoadBalancingV2TargetGroupARNs(client *elasticloadbalancingv2.Client) (resources []string) {
 	req := client.DescribeTargetGroupsRequest(&elasticloadbalancingv2.DescribeTargetGroupsInput{})
 	p := elasticloadbalancingv2.NewDescribeTargetGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.TargetGroups {
-			r.resources = append(r.resources, *resource.TargetGroupArn)
+			resources = append(resources, *resource.TargetGroupArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }

@@ -9,21 +9,24 @@ import (
 
 func getS3Control(config aws.Config) (resources resourceMap) {
 	client := s3control.New(config)
-	resources = reduce(
-		getS3AccessPoint(client).unwrap(s3AccessPoint),
-	)
+
+	s3AccessPointNames := getS3AccessPointNames(client)
+
+	resources = resourceMap{
+		s3AccessPoint: s3AccessPointNames,
+	}
 	return
 }
 
-func getS3AccessPoint(client *s3control.Client) (r resourceSliceError) {
+func getS3AccessPointNames(client *s3control.Client) (resources []string) {
 	req := client.ListAccessPointsRequest(&s3control.ListAccessPointsInput{})
 	p := s3control.NewListAccessPointsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.AccessPointList {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

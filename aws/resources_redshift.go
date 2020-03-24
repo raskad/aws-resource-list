@@ -9,63 +9,69 @@ import (
 
 func getRedshift(config aws.Config) (resources resourceMap) {
 	client := redshift.New(config)
-	resources = reduce(
-		getRedshiftCluster(client).unwrap(redshiftCluster),
-		getRedshiftClusterParameterGroup(client).unwrap(redshiftClusterParameterGroup),
-		getRedshiftClusterSecurityGroup(client).unwrap(redshiftClusterSecurityGroup),
-		getRedshiftClusterSubnetGroup(client).unwrap(redshiftClusterSubnetGroup),
-	)
+
+	redshiftClusterIDs := getRedshiftClusterIDs(client)
+	redshiftClusterParameterGroupNames := getRedshiftClusterParameterGroupNames(client)
+	redshiftClusterSecurityGroupNames := getRedshiftClusterSecurityGroupNames(client)
+	redshiftClusterSubnetGroupNames := getRedshiftClusterSubnetGroupNames(client)
+
+	resources = resourceMap{
+		redshiftCluster:               redshiftClusterIDs,
+		redshiftClusterParameterGroup: redshiftClusterParameterGroupNames,
+		redshiftClusterSecurityGroup:  redshiftClusterSecurityGroupNames,
+		redshiftClusterSubnetGroup:    redshiftClusterSubnetGroupNames,
+	}
 	return
 }
 
-func getRedshiftCluster(client *redshift.Client) (r resourceSliceError) {
+func getRedshiftClusterIDs(client *redshift.Client) (resources []string) {
 	req := client.DescribeClustersRequest(&redshift.DescribeClustersInput{})
 	p := redshift.NewDescribeClustersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Clusters {
-			r.resources = append(r.resources, *resource.ClusterIdentifier)
+			resources = append(resources, *resource.ClusterIdentifier)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRedshiftClusterParameterGroup(client *redshift.Client) (r resourceSliceError) {
+func getRedshiftClusterParameterGroupNames(client *redshift.Client) (resources []string) {
 	req := client.DescribeClusterParameterGroupsRequest(&redshift.DescribeClusterParameterGroupsInput{})
 	p := redshift.NewDescribeClusterParameterGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ParameterGroups {
-			r.resources = append(r.resources, *resource.ParameterGroupName)
+			resources = append(resources, *resource.ParameterGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRedshiftClusterSecurityGroup(client *redshift.Client) (r resourceSliceError) {
+func getRedshiftClusterSecurityGroupNames(client *redshift.Client) (resources []string) {
 	req := client.DescribeClusterSecurityGroupsRequest(&redshift.DescribeClusterSecurityGroupsInput{})
 	p := redshift.NewDescribeClusterSecurityGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ClusterSecurityGroups {
-			r.resources = append(r.resources, *resource.ClusterSecurityGroupName)
+			resources = append(resources, *resource.ClusterSecurityGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getRedshiftClusterSubnetGroup(client *redshift.Client) (r resourceSliceError) {
+func getRedshiftClusterSubnetGroupNames(client *redshift.Client) (resources []string) {
 	req := client.DescribeClusterSubnetGroupsRequest(&redshift.DescribeClusterSubnetGroupsInput{})
 	p := redshift.NewDescribeClusterSubnetGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.ClusterSubnetGroups {
-			r.resources = append(r.resources, *resource.ClusterSubnetGroupName)
+			resources = append(resources, *resource.ClusterSubnetGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

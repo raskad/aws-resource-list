@@ -9,23 +9,24 @@ import (
 
 func getIoTEvents(config aws.Config) (resources resourceMap) {
 	client := iotevents.New(config)
-	resources = reduce(
-		getIoTEventsDetectorModel(client).unwrap(ioTEventsDetectorModel),
-		getIoTEventsInput(client).unwrap(ioTEventsInput),
-	)
+
+	ioTEventsDetectorModelNames := getIoTEventsDetectorModelNames(client)
+	ioTEventsInputNames := getIoTEventsInputNames(client)
+
+	resources = resourceMap{
+		ioTEventsDetectorModel: ioTEventsDetectorModelNames,
+		ioTEventsInput:         ioTEventsInputNames,
+	}
 	return
 }
 
-func getIoTEventsDetectorModel(client *iotevents.Client) (r resourceSliceError) {
+func getIoTEventsDetectorModelNames(client *iotevents.Client) (resources []string) {
 	input := iotevents.ListDetectorModelsInput{}
 	for {
 		page, err := client.ListDetectorModelsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.DetectorModelSummaries {
-			r.resources = append(r.resources, *resource.DetectorModelName)
+			resources = append(resources, *resource.DetectorModelName)
 		}
 		if page.NextToken == nil {
 			return
@@ -34,16 +35,13 @@ func getIoTEventsDetectorModel(client *iotevents.Client) (r resourceSliceError) 
 	}
 }
 
-func getIoTEventsInput(client *iotevents.Client) (r resourceSliceError) {
+func getIoTEventsInputNames(client *iotevents.Client) (resources []string) {
 	input := iotevents.ListInputsInput{}
 	for {
 		page, err := client.ListInputsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.InputSummaries {
-			r.resources = append(r.resources, *resource.InputName)
+			resources = append(resources, *resource.InputName)
 		}
 		if page.NextToken == nil {
 			return

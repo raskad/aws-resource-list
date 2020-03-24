@@ -61,23 +61,6 @@ func reduce(maps ...resourceMap) (result resourceMap) {
 	return
 }
 
-type resourceSliceError struct {
-	resources []string
-	err       error
-}
-
-func (resourceSliceError resourceSliceError) unwrap(resourceType resourceType) (rMap resourceMap) {
-	logDebug("Listing", resourceType, "resources")
-	if resourceSliceError.err != nil {
-		logError("Cloud not get resources of type", resourceType, "Error:", resourceSliceError.err)
-	}
-	for _, resource := range resourceSliceError.resources {
-		logDebug("Got", resourceType, "resource with PhysicalResourceId", resource)
-	}
-	rMap = resourceMap{resourceType: resourceSliceError.resources}
-	return
-}
-
 type resourceType string
 
 const (

@@ -9,23 +9,24 @@ import (
 
 func getCloudWatchEvents(config aws.Config) (resources resourceMap) {
 	client := cloudwatchevents.New(config)
-	resources = reduce(
-		getEventsEventBus(client).unwrap(eventsEventBus),
-		getEventsRule(client).unwrap(eventsRule),
-	)
+
+	eventsEventBusNames := getEventsEventBusNames(client)
+	eventsRuleNames := getEventsRuleNames(client)
+
+	resources = resourceMap{
+		eventsEventBus: eventsEventBusNames,
+		eventsRule:     eventsRuleNames,
+	}
 	return
 }
 
-func getEventsEventBus(client *cloudwatchevents.Client) (r resourceSliceError) {
+func getEventsEventBusNames(client *cloudwatchevents.Client) (resources []string) {
 	input := cloudwatchevents.ListEventBusesInput{}
 	for {
 		page, err := client.ListEventBusesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.EventBuses {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return
@@ -34,16 +35,13 @@ func getEventsEventBus(client *cloudwatchevents.Client) (r resourceSliceError) {
 	}
 }
 
-func getEventsRule(client *cloudwatchevents.Client) (r resourceSliceError) {
+func getEventsRuleNames(client *cloudwatchevents.Client) (resources []string) {
 	input := cloudwatchevents.ListRulesInput{}
 	for {
 		page, err := client.ListRulesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Rules {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return

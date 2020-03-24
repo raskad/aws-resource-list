@@ -9,22 +9,22 @@ import (
 
 func getAutoScalingPlans(config aws.Config) (resources resourceMap) {
 	client := autoscalingplans.New(config)
-	resources = reduce(
-		getAutoScalingPlansScalingPlan(client).unwrap(autoScalingPlansScalingPlan),
-	)
+
+	autoScalingPlansScalingPlanNames := getAutoScalingPlansScalingPlanNames(client)
+
+	resources = resourceMap{
+		autoScalingPlansScalingPlan: autoScalingPlansScalingPlanNames,
+	}
 	return
 }
 
-func getAutoScalingPlansScalingPlan(client *autoscalingplans.Client) (r resourceSliceError) {
+func getAutoScalingPlansScalingPlanNames(client *autoscalingplans.Client) (resources []string) {
 	input := autoscalingplans.DescribeScalingPlansInput{}
 	for {
 		page, err := client.DescribeScalingPlansRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ScalingPlans {
-			r.resources = append(r.resources, *resource.ScalingPlanName)
+			resources = append(resources, *resource.ScalingPlanName)
 		}
 		if page.NextToken == nil {
 			return

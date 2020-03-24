@@ -9,28 +9,34 @@ import (
 
 func getGameLift(config aws.Config) (resources resourceMap) {
 	client := gamelift.New(config)
-	resources = reduce(
-		getGameLiftAlias(client).unwrap(gameLiftAlias),
-		getGameLiftBuild(client).unwrap(gameLiftBuild),
-		getGameLiftFleet(client).unwrap(gameLiftFleet),
-		getGameLiftGameSessionQueue(client).unwrap(gameLiftGameSessionQueue),
-		getGameLiftMatchmakingConfiguration(client).unwrap(gameLiftMatchmakingConfiguration),
-		getGameLiftMatchmakingRuleSet(client).unwrap(gameLiftMatchmakingRuleSet),
-		getGameLiftScript(client).unwrap(gameLiftScript),
-	)
+
+	getGameLiftAliasIDs := getGameLiftAliasIDs(client)
+	getGameLiftBuildIDs := getGameLiftBuildIDs(client)
+	getGameLiftFleetIDs := getGameLiftFleetIDs(client)
+	getGameLiftGameSessionQueueNames := getGameLiftGameSessionQueueNames(client)
+	getGameLiftMatchmakingConfigurationNames := getGameLiftMatchmakingConfigurationNames(client)
+	getGameLiftMatchmakingRuleSetNames := getGameLiftMatchmakingRuleSetNames(client)
+	getGameLiftScriptIDs := getGameLiftScriptIDs(client)
+
+	resources = resourceMap{
+		gameLiftAlias:                    getGameLiftAliasIDs,
+		gameLiftBuild:                    getGameLiftBuildIDs,
+		gameLiftFleet:                    getGameLiftFleetIDs,
+		gameLiftGameSessionQueue:         getGameLiftGameSessionQueueNames,
+		gameLiftMatchmakingConfiguration: getGameLiftMatchmakingConfigurationNames,
+		gameLiftMatchmakingRuleSet:       getGameLiftMatchmakingRuleSetNames,
+		gameLiftScript:                   getGameLiftScriptIDs,
+	}
 	return
 }
 
-func getGameLiftAlias(client *gamelift.Client) (r resourceSliceError) {
+func getGameLiftAliasIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListAliasesInput{}
 	for {
 		page, err := client.ListAliasesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Aliases {
-			r.resources = append(r.resources, *resource.AliasId)
+			resources = append(resources, *resource.AliasId)
 		}
 		if page.NextToken == nil {
 			return
@@ -39,16 +45,13 @@ func getGameLiftAlias(client *gamelift.Client) (r resourceSliceError) {
 	}
 }
 
-func getGameLiftBuild(client *gamelift.Client) (r resourceSliceError) {
+func getGameLiftBuildIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListBuildsInput{}
 	for {
 		page, err := client.ListBuildsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Builds {
-			r.resources = append(r.resources, *resource.BuildId)
+			resources = append(resources, *resource.BuildId)
 		}
 		if page.NextToken == nil {
 			return
@@ -57,17 +60,12 @@ func getGameLiftBuild(client *gamelift.Client) (r resourceSliceError) {
 	}
 }
 
-func getGameLiftFleet(client *gamelift.Client) (r resourceSliceError) {
+func getGameLiftFleetIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListFleetsInput{}
 	for {
 		page, err := client.ListFleetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
-		for _, resource := range page.FleetIds {
-			r.resources = append(r.resources, resource)
-		}
+		logErr(err)
+		resources = append(resources, page.FleetIds...)
 		if page.NextToken == nil {
 			return
 		}
@@ -75,16 +73,13 @@ func getGameLiftFleet(client *gamelift.Client) (r resourceSliceError) {
 	}
 }
 
-func getGameLiftGameSessionQueue(client *gamelift.Client) (r resourceSliceError) {
+func getGameLiftGameSessionQueueNames(client *gamelift.Client) (resources []string) {
 	input := gamelift.DescribeGameSessionQueuesInput{}
 	for {
 		page, err := client.DescribeGameSessionQueuesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.GameSessionQueues {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return
@@ -93,16 +88,13 @@ func getGameLiftGameSessionQueue(client *gamelift.Client) (r resourceSliceError)
 	}
 }
 
-func getGameLiftMatchmakingConfiguration(client *gamelift.Client) (r resourceSliceError) {
+func getGameLiftMatchmakingConfigurationNames(client *gamelift.Client) (resources []string) {
 	input := gamelift.DescribeMatchmakingConfigurationsInput{}
 	for {
 		page, err := client.DescribeMatchmakingConfigurationsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Configurations {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return
@@ -111,16 +103,13 @@ func getGameLiftMatchmakingConfiguration(client *gamelift.Client) (r resourceSli
 	}
 }
 
-func getGameLiftMatchmakingRuleSet(client *gamelift.Client) (r resourceSliceError) {
+func getGameLiftMatchmakingRuleSetNames(client *gamelift.Client) (resources []string) {
 	input := gamelift.DescribeMatchmakingRuleSetsInput{}
 	for {
 		page, err := client.DescribeMatchmakingRuleSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.RuleSets {
-			r.resources = append(r.resources, *resource.RuleSetName)
+			resources = append(resources, *resource.RuleSetName)
 		}
 		if page.NextToken == nil {
 			return
@@ -129,16 +118,13 @@ func getGameLiftMatchmakingRuleSet(client *gamelift.Client) (r resourceSliceErro
 	}
 }
 
-func getGameLiftScript(client *gamelift.Client) (r resourceSliceError) {
+func getGameLiftScriptIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListScriptsInput{}
 	for {
 		page, err := client.ListScriptsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Scripts {
-			r.resources = append(r.resources, *resource.ScriptId)
+			resources = append(resources, *resource.ScriptId)
 		}
 		if page.NextToken == nil {
 			return

@@ -9,21 +9,22 @@ import (
 
 func getSdb(config aws.Config) (resources resourceMap) {
 	client := simpledb.New(config)
-	resources = reduce(
-		getSdbDomain(client).unwrap(sdbDomain),
-	)
+
+	sdbDomainNames := getSdbDomainNames(client)
+
+	resources = resourceMap{
+		sdbDomain: sdbDomainNames,
+	}
 	return
 }
 
-func getSdbDomain(client *simpledb.Client) (r resourceSliceError) {
+func getSdbDomainNames(client *simpledb.Client) (resources []string) {
 	req := client.ListDomainsRequest(&simpledb.ListDomainsInput{})
 	p := simpledb.NewListDomainsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.DomainNames {
-			r.resources = append(r.resources, resource)
-		}
+		resources = append(resources, page.DomainNames...)
 	}
-	r.err = p.Err()
 	return
 }

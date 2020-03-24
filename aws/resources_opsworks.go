@@ -10,103 +10,89 @@ import (
 func getOpsWorks(config aws.Config) (resources resourceMap) {
 	client := opsworks.New(config)
 
-	opsWorksStackResourceMap := getOpsWorksStack(client).unwrap(opsWorksStack)
-	opsWorksStackIDs := opsWorksStackResourceMap[opsWorksStack]
+	opsWorksStackIDs := getOpsWorksStackIDs(client)
+	opsWorksAppIDs := getOpsWorksAppIDs(client, opsWorksStackIDs)
+	opsWorksInstanceIDs := getOpsWorksInstanceIDs(client, opsWorksStackIDs)
+	opsWorksLayerIDs := getOpsWorksLayerIDs(client, opsWorksStackIDs)
+	opsWorksUserProfileARNs := getOpsWorksUserProfileARNs(client)
+	opsWorksVolumeIDs := getOpsWorksVolumeIDs(client, opsWorksStackIDs)
 
-	resources = reduce(
-		getOpsWorksApp(client, opsWorksStackIDs).unwrap(opsWorksApp),
-		getOpsWorksInstance(client, opsWorksStackIDs).unwrap(opsWorksInstance),
-		getOpsWorksLayer(client, opsWorksStackIDs).unwrap(opsWorksLayer),
-		opsWorksStackResourceMap,
-		getOpsWorksUserProfile(client).unwrap(opsWorksUserProfile),
-		getOpsWorksVolume(client, opsWorksStackIDs).unwrap(opsWorksVolume),
-	)
+	resources = resourceMap{
+		opsWorksApp:         opsWorksAppIDs,
+		opsWorksStack:       opsWorksStackIDs,
+		opsWorksInstance:    opsWorksInstanceIDs,
+		opsWorksLayer:       opsWorksLayerIDs,
+		opsWorksUserProfile: opsWorksUserProfileARNs,
+		opsWorksVolume:      opsWorksVolumeIDs,
+	}
 	return
 }
 
-func getOpsWorksApp(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksAppIDs(client *opsworks.Client, stackIDs []string) (resources []string) {
 	for _, stackID := range stackIDs {
 		output, err := client.DescribeAppsRequest(&opsworks.DescribeAppsInput{
 			StackId: aws.String(stackID),
 		}).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range output.Apps {
-			r.resources = append(r.resources, *resource.AppId)
+			resources = append(resources, *resource.AppId)
 		}
 	}
 	return
 }
 
-func getOpsWorksInstance(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksInstanceIDs(client *opsworks.Client, stackIDs []string) (resources []string) {
 	for _, stackID := range stackIDs {
 		output, err := client.DescribeInstancesRequest(&opsworks.DescribeInstancesInput{
 			StackId: aws.String(stackID),
 		}).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range output.Instances {
-			r.resources = append(r.resources, *resource.InstanceId)
+			resources = append(resources, *resource.InstanceId)
 		}
 	}
 	return
 }
 
-func getOpsWorksLayer(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksLayerIDs(client *opsworks.Client, stackIDs []string) (resources []string) {
 	for _, stackID := range stackIDs {
 		output, err := client.DescribeLayersRequest(&opsworks.DescribeLayersInput{
 			StackId: aws.String(stackID),
 		}).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range output.Layers {
-			r.resources = append(r.resources, *resource.LayerId)
+			resources = append(resources, *resource.LayerId)
 		}
 	}
 	return
 }
 
-func getOpsWorksStack(client *opsworks.Client) (r resourceSliceError) {
+func getOpsWorksStackIDs(client *opsworks.Client) (resources []string) {
 	output, err := client.DescribeStacksRequest(&opsworks.DescribeStacksInput{}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range output.Stacks {
-		r.resources = append(r.resources, *resource.StackId)
+		resources = append(resources, *resource.StackId)
 	}
 	return
 }
 
-func getOpsWorksUserProfile(client *opsworks.Client) (r resourceSliceError) {
+func getOpsWorksUserProfileARNs(client *opsworks.Client) (resources []string) {
 	output, err := client.DescribeUserProfilesRequest(&opsworks.DescribeUserProfilesInput{}).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range output.UserProfiles {
-		r.resources = append(r.resources, *resource.IamUserArn)
+		resources = append(resources, *resource.IamUserArn)
 	}
 	return
 }
 
-func getOpsWorksVolume(client *opsworks.Client, stackIDs []string) (r resourceSliceError) {
+func getOpsWorksVolumeIDs(client *opsworks.Client, stackIDs []string) (resources []string) {
 	for _, stackID := range stackIDs {
 		output, err := client.DescribeVolumesRequest(&opsworks.DescribeVolumesInput{
 			StackId: aws.String(stackID),
 		}).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range output.Volumes {
-			r.resources = append(r.resources, *resource.VolumeId)
+			resources = append(resources, *resource.VolumeId)
 		}
 	}
 	return

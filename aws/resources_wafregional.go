@@ -9,31 +9,40 @@ import (
 
 func getWafRegional(config aws.Config) (resources resourceMap) {
 	client := wafregional.New(config)
-	resources = reduce(
-		getWafRegionalByteMatchSet(client).unwrap(wafRegionalByteMatchSet),
-		getWafRegionalGeoMatchSet(client).unwrap(wafRegionalGeoMatchSet),
-		getWafRegionalIPSet(client).unwrap(wafRegionalIPSet),
-		getWafRegionalRateBasedRule(client).unwrap(wafRegionalRateBasedRule),
-		getWafRegionalRegexPatternSet(client).unwrap(wafRegionalRegexPatternSet),
-		getWafRegionalRule(client).unwrap(wafRegionalRule),
-		getWafRegionalSizeConstraintSet(client).unwrap(wafRegionalSizeConstraintSet),
-		getWafRegionalSQLInjectionMatchSet(client).unwrap(wafRegionalSQLInjectionMatchSet),
-		getWafRegionalWebACL(client).unwrap(wafRegionalWebACL),
-		getWafRegionalXSSMatchSet(client).unwrap(wafRegionalXSSMatchSet),
-	)
+
+	wafRegionalByteMatchSetIDs := getWafRegionalByteMatchSetIDs(client)
+	wafRegionalGeoMatchSetIDs := getWafRegionalGeoMatchSetIDs(client)
+	wafRegionalIPSetIDs := getWafRegionalIPSetIDs(client)
+	wafRegionalRateBasedRuleIDs := getWafRegionalRateBasedRuleIDs(client)
+	wafRegionalRegexPatternSetIDs := getWafRegionalRegexPatternSetIDs(client)
+	wafRegionalRuleIDs := getWafRegionalRuleIDs(client)
+	wafRegionalSizeConstraintSetIDs := getWafRegionalSizeConstraintSetIDs(client)
+	wafRegionalSQLInjectionMatchSetIDs := getWafRegionalSQLInjectionMatchSetIDs(client)
+	wafRegionalWebACLIDs := getWafRegionalWebACLIDs(client)
+	wafRegionalXSSMatchSetIDs := getWafRegionalXSSMatchSetIDs(client)
+
+	resources = resourceMap{
+		wafRegionalByteMatchSet:         wafRegionalByteMatchSetIDs,
+		wafRegionalGeoMatchSet:          wafRegionalGeoMatchSetIDs,
+		wafRegionalIPSet:                wafRegionalIPSetIDs,
+		wafRegionalRateBasedRule:        wafRegionalRateBasedRuleIDs,
+		wafRegionalRegexPatternSet:      wafRegionalRegexPatternSetIDs,
+		wafRegionalRule:                 wafRegionalRuleIDs,
+		wafRegionalSizeConstraintSet:    wafRegionalSizeConstraintSetIDs,
+		wafRegionalSQLInjectionMatchSet: wafRegionalSQLInjectionMatchSetIDs,
+		wafRegionalWebACL:               wafRegionalWebACLIDs,
+		wafRegionalXSSMatchSet:          wafRegionalXSSMatchSetIDs,
+	}
 	return
 }
 
-func getWafRegionalByteMatchSet(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalByteMatchSetIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListByteMatchSetsInput{}
 	for {
 		page, err := client.ListByteMatchSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ByteMatchSets {
-			r.resources = append(r.resources, *resource.ByteMatchSetId)
+			resources = append(resources, *resource.ByteMatchSetId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -42,16 +51,13 @@ func getWafRegionalByteMatchSet(client *wafregional.Client) (r resourceSliceErro
 	}
 }
 
-func getWafRegionalGeoMatchSet(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalGeoMatchSetIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListGeoMatchSetsInput{}
 	for {
 		page, err := client.ListGeoMatchSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.GeoMatchSets {
-			r.resources = append(r.resources, *resource.GeoMatchSetId)
+			resources = append(resources, *resource.GeoMatchSetId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -60,16 +66,13 @@ func getWafRegionalGeoMatchSet(client *wafregional.Client) (r resourceSliceError
 	}
 }
 
-func getWafRegionalIPSet(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalIPSetIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListIPSetsInput{}
 	for {
 		page, err := client.ListIPSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.IPSets {
-			r.resources = append(r.resources, *resource.IPSetId)
+			resources = append(resources, *resource.IPSetId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -78,16 +81,13 @@ func getWafRegionalIPSet(client *wafregional.Client) (r resourceSliceError) {
 	}
 }
 
-func getWafRegionalRateBasedRule(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalRateBasedRuleIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListRateBasedRulesInput{}
 	for {
 		page, err := client.ListRateBasedRulesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Rules {
-			r.resources = append(r.resources, *resource.RuleId)
+			resources = append(resources, *resource.RuleId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -96,16 +96,13 @@ func getWafRegionalRateBasedRule(client *wafregional.Client) (r resourceSliceErr
 	}
 }
 
-func getWafRegionalRegexPatternSet(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalRegexPatternSetIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListRegexPatternSetsInput{}
 	for {
 		page, err := client.ListRegexPatternSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.RegexPatternSets {
-			r.resources = append(r.resources, *resource.RegexPatternSetId)
+			resources = append(resources, *resource.RegexPatternSetId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -114,16 +111,13 @@ func getWafRegionalRegexPatternSet(client *wafregional.Client) (r resourceSliceE
 	}
 }
 
-func getWafRegionalRule(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalRuleIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListRulesInput{}
 	for {
 		page, err := client.ListRulesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Rules {
-			r.resources = append(r.resources, *resource.RuleId)
+			resources = append(resources, *resource.RuleId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -132,16 +126,13 @@ func getWafRegionalRule(client *wafregional.Client) (r resourceSliceError) {
 	}
 }
 
-func getWafRegionalSizeConstraintSet(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalSizeConstraintSetIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListSizeConstraintSetsInput{}
 	for {
 		page, err := client.ListSizeConstraintSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.SizeConstraintSets {
-			r.resources = append(r.resources, *resource.SizeConstraintSetId)
+			resources = append(resources, *resource.SizeConstraintSetId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -150,16 +141,13 @@ func getWafRegionalSizeConstraintSet(client *wafregional.Client) (r resourceSlic
 	}
 }
 
-func getWafRegionalSQLInjectionMatchSet(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalSQLInjectionMatchSetIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListSqlInjectionMatchSetsInput{}
 	for {
 		page, err := client.ListSqlInjectionMatchSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.SqlInjectionMatchSets {
-			r.resources = append(r.resources, *resource.SqlInjectionMatchSetId)
+			resources = append(resources, *resource.SqlInjectionMatchSetId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -168,16 +156,13 @@ func getWafRegionalSQLInjectionMatchSet(client *wafregional.Client) (r resourceS
 	}
 }
 
-func getWafRegionalWebACL(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalWebACLIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListWebACLsInput{}
 	for {
 		page, err := client.ListWebACLsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.WebACLs {
-			r.resources = append(r.resources, *resource.WebACLId)
+			resources = append(resources, *resource.WebACLId)
 		}
 		if page.NextMarker == nil {
 			return
@@ -186,16 +171,13 @@ func getWafRegionalWebACL(client *wafregional.Client) (r resourceSliceError) {
 	}
 }
 
-func getWafRegionalXSSMatchSet(client *wafregional.Client) (r resourceSliceError) {
+func getWafRegionalXSSMatchSetIDs(client *wafregional.Client) (resources []string) {
 	input := wafregional.ListXssMatchSetsInput{}
 	for {
 		page, err := client.ListXssMatchSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.XssMatchSets {
-			r.resources = append(r.resources, *resource.XssMatchSetId)
+			resources = append(resources, *resource.XssMatchSetId)
 		}
 		if page.NextMarker == nil {
 			return

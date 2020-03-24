@@ -9,21 +9,22 @@ import (
 
 func getCloud9(config aws.Config) (resources resourceMap) {
 	client := cloud9.New(config)
-	resources = reduce(
-		getCloud9EnvironmentEC2(client).unwrap(cloud9EnvironmentEC2),
-	)
+
+	cloud9EnvironmentEC2IDs := getCloud9EnvironmentEC2IDs(client)
+
+	resources = resourceMap{
+		cloud9EnvironmentEC2: cloud9EnvironmentEC2IDs,
+	}
 	return
 }
 
-func getCloud9EnvironmentEC2(client *cloud9.Client) (r resourceSliceError) {
+func getCloud9EnvironmentEC2IDs(client *cloud9.Client) (resources []string) {
 	req := client.ListEnvironmentsRequest(&cloud9.ListEnvironmentsInput{})
 	p := cloud9.NewListEnvironmentsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.EnvironmentIds {
-			r.resources = append(r.resources, resource)
-		}
+		resources = append(resources, page.EnvironmentIds...)
 	}
-	r.err = p.Err()
 	return
 }

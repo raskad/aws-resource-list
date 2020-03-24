@@ -53,6 +53,12 @@ func logError(s ...interface{}) {
 	log.Println("[ERROR]", s)
 }
 
+func logErr(e error) {
+	if e != nil {
+		logError(e)
+	}
+}
+
 func logFatal(s ...interface{}) {
 	if fatal < globalLogLevel {
 		return

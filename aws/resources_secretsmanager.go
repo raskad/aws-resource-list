@@ -9,21 +9,24 @@ import (
 
 func getSecretsManager(config aws.Config) (resources resourceMap) {
 	client := secretsmanager.New(config)
-	resources = reduce(
-		getSecretsManagerSecret(client).unwrap(secretsManagerSecret),
-	)
+
+	secretsManagerSecretARNs := getSecretsManagerSecretARNs(client)
+
+	resources = resourceMap{
+		secretsManagerSecret: secretsManagerSecretARNs,
+	}
 	return
 }
 
-func getSecretsManagerSecret(client *secretsmanager.Client) (r resourceSliceError) {
+func getSecretsManagerSecretARNs(client *secretsmanager.Client) (resources []string) {
 	req := client.ListSecretsRequest(&secretsmanager.ListSecretsInput{})
 	p := secretsmanager.NewListSecretsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.SecretList {
-			r.resources = append(r.resources, *resource.ARN)
+			resources = append(resources, *resource.ARN)
 		}
 	}
-	r.err = p.Err()
 	return
 }

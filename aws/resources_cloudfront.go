@@ -9,49 +9,54 @@ import (
 
 func getCloudfront(config aws.Config) (resources resourceMap) {
 	client := cloudfront.New(config)
-	resources = reduce(
-		getCloudFrontCloudFrontOriginAccessIdentity(client).unwrap(cloudFrontCloudFrontOriginAccessIdentity),
-		getCloudFrontDistribution(client).unwrap(cloudFrontDistribution),
-		getCloudFrontStreamingDistribution(client).unwrap(cloudFrontStreamingDistribution),
-	)
+
+	cloudFrontCloudFrontOriginAccessIdentityIDs := getCloudFrontCloudFrontOriginAccessIdentityIDs(client)
+	cloudFrontDistributionIDs := getCloudFrontDistributionIDs(client)
+	cloudFrontStreamingDistributionIDs := getCloudFrontStreamingDistributionIDs(client)
+
+	resources = resourceMap{
+		cloudFrontCloudFrontOriginAccessIdentity: cloudFrontCloudFrontOriginAccessIdentityIDs,
+		cloudFrontDistribution:                   cloudFrontDistributionIDs,
+		cloudFrontStreamingDistribution:          cloudFrontStreamingDistributionIDs,
+	}
 	return
 }
 
-func getCloudFrontCloudFrontOriginAccessIdentity(client *cloudfront.Client) (r resourceSliceError) {
+func getCloudFrontCloudFrontOriginAccessIdentityIDs(client *cloudfront.Client) (resources []string) {
 	req := client.ListCloudFrontOriginAccessIdentitiesRequest(&cloudfront.ListCloudFrontOriginAccessIdentitiesInput{})
 	p := cloudfront.NewListCloudFrontOriginAccessIdentitiesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.CloudFrontOriginAccessIdentityList.Items {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getCloudFrontDistribution(client *cloudfront.Client) (r resourceSliceError) {
+func getCloudFrontDistributionIDs(client *cloudfront.Client) (resources []string) {
 	req := client.ListDistributionsRequest(&cloudfront.ListDistributionsInput{})
 	p := cloudfront.NewListDistributionsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DistributionList.Items {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getCloudFrontStreamingDistribution(client *cloudfront.Client) (r resourceSliceError) {
+func getCloudFrontStreamingDistributionIDs(client *cloudfront.Client) (resources []string) {
 	req := client.ListStreamingDistributionsRequest(&cloudfront.ListStreamingDistributionsInput{})
 	p := cloudfront.NewListStreamingDistributionsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.StreamingDistributionList.Items {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }

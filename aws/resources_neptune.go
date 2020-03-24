@@ -9,26 +9,30 @@ import (
 
 func getNeptune(config aws.Config) (resources resourceMap) {
 	client := neptune.New(config)
-	resources = reduce(
-		getNeptuneDBCluster(client).unwrap(neptuneDBCluster),
-		getNeptuneDBClusterParameterGroup(client).unwrap(neptuneDBClusterParameterGroup),
-		getNeptuneDBInstance(client).unwrap(neptuneDBInstance),
-		getNeptuneDBParameterGroup(client).unwrap(neptuneDBParameterGroup),
-		getNeptuneDBSubnetGroup(client).unwrap(neptuneDBSubnetGroup),
-	)
+
+	getNeptuneDBClusterIDs := getNeptuneDBClusterIDs(client)
+	getNeptuneDBClusterParameterGroupNames := getNeptuneDBClusterParameterGroupNames(client)
+	getNeptuneDBInstanceIDs := getNeptuneDBInstanceIDs(client)
+	getNeptuneDBParameterGroupNames := getNeptuneDBParameterGroupNames(client)
+	getNeptuneDBSubnetGroupNames := getNeptuneDBSubnetGroupNames(client)
+
+	resources = resourceMap{
+		neptuneDBCluster:               getNeptuneDBClusterIDs,
+		neptuneDBClusterParameterGroup: getNeptuneDBClusterParameterGroupNames,
+		neptuneDBInstance:              getNeptuneDBInstanceIDs,
+		neptuneDBParameterGroup:        getNeptuneDBParameterGroupNames,
+		neptuneDBSubnetGroup:           getNeptuneDBSubnetGroupNames,
+	}
 	return
 }
 
-func getNeptuneDBCluster(client *neptune.Client) (r resourceSliceError) {
+func getNeptuneDBClusterIDs(client *neptune.Client) (resources []string) {
 	input := neptune.DescribeDBClustersInput{}
 	for {
 		page, err := client.DescribeDBClustersRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.DBClusters {
-			r.resources = append(r.resources, *resource.DBClusterIdentifier)
+			resources = append(resources, *resource.DBClusterIdentifier)
 		}
 		if page.Marker == nil {
 			return
@@ -37,16 +41,13 @@ func getNeptuneDBCluster(client *neptune.Client) (r resourceSliceError) {
 	}
 }
 
-func getNeptuneDBClusterParameterGroup(client *neptune.Client) (r resourceSliceError) {
+func getNeptuneDBClusterParameterGroupNames(client *neptune.Client) (resources []string) {
 	input := neptune.DescribeDBClusterParameterGroupsInput{}
 	for {
 		page, err := client.DescribeDBClusterParameterGroupsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.DBClusterParameterGroups {
-			r.resources = append(r.resources, *resource.DBClusterParameterGroupName)
+			resources = append(resources, *resource.DBClusterParameterGroupName)
 		}
 		if page.Marker == nil {
 			return
@@ -55,41 +56,41 @@ func getNeptuneDBClusterParameterGroup(client *neptune.Client) (r resourceSliceE
 	}
 }
 
-func getNeptuneDBInstance(client *neptune.Client) (r resourceSliceError) {
+func getNeptuneDBInstanceIDs(client *neptune.Client) (resources []string) {
 	req := client.DescribeDBInstancesRequest(&neptune.DescribeDBInstancesInput{})
 	p := neptune.NewDescribeDBInstancesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBInstances {
-			r.resources = append(r.resources, *resource.DBInstanceIdentifier)
+			resources = append(resources, *resource.DBInstanceIdentifier)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getNeptuneDBParameterGroup(client *neptune.Client) (r resourceSliceError) {
+func getNeptuneDBParameterGroupNames(client *neptune.Client) (resources []string) {
 	req := client.DescribeDBParameterGroupsRequest(&neptune.DescribeDBParameterGroupsInput{})
 	p := neptune.NewDescribeDBParameterGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBParameterGroups {
-			r.resources = append(r.resources, *resource.DBParameterGroupName)
+			resources = append(resources, *resource.DBParameterGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getNeptuneDBSubnetGroup(client *neptune.Client) (r resourceSliceError) {
+func getNeptuneDBSubnetGroupNames(client *neptune.Client) (resources []string) {
 	req := client.DescribeDBSubnetGroupsRequest(&neptune.DescribeDBSubnetGroupsInput{})
 	p := neptune.NewDescribeDBSubnetGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.DBSubnetGroups {
-			r.resources = append(r.resources, *resource.DBSubnetGroupName)
+			resources = append(resources, *resource.DBSubnetGroupName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

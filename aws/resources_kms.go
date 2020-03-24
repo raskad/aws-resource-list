@@ -10,37 +10,41 @@ import (
 
 func getKms(config aws.Config) (resources resourceMap) {
 	client := kms.New(config)
-	resources = reduce(
-		getkmsAlias(client).unwrap(kmsAlias),
-		getkmsKey(client).unwrap(kmsKey),
-	)
+
+	kmsAliasNames := getKmsAliasNames(client)
+	kmsKeyIDs := getKmsKeyIDs(client)
+
+	resources = resourceMap{
+		kmsAlias: kmsAliasNames,
+		kmsKey:   kmsKeyIDs,
+	}
 	return
 }
 
-func getkmsAlias(client *kms.Client) (r resourceSliceError) {
+func getKmsAliasNames(client *kms.Client) (resources []string) {
 	req := client.ListAliasesRequest(&kms.ListAliasesInput{})
 	p := kms.NewListAliasesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Aliases {
 			if !strings.HasPrefix(*resource.AliasName, "alias/aws/") {
-				r.resources = append(r.resources, *resource.AliasName)
+				resources = append(resources, *resource.AliasName)
 			}
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getkmsKey(client *kms.Client) (r resourceSliceError) {
+func getKmsKeyIDs(client *kms.Client) (resources []string) {
 	req := client.ListKeysRequest(&kms.ListKeysInput{})
 	p := kms.NewListKeysPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Keys {
-			r.resources = append(r.resources, *resource.KeyId)
+			resources = append(resources, *resource.KeyId)
 		}
 	}
-	r.err = p.Err()
 	return
 }

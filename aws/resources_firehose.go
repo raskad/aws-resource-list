@@ -9,17 +9,18 @@ import (
 
 func getFirehose(config aws.Config) (resources resourceMap) {
 	client := firehose.New(config)
-	resources = reduce(
-		getKinesisFirehoseDeliveryStream(client).unwrap(kinesisFirehoseDeliveryStream),
-	)
+
+	kinesisFirehoseDeliveryStreamNames := getKinesisFirehoseDeliveryStreamNames(client)
+
+	resources = resourceMap{
+		kinesisFirehoseDeliveryStream: kinesisFirehoseDeliveryStreamNames,
+	}
 	return
 }
 
-func getKinesisFirehoseDeliveryStream(client *firehose.Client) (r resourceSliceError) {
+func getKinesisFirehoseDeliveryStreamNames(client *firehose.Client) (resources []string) {
 	page, err := client.ListDeliveryStreamsRequest(&firehose.ListDeliveryStreamsInput{}).Send(context.Background())
-	for _, resource := range page.DeliveryStreamNames {
-		r.resources = append(r.resources, resource)
-	}
-	r.err = err
+	logErr(err)
+	resources = append(resources, page.DeliveryStreamNames...)
 	return
 }

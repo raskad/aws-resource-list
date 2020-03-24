@@ -9,24 +9,26 @@ import (
 
 func getDAX(config aws.Config) (resources resourceMap) {
 	client := dax.New(config)
-	resources = reduce(
-		getDaxCluster(client).unwrap(daxCluster),
-		getDaxParameterGroup(client).unwrap(daxParameterGroup),
-		getDaxSubnetGroup(client).unwrap(daxSubnetGroup),
-	)
+
+	daxClusterNames := getDaxClusterNames(client)
+	daxParameterGroupNames := getDaxParameterGroupNames(client)
+	daxSubnetGroupNames := getDaxSubnetGroupNames(client)
+
+	resources = resourceMap{
+		daxCluster:        daxClusterNames,
+		daxParameterGroup: daxParameterGroupNames,
+		daxSubnetGroup:    daxSubnetGroupNames,
+	}
 	return
 }
 
-func getDaxCluster(client *dax.Client) (r resourceSliceError) {
+func getDaxClusterNames(client *dax.Client) (resources []string) {
 	input := dax.DescribeClustersInput{}
 	for {
 		page, err := client.DescribeClustersRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Clusters {
-			r.resources = append(r.resources, *resource.ClusterName)
+			resources = append(resources, *resource.ClusterName)
 		}
 		if page.NextToken == nil {
 			return
@@ -35,16 +37,13 @@ func getDaxCluster(client *dax.Client) (r resourceSliceError) {
 	}
 }
 
-func getDaxParameterGroup(client *dax.Client) (r resourceSliceError) {
+func getDaxParameterGroupNames(client *dax.Client) (resources []string) {
 	input := dax.DescribeParameterGroupsInput{}
 	for {
 		page, err := client.DescribeParameterGroupsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ParameterGroups {
-			r.resources = append(r.resources, *resource.ParameterGroupName)
+			resources = append(resources, *resource.ParameterGroupName)
 		}
 		if page.NextToken == nil {
 			return
@@ -53,16 +52,13 @@ func getDaxParameterGroup(client *dax.Client) (r resourceSliceError) {
 	}
 }
 
-func getDaxSubnetGroup(client *dax.Client) (r resourceSliceError) {
+func getDaxSubnetGroupNames(client *dax.Client) (resources []string) {
 	input := dax.DescribeSubnetGroupsInput{}
 	for {
 		page, err := client.DescribeSubnetGroupsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.SubnetGroups {
-			r.resources = append(r.resources, *resource.SubnetGroupName)
+			resources = append(resources, *resource.SubnetGroupName)
 		}
 		if page.NextToken == nil {
 			return

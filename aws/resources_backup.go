@@ -10,56 +10,57 @@ import (
 func getBackup(config aws.Config) (resources resourceMap) {
 	client := backup.New(config)
 
-	backupBackupPlanResourceMap := getBackupBackupPlan(client).unwrap(backupBackupPlan)
-	backupBackupPlanIDs := backupBackupPlanResourceMap[backupBackupPlan]
+	backupBackupPlanIDs := getBackupBackupPlanIDs(client)
+	backupBackupSelectionIDs := getBackupBackupSelectionIDs(client, backupBackupPlanIDs)
+	backupBackupVaultNames := getBackupBackupVaultNames(client)
 
-	resources = reduce(
-		backupBackupPlanResourceMap,
-		getBackupBackupSelection(client, backupBackupPlanIDs).unwrap(backupBackupSelection),
-		getBackupBackupVault(client).unwrap(backupBackupVault),
-	)
+	resources = resourceMap{
+		backupBackupPlan:      backupBackupPlanIDs,
+		backupBackupSelection: backupBackupSelectionIDs,
+		backupBackupVault:     backupBackupVaultNames,
+	}
 	return
 }
 
-func getBackupBackupPlan(client *backup.Client) (r resourceSliceError) {
+func getBackupBackupPlanIDs(client *backup.Client) (resources []string) {
 	req := client.ListBackupPlansRequest(&backup.ListBackupPlansInput{})
 	p := backup.NewListBackupPlansPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.BackupPlansList {
-			r.resources = append(r.resources, *resource.BackupPlanId)
+			resources = append(resources, *resource.BackupPlanId)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getBackupBackupSelection(client *backup.Client, backupBackupPlanIDs []string) (r resourceSliceError) {
+func getBackupBackupSelectionIDs(client *backup.Client, backupBackupPlanIDs []string) (resources []string) {
 	for _, backupBackupPlanID := range backupBackupPlanIDs {
 		req := client.ListBackupSelectionsRequest(&backup.ListBackupSelectionsInput{
 			BackupPlanId: aws.String(backupBackupPlanID),
 		})
 		p := backup.NewListBackupSelectionsPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
 			for _, resource := range page.BackupSelectionsList {
-				r.resources = append(r.resources, *resource.SelectionId)
+				resources = append(resources, *resource.SelectionId)
 			}
 		}
-		r.err = p.Err()
 	}
 	return
 }
 
-func getBackupBackupVault(client *backup.Client) (r resourceSliceError) {
+func getBackupBackupVaultNames(client *backup.Client) (resources []string) {
 	req := client.ListBackupVaultsRequest(&backup.ListBackupVaultsInput{})
 	p := backup.NewListBackupVaultsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.BackupVaultList {
-			r.resources = append(r.resources, *resource.BackupVaultName)
+			resources = append(resources, *resource.BackupVaultName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

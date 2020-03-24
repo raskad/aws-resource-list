@@ -10,30 +10,25 @@ import (
 func getDirectoryService(config aws.Config) (resources resourceMap) {
 	client := directoryservice.New(config)
 
-	directoryServiceMicrosoftADResourceMap := getDirectoryServiceMicrosoftAD(client).unwrap(directoryServiceMicrosoftAD)
-	directoryServiceSimpleADResourceMap := getDirectoryServiceSimpleAD(client).unwrap(directoryServiceSimpleAD)
-	directoryServiceMicrosoftADIDs := directoryServiceMicrosoftADResourceMap[directoryServiceMicrosoftAD]
-	directoryServiceSimpleADIDs := directoryServiceSimpleADResourceMap[directoryServiceSimpleAD]
+	directoryServiceMicrosoftADIDs := getDirectoryServiceMicrosoftADIDs(client)
+	directoryServiceSimpleADIDs := getDirectoryServiceSimpleADIDs(client)
 
-	resources = reduce(
-		resourceMap{directoryServiceDirectory: append(directoryServiceMicrosoftADIDs, directoryServiceSimpleADIDs...)},
-		directoryServiceMicrosoftADResourceMap,
-		directoryServiceSimpleADResourceMap,
-	)
+	resources = resourceMap{
+		directoryServiceDirectory:   append(directoryServiceMicrosoftADIDs, directoryServiceSimpleADIDs...),
+		directoryServiceMicrosoftAD: directoryServiceMicrosoftADIDs,
+		directoryServiceSimpleAD:    directoryServiceSimpleADIDs,
+	}
 	return
 }
 
-func getDirectoryServiceMicrosoftAD(client *directoryservice.Client) (r resourceSliceError) {
+func getDirectoryServiceMicrosoftADIDs(client *directoryservice.Client) (resources []string) {
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
 		page, err := client.DescribeDirectoriesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.DirectoryDescriptions {
 			if resource.Type == directoryservice.DirectoryTypeMicrosoftAd {
-				r.resources = append(r.resources, *resource.DirectoryId)
+				resources = append(resources, *resource.DirectoryId)
 			}
 		}
 		if page.NextToken == nil {
@@ -43,17 +38,14 @@ func getDirectoryServiceMicrosoftAD(client *directoryservice.Client) (r resource
 	}
 }
 
-func getDirectoryServiceSimpleAD(client *directoryservice.Client) (r resourceSliceError) {
+func getDirectoryServiceSimpleADIDs(client *directoryservice.Client) (resources []string) {
 	input := directoryservice.DescribeDirectoriesInput{}
 	for {
 		page, err := client.DescribeDirectoriesRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.DirectoryDescriptions {
 			if resource.Type == directoryservice.DirectoryTypeSimpleAd {
-				r.resources = append(r.resources, *resource.DirectoryId)
+				resources = append(resources, *resource.DirectoryId)
 			}
 		}
 		if page.NextToken == nil {

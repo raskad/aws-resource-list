@@ -9,21 +9,24 @@ import (
 
 func getElasticLoadBalancing(config aws.Config) (resources resourceMap) {
 	client := elasticloadbalancing.New(config)
-	resources = reduce(
-		getElasticLoadBalancingLoadBalancer(client).unwrap(elasticLoadBalancingLoadBalancer),
-	)
+
+	elasticLoadBalancingLoadBalancerNames := getElasticLoadBalancingLoadBalancerNames(client)
+
+	resources = resourceMap{
+		elasticLoadBalancingLoadBalancer: elasticLoadBalancingLoadBalancerNames,
+	}
 	return
 }
 
-func getElasticLoadBalancingLoadBalancer(client *elasticloadbalancing.Client) (r resourceSliceError) {
+func getElasticLoadBalancingLoadBalancerNames(client *elasticloadbalancing.Client) (resources []string) {
 	req := client.DescribeLoadBalancersRequest(&elasticloadbalancing.DescribeLoadBalancersInput{})
 	p := elasticloadbalancing.NewDescribeLoadBalancersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.LoadBalancerDescriptions {
-			r.resources = append(r.resources, *resource.LoadBalancerName)
+			resources = append(resources, *resource.LoadBalancerName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

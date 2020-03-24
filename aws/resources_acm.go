@@ -9,21 +9,24 @@ import (
 
 func getAcm(config aws.Config) (resources resourceMap) {
 	client := acm.New(config)
-	resources = reduce(
-		getCertificateManagerCertificate(client).unwrap(certificateManagerCertificate),
-	)
+
+	certificateManagerCertificateArns := getCertificateManagerCertificateArns(client)
+
+	resources = resourceMap{
+		certificateManagerCertificate: certificateManagerCertificateArns,
+	}
 	return
 }
 
-func getCertificateManagerCertificate(client *acm.Client) (r resourceSliceError) {
+func getCertificateManagerCertificateArns(client *acm.Client) (resources []string) {
 	req := client.ListCertificatesRequest(&acm.ListCertificatesInput{})
 	p := acm.NewListCertificatesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.CertificateSummaryList {
-			r.resources = append(r.resources, *resource.CertificateArn)
+			resources = append(resources, *resource.CertificateArn)
 		}
 	}
-	r.err = p.Err()
 	return
 }

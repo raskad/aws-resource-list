@@ -9,91 +9,99 @@ import (
 
 func getAPIGateway(config aws.Config) (resources resourceMap) {
 	client := apigateway.New(config)
-	resources = reduce(
-		getAPIGatewayAPIKey(client).unwrap(apiGatewayAPIKey),
-		getAPIGatewayClientCertificate(client).unwrap(apiGatewayClientCertificate),
-		getAPIGatewayDomainName(client).unwrap(apiGatewayDomainName),
-		getAPIGatewayRestAPI(client).unwrap(apiGatewayRestAPI),
-		getAPIGatewayUsagePlan(client).unwrap(apiGatewayUsagePlan),
-		getAPIGatewayVpcLink(client).unwrap(apiGatewayVpcLink),
-	)
+
+	apiGatewayAPIKeyIDs := getAPIGatewayAPIKeyIDs(client)
+	apiGatewayClientCertificateIDs := getAPIGatewayClientCertificateIDs(client)
+	apiGatewayDomainNames := getAPIGatewayDomainNames(client)
+	apiGatewayRestAPIIDs := getAPIGatewayRestAPIIDs(client)
+	apiGatewayUsagePlanIDs := getAPIGatewayUsagePlanIDs(client)
+	apiGatewayVpcLinkIDs := getAPIGatewayVpcLinkIDs(client)
+
+	resources = resourceMap{
+		apiGatewayAPIKey:            apiGatewayAPIKeyIDs,
+		apiGatewayClientCertificate: apiGatewayClientCertificateIDs,
+		apiGatewayDomainName:        apiGatewayDomainNames,
+		apiGatewayRestAPI:           apiGatewayRestAPIIDs,
+		apiGatewayUsagePlan:         apiGatewayUsagePlanIDs,
+		apiGatewayVpcLink:           apiGatewayVpcLinkIDs,
+	}
 	return
 }
 
-func getAPIGatewayAPIKey(client *apigateway.Client) (r resourceSliceError) {
+func getAPIGatewayAPIKeyIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetApiKeysRequest(&apigateway.GetApiKeysInput{})
 	p := apigateway.NewGetApiKeysPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayClientCertificate(client *apigateway.Client) (r resourceSliceError) {
+func getAPIGatewayClientCertificateIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetClientCertificatesRequest(&apigateway.GetClientCertificatesInput{})
 	p := apigateway.NewGetClientCertificatesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.ClientCertificateId)
+			resources = append(resources, *resource.ClientCertificateId)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayDomainName(client *apigateway.Client) (r resourceSliceError) {
+func getAPIGatewayDomainNames(client *apigateway.Client) (resources []string) {
 	req := client.GetDomainNamesRequest(&apigateway.GetDomainNamesInput{})
 	p := apigateway.NewGetDomainNamesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.DomainName)
+			resources = append(resources, *resource.DomainName)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayRestAPI(client *apigateway.Client) (r resourceSliceError) {
+func getAPIGatewayRestAPIIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetRestApisRequest(&apigateway.GetRestApisInput{})
 	p := apigateway.NewGetRestApisPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayUsagePlan(client *apigateway.Client) (r resourceSliceError) {
+func getAPIGatewayUsagePlanIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetUsagePlanKeysRequest(&apigateway.GetUsagePlanKeysInput{})
 	p := apigateway.NewGetUsagePlanKeysPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAPIGatewayVpcLink(client *apigateway.Client) (r resourceSliceError) {
+func getAPIGatewayVpcLinkIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetVpcLinksRequest(&apigateway.GetVpcLinksInput{})
 	p := apigateway.NewGetVpcLinksPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 	}
-	r.err = p.Err()
 	return
 }

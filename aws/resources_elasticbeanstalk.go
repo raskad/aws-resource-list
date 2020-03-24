@@ -9,38 +9,38 @@ import (
 
 func getElasticBeanstalk(config aws.Config) (resources resourceMap) {
 	client := elasticbeanstalk.New(config)
-	resources = reduce(
-		getElasticBeanstalkApplication(client).unwrap(elasticBeanstalkApplication),
-		getElasticBeanstalkApplicationVersion(client).unwrap(elasticBeanstalkApplicationVersion),
-		getElasticBeanstalkConfigurationTemplate(client).unwrap(elasticBeanstalkConfigurationTemplate),
-		getElasticBeanstalkEnvironment(client).unwrap(elasticBeanstalkEnvironment),
-	)
+
+	elasticBeanstalkApplicationNames := getElasticBeanstalkApplicationNames(client)
+	elasticBeanstalkApplicationVersionARNs := getElasticBeanstalkApplicationVersionARNs(client)
+	elasticBeanstalkConfigurationTemplateNames := getElasticBeanstalkConfigurationTemplateNames(client)
+	elasticBeanstalkEnvironmentIDs := getElasticBeanstalkEnvironmentIDs(client)
+
+	resources = resourceMap{
+		elasticBeanstalkApplication:           elasticBeanstalkApplicationNames,
+		elasticBeanstalkApplicationVersion:    elasticBeanstalkApplicationVersionARNs,
+		elasticBeanstalkConfigurationTemplate: elasticBeanstalkConfigurationTemplateNames,
+		elasticBeanstalkEnvironment:           elasticBeanstalkEnvironmentIDs,
+	}
 	return
 }
 
-func getElasticBeanstalkApplication(client *elasticbeanstalk.Client) (r resourceSliceError) {
+func getElasticBeanstalkApplicationNames(client *elasticbeanstalk.Client) (resources []string) {
 	input := elasticbeanstalk.DescribeApplicationsInput{}
 	page, err := client.DescribeApplicationsRequest(&input).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.Applications {
-		r.resources = append(r.resources, *resource.ApplicationName)
+		resources = append(resources, *resource.ApplicationName)
 	}
 	return
 }
 
-func getElasticBeanstalkApplicationVersion(client *elasticbeanstalk.Client) (r resourceSliceError) {
+func getElasticBeanstalkApplicationVersionARNs(client *elasticbeanstalk.Client) (resources []string) {
 	input := elasticbeanstalk.DescribeApplicationVersionsInput{}
 	for {
 		page, err := client.DescribeApplicationVersionsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ApplicationVersions {
-			r.resources = append(r.resources, *resource.ApplicationVersionArn)
+			resources = append(resources, *resource.ApplicationVersionArn)
 		}
 		if page.NextToken == nil {
 			return
@@ -49,31 +49,23 @@ func getElasticBeanstalkApplicationVersion(client *elasticbeanstalk.Client) (r r
 	}
 }
 
-func getElasticBeanstalkConfigurationTemplate(client *elasticbeanstalk.Client) (r resourceSliceError) {
+func getElasticBeanstalkConfigurationTemplateNames(client *elasticbeanstalk.Client) (resources []string) {
 	input := elasticbeanstalk.DescribeApplicationsInput{}
 	page, err := client.DescribeApplicationsRequest(&input).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.Applications {
-		for _, resource := range resource.ConfigurationTemplates {
-			r.resources = append(r.resources, resource)
-		}
+		resources = append(resources, resource.ConfigurationTemplates...)
 	}
 	return
 }
 
-func getElasticBeanstalkEnvironment(client *elasticbeanstalk.Client) (r resourceSliceError) {
+func getElasticBeanstalkEnvironmentIDs(client *elasticbeanstalk.Client) (resources []string) {
 	input := elasticbeanstalk.DescribeEnvironmentsInput{}
 	for {
 		page, err := client.DescribeEnvironmentsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Environments {
-			r.resources = append(r.resources, *resource.EnvironmentId)
+			resources = append(resources, *resource.EnvironmentId)
 		}
 		if page.NextToken == nil {
 			return

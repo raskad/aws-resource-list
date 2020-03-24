@@ -9,27 +9,30 @@ import (
 
 func getWafv2(config aws.Config) (resources resourceMap) {
 	client := wafv2.New(config)
-	resources = reduce(
-		getWafv2IPSet(client).unwrap(wafv2IPSet),
-		getWafv2RegexPatternSet(client).unwrap(wafv2RegexPatternSet),
-		getWafv2RuleGroup(client).unwrap(wafv2RuleGroup),
-		getWafv2WebACL(client).unwrap(wafv2WebACL),
-	)
+
+	wafv2IPSetIDs := getWafv2IPSetIDs(client)
+	wafv2RegexPatternSetIDs := getWafv2RegexPatternSetIDs(client)
+	wafv2RuleGroupIDs := getWafv2RuleGroupIDs(client)
+	wafv2WebACLIDs := getWafv2WebACLIDs(client)
+
+	resources = resourceMap{
+		wafv2IPSet:           wafv2IPSetIDs,
+		wafv2RegexPatternSet: wafv2RegexPatternSetIDs,
+		wafv2RuleGroup:       wafv2RuleGroupIDs,
+		wafv2WebACL:          wafv2WebACLIDs,
+	}
 	return
 }
 
-func getWafv2IPSet(client *wafv2.Client) (r resourceSliceError) {
+func getWafv2IPSetIDs(client *wafv2.Client) (resources []string) {
 	input := wafv2.ListIPSetsInput{
 		Scope: wafv2.ScopeRegional,
 	}
 	for {
 		page, err := client.ListIPSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.IPSets {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 		if page.NextMarker == nil {
 			return
@@ -38,18 +41,15 @@ func getWafv2IPSet(client *wafv2.Client) (r resourceSliceError) {
 	}
 }
 
-func getWafv2RegexPatternSet(client *wafv2.Client) (r resourceSliceError) {
+func getWafv2RegexPatternSetIDs(client *wafv2.Client) (resources []string) {
 	input := wafv2.ListRegexPatternSetsInput{
 		Scope: wafv2.ScopeRegional,
 	}
 	for {
 		page, err := client.ListRegexPatternSetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.RegexPatternSets {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 		if page.NextMarker == nil {
 			return
@@ -58,18 +58,15 @@ func getWafv2RegexPatternSet(client *wafv2.Client) (r resourceSliceError) {
 	}
 }
 
-func getWafv2RuleGroup(client *wafv2.Client) (r resourceSliceError) {
+func getWafv2RuleGroupIDs(client *wafv2.Client) (resources []string) {
 	input := wafv2.ListRuleGroupsInput{
 		Scope: wafv2.ScopeRegional,
 	}
 	for {
 		page, err := client.ListRuleGroupsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.RuleGroups {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 		if page.NextMarker == nil {
 			return
@@ -78,18 +75,15 @@ func getWafv2RuleGroup(client *wafv2.Client) (r resourceSliceError) {
 	}
 }
 
-func getWafv2WebACL(client *wafv2.Client) (r resourceSliceError) {
+func getWafv2WebACLIDs(client *wafv2.Client) (resources []string) {
 	input := wafv2.ListWebACLsInput{
 		Scope: wafv2.ScopeRegional,
 	}
 	for {
 		page, err := client.ListWebACLsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.WebACLs {
-			r.resources = append(r.resources, *resource.Id)
+			resources = append(resources, *resource.Id)
 		}
 		if page.NextMarker == nil {
 			return

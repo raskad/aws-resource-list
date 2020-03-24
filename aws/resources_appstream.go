@@ -9,25 +9,28 @@ import (
 
 func getAppStream(config aws.Config) (resources resourceMap) {
 	client := appstream.New(config)
-	resources = reduce(
-		getAppStreamDirectoryConfig(client).unwrap(appStreamDirectoryConfig),
-		getAppStreamFleet(client).unwrap(appStreamFleet),
-		getAppStreamImageBuilder(client).unwrap(appStreamImageBuilder),
-		getAppStreamStack(client).unwrap(appStreamStack),
-	)
+
+	appStreamDirectoryConfigNames := getAppStreamDirectoryConfigNames(client)
+	appStreamFleetNames := getAppStreamFleetNames(client)
+	appStreamImageBuilderNames := getAppStreamImageBuilderNames(client)
+	appStreamStackNames := getAppStreamStackNames(client)
+
+	resources = resourceMap{
+		appStreamDirectoryConfig: appStreamDirectoryConfigNames,
+		appStreamFleet:           appStreamFleetNames,
+		appStreamImageBuilder:    appStreamImageBuilderNames,
+		appStreamStack:           appStreamStackNames,
+	}
 	return
 }
 
-func getAppStreamDirectoryConfig(client *appstream.Client) (r resourceSliceError) {
+func getAppStreamDirectoryConfigNames(client *appstream.Client) (resources []string) {
 	input := appstream.DescribeDirectoryConfigsInput{}
 	for {
 		page, err := client.DescribeDirectoryConfigsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.DirectoryConfigs {
-			r.resources = append(r.resources, *resource.DirectoryName)
+			resources = append(resources, *resource.DirectoryName)
 		}
 		if page.NextToken == nil {
 			return
@@ -36,16 +39,13 @@ func getAppStreamDirectoryConfig(client *appstream.Client) (r resourceSliceError
 	}
 }
 
-func getAppStreamFleet(client *appstream.Client) (r resourceSliceError) {
+func getAppStreamFleetNames(client *appstream.Client) (resources []string) {
 	input := appstream.DescribeFleetsInput{}
 	for {
 		page, err := client.DescribeFleetsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Fleets {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return
@@ -54,16 +54,13 @@ func getAppStreamFleet(client *appstream.Client) (r resourceSliceError) {
 	}
 }
 
-func getAppStreamImageBuilder(client *appstream.Client) (r resourceSliceError) {
+func getAppStreamImageBuilderNames(client *appstream.Client) (resources []string) {
 	input := appstream.DescribeImageBuildersInput{}
 	for {
 		page, err := client.DescribeImageBuildersRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ImageBuilders {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return
@@ -72,16 +69,13 @@ func getAppStreamImageBuilder(client *appstream.Client) (r resourceSliceError) {
 	}
 }
 
-func getAppStreamStack(client *appstream.Client) (r resourceSliceError) {
+func getAppStreamStackNames(client *appstream.Client) (resources []string) {
 	input := appstream.DescribeStacksInput{}
 	for {
 		page, err := client.DescribeStacksRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.Stacks {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 		if page.NextToken == nil {
 			return

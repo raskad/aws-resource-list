@@ -10,42 +10,39 @@ import (
 func getEfs(config aws.Config) (resources resourceMap) {
 	client := efs.New(config)
 
-	efsFileSystemResourceMap := getEfsFileSystem(client).unwrap(efsFileSystem)
-	efsFileSystemIDs := efsFileSystemResourceMap[efsFileSystem]
+	efsFileSystemIDs := getEfsFileSystemIDs(client)
+	efsMountTargetIDs := getEfsMountTargetIDs(client, efsFileSystemIDs)
 
-	resources = reduce(
-		efsFileSystemResourceMap,
-		getEfsMountTarget(client, efsFileSystemIDs).unwrap(efsMountTarget),
-	)
+	resources = resourceMap{
+		efsFileSystem:  efsFileSystemIDs,
+		efsMountTarget: efsMountTargetIDs,
+	}
 	return
 }
 
-func getEfsFileSystem(client *efs.Client) (r resourceSliceError) {
+func getEfsFileSystemIDs(client *efs.Client) (resources []string) {
 	req := client.DescribeFileSystemsRequest(&efs.DescribeFileSystemsInput{})
 	p := efs.NewDescribeFileSystemsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.FileSystems {
-			r.resources = append(r.resources, *resource.FileSystemId)
+			resources = append(resources, *resource.FileSystemId)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getEfsMountTarget(client *efs.Client, fileSystemIDs []string) (r resourceSliceError) {
+func getEfsMountTargetIDs(client *efs.Client, fileSystemIDs []string) (resources []string) {
 	for _, fileSystemID := range fileSystemIDs {
 		input := efs.DescribeMountTargetsInput{
 			FileSystemId: aws.String(fileSystemID),
 		}
 		for {
 			page, err := client.DescribeMountTargetsRequest(&input).Send(context.Background())
-			if err != nil {
-				r.err = err
-				return
-			}
+			logErr(err)
 			for _, resource := range page.MountTargets {
-				r.resources = append(r.resources, *resource.MountTargetId)
+				resources = append(resources, *resource.MountTargetId)
 			}
 			if page.NextMarker == nil {
 				return

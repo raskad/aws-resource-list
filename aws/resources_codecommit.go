@@ -9,21 +9,24 @@ import (
 
 func getCodeCommit(config aws.Config) (resources resourceMap) {
 	client := codecommit.New(config)
-	resources = reduce(
-		getCodeCommitRepository(client).unwrap(codeCommitRepository),
-	)
+
+	codeCommitRepositoryIDs := getCodeCommitRepositoryIDs(client)
+
+	resources = resourceMap{
+		codeCommitRepository: codeCommitRepositoryIDs,
+	}
 	return
 }
 
-func getCodeCommitRepository(client *codecommit.Client) (r resourceSliceError) {
+func getCodeCommitRepositoryIDs(client *codecommit.Client) (resources []string) {
 	req := client.ListRepositoriesRequest(&codecommit.ListRepositoriesInput{})
 	p := codecommit.NewListRepositoriesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Repositories {
-			r.resources = append(r.resources, *resource.RepositoryId)
+			resources = append(resources, *resource.RepositoryId)
 		}
 	}
-	r.err = p.Err()
 	return
 }

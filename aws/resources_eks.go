@@ -10,43 +10,38 @@ import (
 func getEks(config aws.Config) (resources resourceMap) {
 	client := eks.New(config)
 
-	eksClusterResourceMap := getEksCluster(client).unwrap(eksCluster)
-	eksClusterNames := eksClusterResourceMap[eksCluster]
+	eksClusterNames := getEksClusterNames(client)
+	eksNodegroupNames := getEksNodegroupNames(client, eksClusterNames)
 
-	resources = reduce(
-		eksClusterResourceMap,
-		getEksNodegroup(client, eksClusterNames).unwrap(eksNodegroup),
-	)
+	resources = resourceMap{
+		eksCluster:   eksClusterNames,
+		eksNodegroup: eksNodegroupNames,
+	}
 	return
 }
 
-func getEksCluster(client *eks.Client) (r resourceSliceError) {
+func getEksClusterNames(client *eks.Client) (resources []string) {
 	req := client.ListClustersRequest(&eks.ListClustersInput{})
 	p := eks.NewListClustersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.Clusters {
-			r.resources = append(r.resources, resource)
-		}
+		resources = append(resources, page.Clusters...)
 	}
-	r.err = p.Err()
 	return
 }
 
-func getEksNodegroup(client *eks.Client, clusterNames []string) (r resourceSliceError) {
+func getEksNodegroupNames(client *eks.Client, clusterNames []string) (resources []string) {
 	for _, clusterName := range clusterNames {
 		req := client.ListNodegroupsRequest(&eks.ListNodegroupsInput{
 			ClusterName: aws.String(clusterName),
 		})
 		p := eks.NewListNodegroupsPaginator(req)
 		for p.Next(context.Background()) {
+			logErr(p.Err())
 			page := p.CurrentPage()
-			for _, resource := range page.Nodegroups {
-				r.resources = append(r.resources, resource)
-			}
+			resources = append(resources, page.Nodegroups...)
 		}
-		r.err = p.Err()
-		return
 	}
 	return
 }

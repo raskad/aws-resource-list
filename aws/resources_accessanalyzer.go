@@ -9,21 +9,24 @@ import (
 
 func getAccessAnalyzer(config aws.Config) (resources resourceMap) {
 	client := accessanalyzer.New(config)
-	resources = reduce(
-		getAccessAnalyzerAnalyzer(client).unwrap(accessAnalyzerAnalyzer),
-	)
+
+	accessAnalyzerAnalyzerNames := getAccessAnalyzerAnalyzerNames(client)
+
+	resources = resourceMap{
+		accessAnalyzerAnalyzer: accessAnalyzerAnalyzerNames,
+	}
 	return
 }
 
-func getAccessAnalyzerAnalyzer(client *accessanalyzer.Client) (r resourceSliceError) {
+func getAccessAnalyzerAnalyzerNames(client *accessanalyzer.Client) (resources []string) {
 	req := client.ListAnalyzersRequest(&accessanalyzer.ListAnalyzersInput{})
 	p := accessanalyzer.NewListAnalyzersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Analyzers {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

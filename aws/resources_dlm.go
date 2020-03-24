@@ -9,17 +9,20 @@ import (
 
 func getDLM(config aws.Config) (resources resourceMap) {
 	client := dlm.New(config)
-	resources = reduce(
-		getDlmLifecyclePolicy(client).unwrap(dlmLifecyclePolicy),
-	)
+
+	dlmLifecyclePolicyIDs := getDlmLifecyclePolicyIDs(client)
+
+	resources = resourceMap{
+		dlmLifecyclePolicy: dlmLifecyclePolicyIDs,
+	}
 	return
 }
 
-func getDlmLifecyclePolicy(client *dlm.Client) (r resourceSliceError) {
+func getDlmLifecyclePolicyIDs(client *dlm.Client) (resources []string) {
 	buckets, err := client.GetLifecyclePoliciesRequest(&dlm.GetLifecyclePoliciesInput{}).Send(context.Background())
+	logErr(err)
 	for _, resource := range buckets.Policies {
-		r.resources = append(r.resources, *resource.PolicyId)
+		resources = append(resources, *resource.PolicyId)
 	}
-	r.err = err
 	return
 }

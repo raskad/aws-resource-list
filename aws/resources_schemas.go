@@ -9,35 +9,39 @@ import (
 
 func getSchemas(config aws.Config) (resources resourceMap) {
 	client := schemas.New(config)
-	resources = reduce(
-		getEventSchemasDiscoverer(client).unwrap(eventSchemasDiscoverer),
-		getEventSchemasRegistry(client).unwrap(eventSchemasRegistry),
-	)
+
+	eventSchemasDiscovererIDs := getEventSchemasDiscovererIDs(client)
+	eventSchemasRegistryNames := getEventSchemasRegistryNames(client)
+
+	resources = resourceMap{
+		eventSchemasDiscoverer: eventSchemasDiscovererIDs,
+		eventSchemasRegistry:   eventSchemasRegistryNames,
+	}
 	return
 }
 
-func getEventSchemasDiscoverer(client *schemas.Client) (r resourceSliceError) {
+func getEventSchemasDiscovererIDs(client *schemas.Client) (resources []string) {
 	req := client.ListDiscoverersRequest(&schemas.ListDiscoverersInput{})
 	p := schemas.NewListDiscoverersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Discoverers {
-			r.resources = append(r.resources, *resource.DiscovererId)
+			resources = append(resources, *resource.DiscovererId)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getEventSchemasRegistry(client *schemas.Client) (r resourceSliceError) {
+func getEventSchemasRegistryNames(client *schemas.Client) (resources []string) {
 	req := client.ListRegistriesRequest(&schemas.ListRegistriesInput{})
 	p := schemas.NewListRegistriesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Registries {
-			r.resources = append(r.resources, *resource.RegistryName)
+			resources = append(resources, *resource.RegistryName)
 		}
 	}
-	r.err = p.Err()
 	return
 }

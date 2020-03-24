@@ -9,25 +9,25 @@ import (
 
 func getCodeBuild(config aws.Config) (resources resourceMap) {
 	client := codebuild.New(config)
-	resources = reduce(
-		getCodeBuildProject(client).unwrap(codeBuildProject),
-		getCodeBuildReportGroup(client).unwrap(codeBuildReportGroup),
-		getCodeBuildSourceCredential(client).unwrap(codeBuildSourceCredential),
-	)
+
+	codeBuildProjectNames := getCodeBuildProjectNames(client)
+	codeBuildReportGroupARNs := getCodeBuildReportGroupARNs(client)
+	codeBuildSourceCredentialARNs := getCodeBuildSourceCredentialARNs(client)
+
+	resources = resourceMap{
+		codeBuildProject:          codeBuildProjectNames,
+		codeBuildReportGroup:      codeBuildReportGroupARNs,
+		codeBuildSourceCredential: codeBuildSourceCredentialARNs,
+	}
 	return
 }
 
-func getCodeBuildProject(client *codebuild.Client) (r resourceSliceError) {
+func getCodeBuildProjectNames(client *codebuild.Client) (resources []string) {
 	input := codebuild.ListProjectsInput{}
 	for {
 		page, err := client.ListProjectsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
-		for _, resource := range page.Projects {
-			r.resources = append(r.resources, resource)
-		}
+		logErr(err)
+		resources = append(resources, page.Projects...)
 		if page.NextToken == nil {
 			return
 		}
@@ -35,17 +35,12 @@ func getCodeBuildProject(client *codebuild.Client) (r resourceSliceError) {
 	}
 }
 
-func getCodeBuildReportGroup(client *codebuild.Client) (r resourceSliceError) {
+func getCodeBuildReportGroupARNs(client *codebuild.Client) (resources []string) {
 	input := codebuild.ListReportGroupsInput{}
 	for {
 		page, err := client.ListReportGroupsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
-		for _, resource := range page.ReportGroups {
-			r.resources = append(r.resources, resource)
-		}
+		logErr(err)
+		resources = append(resources, page.ReportGroups...)
 		if page.NextToken == nil {
 			return
 		}
@@ -53,15 +48,12 @@ func getCodeBuildReportGroup(client *codebuild.Client) (r resourceSliceError) {
 	}
 }
 
-func getCodeBuildSourceCredential(client *codebuild.Client) (r resourceSliceError) {
+func getCodeBuildSourceCredentialARNs(client *codebuild.Client) (resources []string) {
 	input := codebuild.ListSourceCredentialsInput{}
 	page, err := client.ListSourceCredentialsRequest(&input).Send(context.Background())
-	if err != nil {
-		r.err = err
-		return
-	}
+	logErr(err)
 	for _, resource := range page.SourceCredentialsInfos {
-		r.resources = append(r.resources, *resource.Arn)
+		resources = append(resources, *resource.Arn)
 	}
 	return
 }

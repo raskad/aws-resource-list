@@ -9,35 +9,37 @@ import (
 
 func getAthena(config aws.Config) (resources resourceMap) {
 	client := athena.New(config)
-	resources = reduce(
-		getAthenaNamedQuery(client).unwrap(athenaNamedQuery),
-		getAthenaWorkGroup(client).unwrap(athenaWorkGroup),
-	)
+
+	athenaNamedQueryIDs := getAthenaNamedQueryIDs(client)
+	athenaWorkGroupNames := getAthenaWorkGroupNames(client)
+
+	resources = resourceMap{
+		athenaNamedQuery: athenaNamedQueryIDs,
+		athenaWorkGroup:  athenaWorkGroupNames,
+	}
 	return
 }
 
-func getAthenaNamedQuery(client *athena.Client) (r resourceSliceError) {
+func getAthenaNamedQueryIDs(client *athena.Client) (resources []string) {
 	req := client.ListNamedQueriesRequest(&athena.ListNamedQueriesInput{})
 	p := athena.NewListNamedQueriesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
-		for _, resource := range page.NamedQueryIds {
-			r.resources = append(r.resources, resource)
-		}
+		resources = append(resources, page.NamedQueryIds...)
 	}
-	r.err = p.Err()
 	return
 }
 
-func getAthenaWorkGroup(client *athena.Client) (r resourceSliceError) {
+func getAthenaWorkGroupNames(client *athena.Client) (resources []string) {
 	req := client.ListWorkGroupsRequest(&athena.ListWorkGroupsInput{})
 	p := athena.NewListWorkGroupsPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.WorkGroups {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

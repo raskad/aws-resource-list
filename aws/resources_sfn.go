@@ -9,35 +9,39 @@ import (
 
 func getSfn(config aws.Config) (resources resourceMap) {
 	client := sfn.New(config)
-	resources = reduce(
-		getStepFunctionsActivity(client).unwrap(stepFunctionsActivity),
-		getStepFunctionsStateMachine(client).unwrap(stepFunctionsStateMachine),
-	)
+
+	stepFunctionsActivityNames := getStepFunctionsActivityNames(client)
+	stepFunctionsStateMachineNames := getStepFunctionsStateMachineNames(client)
+
+	resources = resourceMap{
+		stepFunctionsActivity:     stepFunctionsActivityNames,
+		stepFunctionsStateMachine: stepFunctionsStateMachineNames,
+	}
 	return
 }
 
-func getStepFunctionsActivity(client *sfn.Client) (r resourceSliceError) {
+func getStepFunctionsActivityNames(client *sfn.Client) (resources []string) {
 	req := client.ListActivitiesRequest(&sfn.ListActivitiesInput{})
 	p := sfn.NewListActivitiesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Activities {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }
 
-func getStepFunctionsStateMachine(client *sfn.Client) (r resourceSliceError) {
+func getStepFunctionsStateMachineNames(client *sfn.Client) (resources []string) {
 	req := client.ListStateMachinesRequest(&sfn.ListStateMachinesInput{})
 	p := sfn.NewListStateMachinesPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.StateMachines {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

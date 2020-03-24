@@ -9,21 +9,24 @@ import (
 
 func getQLDB(config aws.Config) (resources resourceMap) {
 	client := qldb.New(config)
-	resources = reduce(
-		getQLDBLedger(client).unwrap(qLDBLedger),
-	)
+
+	qldbLedgerNames := getQLDBLedgerNames(client)
+
+	resources = resourceMap{
+		qLDBLedger: qldbLedgerNames,
+	}
 	return
 }
 
-func getQLDBLedger(client *qldb.Client) (r resourceSliceError) {
+func getQLDBLedgerNames(client *qldb.Client) (resources []string) {
 	req := client.ListLedgersRequest(&qldb.ListLedgersInput{})
 	p := qldb.NewListLedgersPaginator(req)
 	for p.Next(context.Background()) {
+		logErr(p.Err())
 		page := p.CurrentPage()
 		for _, resource := range page.Ledgers {
-			r.resources = append(r.resources, *resource.Name)
+			resources = append(resources, *resource.Name)
 		}
 	}
-	r.err = p.Err()
 	return
 }

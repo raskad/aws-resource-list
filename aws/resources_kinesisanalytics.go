@@ -9,22 +9,22 @@ import (
 
 func getKinesisAnalytics(config aws.Config) (resources resourceMap) {
 	client := kinesisanalytics.New(config)
-	resources = reduce(
-		getKinesisAnalyticsApplication(client).unwrap(kinesisAnalyticsApplication),
-	)
+
+	kinesisAnalyticsApplicationNames := getKinesisAnalyticsApplicationNames(client)
+
+	resources = resourceMap{
+		kinesisAnalyticsApplication: kinesisAnalyticsApplicationNames,
+	}
 	return
 }
 
-func getKinesisAnalyticsApplication(client *kinesisanalytics.Client) (r resourceSliceError) {
+func getKinesisAnalyticsApplicationNames(client *kinesisanalytics.Client) (resources []string) {
 	input := kinesisanalytics.ListApplicationsInput{}
 	for {
 		page, err := client.ListApplicationsRequest(&input).Send(context.Background())
-		if err != nil {
-			r.err = err
-			return
-		}
+		logErr(err)
 		for _, resource := range page.ApplicationSummaries {
-			r.resources = append(r.resources, *resource.ApplicationName)
+			resources = append(resources, *resource.ApplicationName)
 		}
 		if !*page.HasMoreApplications {
 			return
