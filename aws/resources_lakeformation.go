@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lakeformation"
 )
 
-func getLakeFormation(config aws.Config) (resources resourceMap) {
+func getLakeFormation(config aws.Config) (resources awsResourceMap) {
 	client := lakeformation.New(config)
 
 	getLakeFormationResourceARNs := getLakeFormationResourceARNs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		lakeFormationResource: getLakeFormationResourceARNs,
 	}
 	return
@@ -22,7 +22,10 @@ func getLakeFormationResourceARNs(client *lakeformation.Client) (resources []str
 	req := client.ListResourcesRequest(&lakeformation.ListResourcesInput{})
 	p := lakeformation.NewListResourcesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ResourceInfoList {
 			resources = append(resources, *resource.ResourceArn)

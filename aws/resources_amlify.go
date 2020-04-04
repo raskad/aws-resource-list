@@ -7,14 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/amplify"
 )
 
-func getAmplify(config aws.Config) (resources resourceMap) {
+func getAmplify(config aws.Config) (resources awsResourceMap) {
 	client := amplify.New(config)
 
 	amplifyAppIDs := getAmplifyAppIDs(client)
 	amplifyBranchNames := getAmplifyBranchNames(client, amplifyAppIDs)
 	amplifyDomainNames := getAmplifyDomainNames(client, amplifyAppIDs)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		amplifyApp:    amplifyAppIDs,
 		amplifyBranch: amplifyBranchNames,
 		amplifyDomain: amplifyDomainNames,
@@ -26,7 +26,10 @@ func getAmplifyAppIDs(client *amplify.Client) (resources []string) {
 	input := amplify.ListAppsInput{}
 	for {
 		page, err := client.ListAppsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Apps {
 			resources = append(resources, *resource.AppId)
 		}
@@ -44,7 +47,10 @@ func getAmplifyBranchNames(client *amplify.Client, appIDs []string) (resources [
 		}
 		for {
 			page, err := client.ListBranchesRequest(&input).Send(context.Background())
-			logErr(err)
+			if err != nil {
+				logErr(err)
+				break
+			}
 			for _, resource := range page.Branches {
 				resources = append(resources, *resource.BranchName)
 			}
@@ -64,7 +70,10 @@ func getAmplifyDomainNames(client *amplify.Client, appIDs []string) (resources [
 		}
 		for {
 			page, err := client.ListDomainAssociationsRequest(&input).Send(context.Background())
-			logErr(err)
+			if err != nil {
+				logErr(err)
+				break
+			}
 			for _, resource := range page.DomainAssociations {
 				resources = append(resources, *resource.DomainName)
 			}

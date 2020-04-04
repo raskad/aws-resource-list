@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iotanalytics"
 )
 
-func getIoTAnalytics(config aws.Config) (resources resourceMap) {
+func getIoTAnalytics(config aws.Config) (resources awsResourceMap) {
 	client := iotanalytics.New(config)
 
 	ioTAnalyticsChannelNames := getIoTAnalyticsChannelNames(client)
@@ -15,7 +15,7 @@ func getIoTAnalytics(config aws.Config) (resources resourceMap) {
 	ioTAnalyticsDatastoreNames := getIoTAnalyticsDatastoreNames(client)
 	ioTAnalyticsPipelineNames := getIoTAnalyticsPipelineNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		ioTAnalyticsChannel:   ioTAnalyticsChannelNames,
 		ioTAnalyticsDataset:   ioTAnalyticsDatasetNames,
 		ioTAnalyticsDatastore: ioTAnalyticsDatastoreNames,
@@ -28,7 +28,10 @@ func getIoTAnalyticsChannelNames(client *iotanalytics.Client) (resources []strin
 	req := client.ListChannelsRequest(&iotanalytics.ListChannelsInput{})
 	p := iotanalytics.NewListChannelsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ChannelSummaries {
 			resources = append(resources, *resource.ChannelName)
@@ -41,7 +44,10 @@ func getIoTAnalyticsDatasetNames(client *iotanalytics.Client) (resources []strin
 	req := client.ListDatasetsRequest(&iotanalytics.ListDatasetsInput{})
 	p := iotanalytics.NewListDatasetsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.DatasetSummaries {
 			resources = append(resources, *resource.DatasetName)
@@ -54,7 +60,10 @@ func getIoTAnalyticsDatastoreNames(client *iotanalytics.Client) (resources []str
 	req := client.ListDatastoresRequest(&iotanalytics.ListDatastoresInput{})
 	p := iotanalytics.NewListDatastoresPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.DatastoreSummaries {
 			resources = append(resources, *resource.DatastoreName)
@@ -67,7 +76,10 @@ func getIoTAnalyticsPipelineNames(client *iotanalytics.Client) (resources []stri
 	req := client.ListPipelinesRequest(&iotanalytics.ListPipelinesInput{})
 	p := iotanalytics.NewListPipelinesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.PipelineSummaries {
 			resources = append(resources, *resource.PipelineName)

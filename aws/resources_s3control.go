@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3control"
 )
 
-func getS3Control(config aws.Config) (resources resourceMap) {
+func getS3Control(config aws.Config) (resources awsResourceMap) {
 	client := s3control.New(config)
 
 	s3AccessPointNames := getS3AccessPointNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		s3AccessPoint: s3AccessPointNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getS3AccessPointNames(client *s3control.Client) (resources []string) {
 	req := client.ListAccessPointsRequest(&s3control.ListAccessPointsInput{})
 	p := s3control.NewListAccessPointsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.AccessPointList {
 			resources = append(resources, *resource.Name)

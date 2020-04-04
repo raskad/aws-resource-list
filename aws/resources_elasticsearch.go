@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 )
 
-func getElasticsearch(config aws.Config) (resources resourceMap) {
+func getElasticsearch(config aws.Config) (resources awsResourceMap) {
 	client := elasticsearchservice.New(config)
 
 	elasticsearchDomainNames := getElasticsearchDomainNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		elasticsearchDomain: elasticsearchDomainNames,
 	}
 	return
@@ -20,7 +20,10 @@ func getElasticsearch(config aws.Config) (resources resourceMap) {
 
 func getElasticsearchDomainNames(client *elasticsearchservice.Client) (resources []string) {
 	page, err := client.ListDomainNamesRequest(&elasticsearchservice.ListDomainNamesInput{}).Send(context.Background())
-	logErr(err)
+	if err != nil {
+		logErr(err)
+		return
+	}
 	for _, resource := range page.DomainNames {
 		resources = append(resources, *resource.DomainName)
 	}

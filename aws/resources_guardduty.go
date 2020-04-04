@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/guardduty"
 )
 
-func getGuardDuty(config aws.Config) (resources resourceMap) {
+func getGuardDuty(config aws.Config) (resources awsResourceMap) {
 	client := guardduty.New(config)
 
 	guardDutyDetectorIDs := getGuardDutyDetectorIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		guardDutyDetector: guardDutyDetectorIDs,
 	}
 	return
@@ -22,7 +22,10 @@ func getGuardDutyDetectorIDs(client *guardduty.Client) (resources []string) {
 	req := client.ListDetectorsRequest(&guardduty.ListDetectorsInput{})
 	p := guardduty.NewListDetectorsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.DetectorIds...)
 	}

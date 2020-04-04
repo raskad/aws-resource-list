@@ -7,17 +7,19 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 )
 
-func getEcs(config aws.Config) (resources resourceMap) {
+func getEcs(config aws.Config) (resources awsResourceMap) {
 	client := ecs.New(config)
 
 	ecsClusterARNs := getEcsClusterARNs(client)
 	ecsServiceARNs := getEcsServiceARNs(client, ecsClusterARNs)
 	ecsTaskDefinitionARNs := getEcsTaskDefinitionARNs(client)
+	ecsCapacityProviderARNs := getEcsCapacityProviderARNs(client)
 
-	resources = resourceMap{
-		ecsCluster:        ecsClusterARNs,
-		ecsService:        ecsServiceARNs,
-		ecsTaskDefinition: ecsTaskDefinitionARNs,
+	resources = awsResourceMap{
+		ecsCluster:          ecsClusterARNs,
+		ecsService:          ecsServiceARNs,
+		ecsTaskDefinition:   ecsTaskDefinitionARNs,
+		ecsCapacityProvider: ecsCapacityProviderARNs,
 	}
 	return
 }
@@ -26,7 +28,10 @@ func getEcsClusterARNs(client *ecs.Client) (resources []string) {
 	req := client.ListClustersRequest(&ecs.ListClustersInput{})
 	p := ecs.NewListClustersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.ClusterArns...)
 	}
@@ -40,7 +45,10 @@ func getEcsServiceARNs(client *ecs.Client, clusterARNs []string) (resources []st
 		})
 		p := ecs.NewListServicesPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			resources = append(resources, page.ServiceArns...)
 		}
@@ -52,9 +60,30 @@ func getEcsTaskDefinitionARNs(client *ecs.Client) (resources []string) {
 	req := client.ListTaskDefinitionsRequest(&ecs.ListTaskDefinitionsInput{})
 	p := ecs.NewListTaskDefinitionsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.TaskDefinitionArns...)
 	}
 	return
+}
+
+func getEcsCapacityProviderARNs(client *ecs.Client) (resources []string) {
+	input := ecs.DescribeCapacityProvidersInput{}
+	for {
+		page, err := client.DescribeCapacityProvidersRequest(&input).Send(context.Background())
+		if err != nil {
+			logErr(err)
+			return
+		}
+		for _, resource := range page.CapacityProviders {
+			resources = append(resources, *resource.CapacityProviderArn)
+		}
+		if page.NextToken == nil {
+			return
+		}
+		input.NextToken = page.NextToken
+	}
 }

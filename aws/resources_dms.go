@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 )
 
-func getDms(config aws.Config) (resources resourceMap) {
+func getDms(config aws.Config) (resources awsResourceMap) {
 	client := databasemigrationservice.New(config)
 
 	dmsCertificateIDs := getDmsCertificateIDs(client)
@@ -17,7 +17,7 @@ func getDms(config aws.Config) (resources resourceMap) {
 	dmsReplicationSubnetGroupIDs := getDmsReplicationSubnetGroupIDs(client)
 	dmsReplicationTaskIDs := getDmsReplicationTaskIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		dmsCertificate:            dmsCertificateIDs,
 		dmsEndpoint:               dmsEndpointIDs,
 		dmsEventSubscription:      dmsEventSubscriptionIDs,
@@ -32,7 +32,10 @@ func getDmsCertificateIDs(client *databasemigrationservice.Client) (resources []
 	req := client.DescribeCertificatesRequest(&databasemigrationservice.DescribeCertificatesInput{})
 	p := databasemigrationservice.NewDescribeCertificatesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Certificates {
 			resources = append(resources, *resource.CertificateIdentifier)
@@ -45,7 +48,10 @@ func getDmsEndpointIDs(client *databasemigrationservice.Client) (resources []str
 	req := client.DescribeEndpointsRequest(&databasemigrationservice.DescribeEndpointsInput{})
 	p := databasemigrationservice.NewDescribeEndpointsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Endpoints {
 			resources = append(resources, *resource.EndpointIdentifier)
@@ -58,7 +64,10 @@ func getDmsEventSubscriptionIDs(client *databasemigrationservice.Client) (resour
 	req := client.DescribeEventSubscriptionsRequest(&databasemigrationservice.DescribeEventSubscriptionsInput{})
 	p := databasemigrationservice.NewDescribeEventSubscriptionsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.EventSubscriptionsList {
 			resources = append(resources, *resource.CustSubscriptionId)
@@ -71,7 +80,10 @@ func getDmsReplicationInstanceIDs(client *databasemigrationservice.Client) (reso
 	req := client.DescribeReplicationInstancesRequest(&databasemigrationservice.DescribeReplicationInstancesInput{})
 	p := databasemigrationservice.NewDescribeReplicationInstancesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ReplicationInstances {
 			resources = append(resources, *resource.ReplicationInstanceIdentifier)
@@ -84,7 +96,10 @@ func getDmsReplicationSubnetGroupIDs(client *databasemigrationservice.Client) (r
 	req := client.DescribeReplicationSubnetGroupsRequest(&databasemigrationservice.DescribeReplicationSubnetGroupsInput{})
 	p := databasemigrationservice.NewDescribeReplicationSubnetGroupsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ReplicationSubnetGroups {
 			resources = append(resources, *resource.ReplicationSubnetGroupIdentifier)
@@ -97,7 +112,10 @@ func getDmsReplicationTaskIDs(client *databasemigrationservice.Client) (resource
 	req := client.DescribeReplicationTasksRequest(&databasemigrationservice.DescribeReplicationTasksInput{})
 	p := databasemigrationservice.NewDescribeReplicationTasksPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ReplicationTasks {
 			resources = append(resources, *resource.ReplicationTaskIdentifier)

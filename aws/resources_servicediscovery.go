@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/servicediscovery"
 )
 
-func getServiceDiscovery(config aws.Config) (resources resourceMap) {
+func getServiceDiscovery(config aws.Config) (resources awsResourceMap) {
 	client := servicediscovery.New(config)
 
 	serviceDiscoveryHTTPNamespaceNames := getServiceDiscoveryHTTPNamespaceNames(client)
@@ -15,7 +15,7 @@ func getServiceDiscovery(config aws.Config) (resources resourceMap) {
 	serviceDiscoveryPublicDNSNamespaceNames := getServiceDiscoveryPublicDNSNamespaceNames(client)
 	serviceDiscoveryServiceIDs := getServiceDiscoveryServiceIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		serviceDiscoveryHTTPNamespace:       serviceDiscoveryHTTPNamespaceNames,
 		serviceDiscoveryPrivateDNSNamespace: serviceDiscoveryPrivateDNSNamespaceNames,
 		serviceDiscoveryPublicDNSNamespace:  serviceDiscoveryPublicDNSNamespaceNames,
@@ -28,7 +28,10 @@ func getServiceDiscoveryHTTPNamespaceNames(client *servicediscovery.Client) (res
 	req := client.ListNamespacesRequest(&servicediscovery.ListNamespacesInput{})
 	p := servicediscovery.NewListNamespacesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Namespaces {
 			if resource.Type == servicediscovery.NamespaceTypeHttp {
@@ -43,7 +46,10 @@ func getServiceDiscoveryPrivateDNSNamespaceNames(client *servicediscovery.Client
 	req := client.ListNamespacesRequest(&servicediscovery.ListNamespacesInput{})
 	p := servicediscovery.NewListNamespacesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Namespaces {
 			if resource.Type == servicediscovery.NamespaceTypeDnsPrivate {
@@ -58,7 +64,10 @@ func getServiceDiscoveryPublicDNSNamespaceNames(client *servicediscovery.Client)
 	req := client.ListNamespacesRequest(&servicediscovery.ListNamespacesInput{})
 	p := servicediscovery.NewListNamespacesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Namespaces {
 			if resource.Type == servicediscovery.NamespaceTypeDnsPublic {
@@ -73,7 +82,10 @@ func getServiceDiscoveryServiceIDs(client *servicediscovery.Client) (resources [
 	req := client.ListServicesRequest(&servicediscovery.ListServicesInput{})
 	p := servicediscovery.NewListServicesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Services {
 			resources = append(resources, *resource.Id)

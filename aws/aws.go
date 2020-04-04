@@ -25,9 +25,9 @@ func Start(gitTag string, gitCommit string) {
 
 	// Initiate application state
 	var state = state{
-		real: resourceMap{},
-		cfn:  resourceMap{},
-		tf:   resourceMap{},
+		Real: awsResourceMap{},
+		Cfn:  extResourceMap{},
+		Tf:   extResourceMap{},
 	}
 
 	// Read state from disk
@@ -51,7 +51,7 @@ func Start(gitTag string, gitCommit string) {
 						Usage: "Refresh currently deployed aws resources",
 						Action: func(c *cli.Context) error {
 							config := awsStart()
-							state[real] = getRealState(config)
+							state.Real = getRealState(config)
 							return nil
 						},
 					},
@@ -64,7 +64,7 @@ func Start(gitTag string, gitCommit string) {
 							if err != nil {
 								logFatal("Could not fetch cloudformation resources:", err)
 							}
-							state[cfn] = cfnState
+							state.Cfn = cfnState
 							return nil
 						},
 					},
@@ -74,11 +74,10 @@ func Start(gitTag string, gitCommit string) {
 						ArgsUsage: "['terraform show -json' output file]",
 						Action: func(c *cli.Context) error {
 							tfjsonFile := c.Args().Get(0)
-							cfnState, err := getTerraformState(tfjsonFile)
+							err := getTerraformState(tfjsonFile, &state.Tf)
 							if err != nil {
 								logFatal("Could not fetch terraform resources:", err)
 							}
-							state[tf] = cfnState
 							return nil
 						},
 					},
@@ -92,7 +91,7 @@ func Start(gitTag string, gitCommit string) {
 						Name:  "real",
 						Usage: "Print currently deployed aws resources",
 						Action: func(c *cli.Context) error {
-							state[real].print()
+							state.Real.print()
 							return nil
 						},
 					},
@@ -100,7 +99,7 @@ func Start(gitTag string, gitCommit string) {
 						Name:  "cfn",
 						Usage: "Print aws resources that are deployed through cloudformation",
 						Action: func(c *cli.Context) error {
-							state[cfn].print()
+							state.Cfn.print()
 							return nil
 						},
 					},
@@ -108,7 +107,7 @@ func Start(gitTag string, gitCommit string) {
 						Name:  "tf",
 						Usage: "Print aws resources that are deployed through terraform",
 						Action: func(c *cli.Context) error {
-							state[tf].print()
+							state.Tf.print()
 							return nil
 						},
 					},
@@ -118,9 +117,56 @@ func Start(gitTag string, gitCommit string) {
 				Name:  "compare",
 				Usage: "Print resources that exist in reality but not in IaC",
 				Action: func(c *cli.Context) error {
-					state.filter(real, cfn).print()
-					state.filter(real, tf).print()
+					state.filter().print()
 					return nil
+				},
+			},
+			{
+				Name:  "types",
+				Usage: "Print resource types",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "cfn",
+						Usage: "Print CloudFormation resource types that are implemented",
+						Action: func(c *cli.Context) error {
+							for key := range cloudformationTypeMap {
+								fmt.Println(key)
+							}
+							return nil
+						},
+					},
+					{
+						Name:  "tf",
+						Usage: "Print Terraform resource types that are implemented",
+						Action: func(c *cli.Context) error {
+							for key := range terraformTypeMap {
+								fmt.Println(key)
+							}
+							return nil
+						},
+					},
+					{
+						Name:  "missing",
+						Usage: "Print resources that are not implemented/blacklisted",
+						Subcommands: []*cli.Command{
+							{
+								Name:  "cfn",
+								Usage: "Print CloudFormation resources that are not implemented/blacklisted",
+								Action: func(c *cli.Context) error {
+									printMissingCloudformationResources()
+									return nil
+								},
+							},
+							{
+								Name:  "tf",
+								Usage: "Print Terraform resources that are not implemented/blacklisted",
+								Action: func(c *cli.Context) error {
+									printMissingTerraformResources()
+									return nil
+								},
+							},
+						},
+					},
 				},
 			},
 			{
@@ -158,15 +204,15 @@ func getAccountID(config aws.Config) (err error) {
 	return nil
 }
 
-func run(f func(config aws.Config) (resources resourceMap), config aws.Config, c chan resourceMap, wg *sync.WaitGroup) {
+func run(f func(config aws.Config) (resources awsResourceMap), config aws.Config, c chan awsResourceMap, wg *sync.WaitGroup) {
 	wg.Add(1)
 	c <- f(config)
 	wg.Done()
 }
 
-func getRealState(config aws.Config) (resources resourceMap) {
-	r := []resourceMap{}
-	c := make(chan resourceMap)
+func getRealState(config aws.Config) (resources awsResourceMap) {
+	r := []awsResourceMap{}
+	c := make(chan awsResourceMap)
 	var wg sync.WaitGroup
 
 	go run(getAccessAnalyzer, config, c, &wg)
@@ -177,6 +223,7 @@ func getRealState(config aws.Config) (resources resourceMap) {
 	go run(getAPIGateway, config, c, &wg)
 	go run(getAPIGatewayV2, config, c, &wg)
 	go run(getAppConfig, config, c, &wg)
+	go run(getApplicationAutoScaling, config, c, &wg)
 	go run(getAppMesh, config, c, &wg)
 	go run(getAppStream, config, c, &wg)
 	go run(getAppSync, config, c, &wg)
@@ -187,18 +234,24 @@ func getRealState(config aws.Config) (resources resourceMap) {
 	go run(getBatch, config, c, &wg)
 	go run(getCloud9, config, c, &wg)
 	go run(getCloudfront, config, c, &wg)
+	go run(getCloudHSMV2, config, c, &wg)
 	go run(getCloudTrail, config, c, &wg)
 	go run(getCloudWatch, config, c, &wg)
 	go run(getCloudWatchEvents, config, c, &wg)
 	go run(getCodeBuild, config, c, &wg)
 	go run(getCodeCommit, config, c, &wg)
 	go run(getCodeDeploy, config, c, &wg)
+	go run(getCodeGuruProfiler, config, c, &wg)
 	go run(getCodePipeline, config, c, &wg)
 	go run(getCognitoIdentity, config, c, &wg)
 	go run(getCognitoIdentityProvider, config, c, &wg)
 	go run(getConfig, config, c, &wg)
+	go run(getCostAndUsageReportService, config, c, &wg)
 	go run(getDataPipeline, config, c, &wg)
+	go run(getDataSync, config, c, &wg)
 	go run(getDAX, config, c, &wg)
+	go run(getDeviceFarm, config, c, &wg)
+	go run(getDirectConnect, config, c, &wg)
 	go run(getDirectoryService, config, c, &wg)
 	go run(getDLM, config, c, &wg)
 	go run(getDms, config, c, &wg)
@@ -211,6 +264,7 @@ func getRealState(config aws.Config) (resources resourceMap) {
 	go run(getEks, config, c, &wg)
 	go run(getElasticache, config, c, &wg)
 	go run(getElasticsearch, config, c, &wg)
+	go run(getElasticTranscoder, config, c, &wg)
 	go run(getElasticBeanstalk, config, c, &wg)
 	go run(getElasticLoadBalancing, config, c, &wg)
 	go run(getElasticLoadBalancingV2, config, c, &wg)
@@ -218,6 +272,8 @@ func getRealState(config aws.Config) (resources resourceMap) {
 	go run(getFirehose, config, c, &wg)
 	go run(getFsx, config, c, &wg)
 	go run(getGameLift, config, c, &wg)
+	go run(getGlacier, config, c, &wg)
+	go run(getGlobalAccelerator, config, c, &wg)
 	go run(getGlue, config, c, &wg)
 	go run(getGreengrass, config, c, &wg)
 	go run(getGroundStation, config, c, &wg)
@@ -232,21 +288,29 @@ func getRealState(config aws.Config) (resources resourceMap) {
 	go run(getKinesis, config, c, &wg)
 	go run(getKinesisAnalytics, config, c, &wg)
 	go run(getKinesisAnalyticsV2, config, c, &wg)
+	go run(getKinesisVideo, config, c, &wg)
 	go run(getKms, config, c, &wg)
 	go run(getLakeFormation, config, c, &wg)
 	go run(getLambda, config, c, &wg)
+	go run(getLicenseManager, config, c, &wg)
+	go run(getLightsail, config, c, &wg)
 	go run(getCloudwatchLogs, config, c, &wg)
+	go run(getMacie, config, c, &wg)
 	go run(getMq, config, c, &wg)
 	go run(getMediaConvert, config, c, &wg)
 	go run(getMediaLive, config, c, &wg)
 	go run(getMediaStore, config, c, &wg)
 	go run(getMsk, config, c, &wg)
 	go run(getNeptune, config, c, &wg)
+	go run(getNetworkManager, config, c, &wg)
 	go run(getOpsWorks, config, c, &wg)
+	go run(getOrganizations, config, c, &wg)
 	go run(getPinpoint, config, c, &wg)
 	go run(getQLDB, config, c, &wg)
+	go run(getQuickSight, config, c, &wg)
 	go run(getRds, config, c, &wg)
 	go run(getRedshift, config, c, &wg)
+	go run(getResourceGroups, config, c, &wg)
 	go run(getRoboMaker, config, c, &wg)
 	go run(getRoute53, config, c, &wg)
 	go run(getRoute53Resolver, config, c, &wg)
@@ -259,17 +323,22 @@ func getRealState(config aws.Config) (resources resourceMap) {
 	go run(getServiceDiscovery, config, c, &wg)
 	go run(getSes, config, c, &wg)
 	go run(getSfn, config, c, &wg)
+	go run(getShield, config, c, &wg)
 	go run(getSns, config, c, &wg)
 	go run(getSns, config, c, &wg)
 	go run(getSqs, config, c, &wg)
 	go run(getSsm, config, c, &wg)
+	go run(getStorageGateway, config, c, &wg)
+	go run(getSWF, config, c, &wg)
 	go run(getTransfer, config, c, &wg)
 	go run(getWaf, config, c, &wg)
 	go run(getWafRegional, config, c, &wg)
 	go run(getWafv2, config, c, &wg)
+	go run(getWorkLink, config, c, &wg)
 	go run(getWorkSpaces, config, c, &wg)
+	go run(getXray, config, c, &wg)
 
-	// Append the resourceMaps to the slice until all are listed
+	// Append the awsResourceMaps to the slice until all are listed
 	first := true
 	for rMap := range c {
 		r = append(r, rMap)

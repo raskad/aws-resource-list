@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 )
 
-func getSqs(config aws.Config) (resources resourceMap) {
+func getSqs(config aws.Config) (resources awsResourceMap) {
 	client := sqs.New(config)
 
 	sqsQueueNames := getSqsQueueNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		sqsQueue: sqsQueueNames,
 	}
 	return
@@ -20,7 +20,10 @@ func getSqs(config aws.Config) (resources resourceMap) {
 
 func getSqsQueueNames(client *sqs.Client) (resources []string) {
 	page, err := client.ListQueuesRequest(&sqs.ListQueuesInput{}).Send(context.Background())
-	logErr(err)
+	if err != nil {
+		logErr(err)
+		return
+	}
 	resources = append(resources, page.QueueUrls...)
 	return
 }

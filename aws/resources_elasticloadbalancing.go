@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 )
 
-func getElasticLoadBalancing(config aws.Config) (resources resourceMap) {
+func getElasticLoadBalancing(config aws.Config) (resources awsResourceMap) {
 	client := elasticloadbalancing.New(config)
 
 	elasticLoadBalancingLoadBalancerNames := getElasticLoadBalancingLoadBalancerNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		elasticLoadBalancingLoadBalancer: elasticLoadBalancingLoadBalancerNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getElasticLoadBalancingLoadBalancerNames(client *elasticloadbalancing.Clien
 	req := client.DescribeLoadBalancersRequest(&elasticloadbalancing.DescribeLoadBalancersInput{})
 	p := elasticloadbalancing.NewDescribeLoadBalancersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.LoadBalancerDescriptions {
 			resources = append(resources, *resource.LoadBalancerName)

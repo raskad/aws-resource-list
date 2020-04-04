@@ -7,14 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/backup"
 )
 
-func getBackup(config aws.Config) (resources resourceMap) {
+func getBackup(config aws.Config) (resources awsResourceMap) {
 	client := backup.New(config)
 
 	backupBackupPlanIDs := getBackupBackupPlanIDs(client)
 	backupBackupSelectionIDs := getBackupBackupSelectionIDs(client, backupBackupPlanIDs)
 	backupBackupVaultNames := getBackupBackupVaultNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		backupBackupPlan:      backupBackupPlanIDs,
 		backupBackupSelection: backupBackupSelectionIDs,
 		backupBackupVault:     backupBackupVaultNames,
@@ -26,7 +26,10 @@ func getBackupBackupPlanIDs(client *backup.Client) (resources []string) {
 	req := client.ListBackupPlansRequest(&backup.ListBackupPlansInput{})
 	p := backup.NewListBackupPlansPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.BackupPlansList {
 			resources = append(resources, *resource.BackupPlanId)
@@ -42,7 +45,10 @@ func getBackupBackupSelectionIDs(client *backup.Client, backupBackupPlanIDs []st
 		})
 		p := backup.NewListBackupSelectionsPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.BackupSelectionsList {
 				resources = append(resources, *resource.SelectionId)
@@ -56,7 +62,10 @@ func getBackupBackupVaultNames(client *backup.Client) (resources []string) {
 	req := client.ListBackupVaultsRequest(&backup.ListBackupVaultsInput{})
 	p := backup.NewListBackupVaultsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.BackupVaultList {
 			resources = append(resources, *resource.BackupVaultName)

@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iot1clickprojects"
 )
 
-func getIoT1ClickProjects(config aws.Config) (resources resourceMap) {
+func getIoT1ClickProjects(config aws.Config) (resources awsResourceMap) {
 	client := iot1clickprojects.New(config)
 
 	ioT1ClickProjectNames := getIoT1ClickProjectNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		ioT1ClickProject: ioT1ClickProjectNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getIoT1ClickProjectNames(client *iot1clickprojects.Client) (resources []str
 	req := client.ListProjectsRequest(&iot1clickprojects.ListProjectsInput{})
 	p := iot1clickprojects.NewListProjectsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Projects {
 			resources = append(resources, *resource.ProjectName)

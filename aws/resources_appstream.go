@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/appstream"
 )
 
-func getAppStream(config aws.Config) (resources resourceMap) {
+func getAppStream(config aws.Config) (resources awsResourceMap) {
 	client := appstream.New(config)
 
 	appStreamDirectoryConfigNames := getAppStreamDirectoryConfigNames(client)
@@ -15,7 +15,7 @@ func getAppStream(config aws.Config) (resources resourceMap) {
 	appStreamImageBuilderNames := getAppStreamImageBuilderNames(client)
 	appStreamStackNames := getAppStreamStackNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		appStreamDirectoryConfig: appStreamDirectoryConfigNames,
 		appStreamFleet:           appStreamFleetNames,
 		appStreamImageBuilder:    appStreamImageBuilderNames,
@@ -28,7 +28,10 @@ func getAppStreamDirectoryConfigNames(client *appstream.Client) (resources []str
 	input := appstream.DescribeDirectoryConfigsInput{}
 	for {
 		page, err := client.DescribeDirectoryConfigsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.DirectoryConfigs {
 			resources = append(resources, *resource.DirectoryName)
 		}
@@ -43,7 +46,10 @@ func getAppStreamFleetNames(client *appstream.Client) (resources []string) {
 	input := appstream.DescribeFleetsInput{}
 	for {
 		page, err := client.DescribeFleetsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Fleets {
 			resources = append(resources, *resource.Name)
 		}
@@ -58,7 +64,10 @@ func getAppStreamImageBuilderNames(client *appstream.Client) (resources []string
 	input := appstream.DescribeImageBuildersInput{}
 	for {
 		page, err := client.DescribeImageBuildersRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.ImageBuilders {
 			resources = append(resources, *resource.Name)
 		}
@@ -73,7 +82,10 @@ func getAppStreamStackNames(client *appstream.Client) (resources []string) {
 	input := appstream.DescribeStacksInput{}
 	for {
 		page, err := client.DescribeStacksRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Stacks {
 			resources = append(resources, *resource.Name)
 		}

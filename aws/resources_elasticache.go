@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 )
 
-func getElasticache(config aws.Config) (resources resourceMap) {
+func getElasticache(config aws.Config) (resources awsResourceMap) {
 	client := elasticache.New(config)
 
 	elastiCacheCacheClusterIDs := getElastiCacheCacheClusterIDs(client)
@@ -16,7 +16,7 @@ func getElasticache(config aws.Config) (resources resourceMap) {
 	elastiCacheSecurityGroupNames := getElastiCacheSecurityGroupNames(client)
 	elastiCacheSubnetGroupNames := getElastiCacheSubnetGroupNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		elastiCacheCacheCluster:     elastiCacheCacheClusterIDs,
 		elastiCacheParameterGroup:   elastiCacheParameterGroupNames,
 		elastiCacheReplicationGroup: elastiCacheReplicationGroupIDs,
@@ -30,7 +30,10 @@ func getElastiCacheCacheClusterIDs(client *elasticache.Client) (resources []stri
 	req := client.DescribeCacheClustersRequest(&elasticache.DescribeCacheClustersInput{})
 	p := elasticache.NewDescribeCacheClustersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.CacheClusters {
 			resources = append(resources, *resource.CacheClusterId)
@@ -43,7 +46,10 @@ func getElastiCacheParameterGroupNames(client *elasticache.Client) (resources []
 	req := client.DescribeCacheParameterGroupsRequest(&elasticache.DescribeCacheParameterGroupsInput{})
 	p := elasticache.NewDescribeCacheParameterGroupsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.CacheParameterGroups {
 			resources = append(resources, *resource.CacheParameterGroupName)
@@ -56,7 +62,10 @@ func getElastiCacheReplicationGroupIDs(client *elasticache.Client) (resources []
 	req := client.DescribeReplicationGroupsRequest(&elasticache.DescribeReplicationGroupsInput{})
 	p := elasticache.NewDescribeReplicationGroupsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ReplicationGroups {
 			resources = append(resources, *resource.ReplicationGroupId)
@@ -69,7 +78,10 @@ func getElastiCacheSecurityGroupNames(client *elasticache.Client) (resources []s
 	req := client.DescribeCacheSecurityGroupsRequest(&elasticache.DescribeCacheSecurityGroupsInput{})
 	p := elasticache.NewDescribeCacheSecurityGroupsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.CacheSecurityGroups {
 			resources = append(resources, *resource.CacheSecurityGroupName)
@@ -82,7 +94,10 @@ func getElastiCacheSubnetGroupNames(client *elasticache.Client) (resources []str
 	req := client.DescribeCacheSubnetGroupsRequest(&elasticache.DescribeCacheSubnetGroupsInput{})
 	p := elasticache.NewDescribeCacheSubnetGroupsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.CacheSubnetGroups {
 			resources = append(resources, *resource.CacheSubnetGroupName)

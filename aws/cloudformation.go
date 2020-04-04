@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 )
 
-func getCloudForamtionState(config aws.Config) (resources resourceMap, err error) {
+func getCloudForamtionState(config aws.Config) (resources extResourceMap, err error) {
 	client := cloudformation.New(config)
 	stackIDs, err := getCloudformationActiveStackIDs(client)
 	if err != nil {
@@ -17,11 +17,11 @@ func getCloudForamtionState(config aws.Config) (resources resourceMap, err error
 	if err != nil {
 		return resources, err
 	}
-	resources = resourceMap{}
+	resources = extResourceMap{}
 	for cloudFormationType := range resourcesCloudFormation {
-		resourceType, ok := fromCloudFormationType(cloudFormationType)
+		_, ok := fromCloudFormationType(cloudFormationType)
 		if ok {
-			resources[resourceType] = resourcesCloudFormation[cloudFormationType]
+			resources[cloudFormationType] = resourcesCloudFormation[cloudFormationType]
 		}
 	}
 	return resources, nil

@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/autoscalingplans"
 )
 
-func getAutoScalingPlans(config aws.Config) (resources resourceMap) {
+func getAutoScalingPlans(config aws.Config) (resources awsResourceMap) {
 	client := autoscalingplans.New(config)
 
 	autoScalingPlansScalingPlanNames := getAutoScalingPlansScalingPlanNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		autoScalingPlansScalingPlan: autoScalingPlansScalingPlanNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getAutoScalingPlansScalingPlanNames(client *autoscalingplans.Client) (resou
 	input := autoscalingplans.DescribeScalingPlansInput{}
 	for {
 		page, err := client.DescribeScalingPlansRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.ScalingPlans {
 			resources = append(resources, *resource.ScalingPlanName)
 		}

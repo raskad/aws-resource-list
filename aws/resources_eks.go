@@ -7,15 +7,17 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/eks"
 )
 
-func getEks(config aws.Config) (resources resourceMap) {
+func getEks(config aws.Config) (resources awsResourceMap) {
 	client := eks.New(config)
 
 	eksClusterNames := getEksClusterNames(client)
 	eksNodegroupNames := getEksNodegroupNames(client, eksClusterNames)
+	eksFargateProfileNames := getEksFargateProfileNames(client, eksClusterNames)
 
-	resources = resourceMap{
-		eksCluster:   eksClusterNames,
-		eksNodegroup: eksNodegroupNames,
+	resources = awsResourceMap{
+		eksCluster:        eksClusterNames,
+		eksNodegroup:      eksNodegroupNames,
+		eksFargateProfile: eksFargateProfileNames,
 	}
 	return
 }
@@ -24,7 +26,10 @@ func getEksClusterNames(client *eks.Client) (resources []string) {
 	req := client.ListClustersRequest(&eks.ListClustersInput{})
 	p := eks.NewListClustersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.Clusters...)
 	}
@@ -38,9 +43,30 @@ func getEksNodegroupNames(client *eks.Client, clusterNames []string) (resources 
 		})
 		p := eks.NewListNodegroupsPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			resources = append(resources, page.Nodegroups...)
+		}
+	}
+	return
+}
+
+func getEksFargateProfileNames(client *eks.Client, clusterNames []string) (resources []string) {
+	for _, clusterName := range clusterNames {
+		req := client.ListFargateProfilesRequest(&eks.ListFargateProfilesInput{
+			ClusterName: aws.String(clusterName),
+		})
+		p := eks.NewListFargateProfilesPaginator(req)
+		for p.Next(context.Background()) {
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
+			page := p.CurrentPage()
+			resources = append(resources, page.FargateProfileNames...)
 		}
 	}
 	return

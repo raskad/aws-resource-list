@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/inspector"
 )
 
-func getInspector(config aws.Config) (resources resourceMap) {
+func getInspector(config aws.Config) (resources awsResourceMap) {
 	client := inspector.New(config)
 
 	inspectorAssessmentTargetARNs := getInspectorAssessmentTargetARNs(client)
 	inspectorAssessmentTemplateARNs := getInspectorAssessmentTemplateARNs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		inspectorAssessmentTarget:   inspectorAssessmentTargetARNs,
 		inspectorAssessmentTemplate: inspectorAssessmentTemplateARNs,
 	}
@@ -24,7 +24,10 @@ func getInspectorAssessmentTargetARNs(client *inspector.Client) (resources []str
 	req := client.ListAssessmentTargetsRequest(&inspector.ListAssessmentTargetsInput{})
 	p := inspector.NewListAssessmentTargetsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.AssessmentTargetArns...)
 	}
@@ -35,7 +38,10 @@ func getInspectorAssessmentTemplateARNs(client *inspector.Client) (resources []s
 	req := client.ListAssessmentTemplatesRequest(&inspector.ListAssessmentTemplatesInput{})
 	p := inspector.NewListAssessmentTemplatesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.AssessmentTemplateArns...)
 	}

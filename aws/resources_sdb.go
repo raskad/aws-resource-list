@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/simpledb"
 )
 
-func getSdb(config aws.Config) (resources resourceMap) {
+func getSdb(config aws.Config) (resources awsResourceMap) {
 	client := simpledb.New(config)
 
 	sdbDomainNames := getSdbDomainNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		sdbDomain: sdbDomainNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getSdbDomainNames(client *simpledb.Client) (resources []string) {
 	req := client.ListDomainsRequest(&simpledb.ListDomainsInput{})
 	p := simpledb.NewListDomainsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.DomainNames...)
 	}

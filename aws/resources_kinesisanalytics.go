@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kinesisanalytics"
 )
 
-func getKinesisAnalytics(config aws.Config) (resources resourceMap) {
+func getKinesisAnalytics(config aws.Config) (resources awsResourceMap) {
 	client := kinesisanalytics.New(config)
 
 	kinesisAnalyticsApplicationNames := getKinesisAnalyticsApplicationNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		kinesisAnalyticsApplication: kinesisAnalyticsApplicationNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getKinesisAnalyticsApplicationNames(client *kinesisanalytics.Client) (resou
 	input := kinesisanalytics.ListApplicationsInput{}
 	for {
 		page, err := client.ListApplicationsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.ApplicationSummaries {
 			resources = append(resources, *resource.ApplicationName)
 		}

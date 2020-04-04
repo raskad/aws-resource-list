@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iotevents"
 )
 
-func getIoTEvents(config aws.Config) (resources resourceMap) {
+func getIoTEvents(config aws.Config) (resources awsResourceMap) {
 	client := iotevents.New(config)
 
 	ioTEventsDetectorModelNames := getIoTEventsDetectorModelNames(client)
 	ioTEventsInputNames := getIoTEventsInputNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		ioTEventsDetectorModel: ioTEventsDetectorModelNames,
 		ioTEventsInput:         ioTEventsInputNames,
 	}
@@ -24,7 +24,10 @@ func getIoTEventsDetectorModelNames(client *iotevents.Client) (resources []strin
 	input := iotevents.ListDetectorModelsInput{}
 	for {
 		page, err := client.ListDetectorModelsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.DetectorModelSummaries {
 			resources = append(resources, *resource.DetectorModelName)
 		}
@@ -39,7 +42,10 @@ func getIoTEventsInputNames(client *iotevents.Client) (resources []string) {
 	input := iotevents.ListInputsInput{}
 	for {
 		page, err := client.ListInputsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.InputSummaries {
 			resources = append(resources, *resource.InputName)
 		}

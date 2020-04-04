@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sfn"
 )
 
-func getSfn(config aws.Config) (resources resourceMap) {
+func getSfn(config aws.Config) (resources awsResourceMap) {
 	client := sfn.New(config)
 
 	stepFunctionsActivityNames := getStepFunctionsActivityNames(client)
 	stepFunctionsStateMachineNames := getStepFunctionsStateMachineNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		stepFunctionsActivity:     stepFunctionsActivityNames,
 		stepFunctionsStateMachine: stepFunctionsStateMachineNames,
 	}
@@ -24,7 +24,10 @@ func getStepFunctionsActivityNames(client *sfn.Client) (resources []string) {
 	req := client.ListActivitiesRequest(&sfn.ListActivitiesInput{})
 	p := sfn.NewListActivitiesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Activities {
 			resources = append(resources, *resource.Name)
@@ -37,7 +40,10 @@ func getStepFunctionsStateMachineNames(client *sfn.Client) (resources []string) 
 	req := client.ListStateMachinesRequest(&sfn.ListStateMachinesInput{})
 	p := sfn.NewListStateMachinesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.StateMachines {
 			resources = append(resources, *resource.Name)

@@ -9,12 +9,6 @@ The goal of this project is to list all resources in an aws account and check wh
 
 You can run the project, by either downloading the latest binary from the [releases page](https://github.com/raskad/aws-resource-list/releases) or building the project from source.
 
-## Implemented resources
-
-A list of resources and their implementation status is located at [resources.yaml](resources.yaml)  
-Currently the list of resources is populated by all available CloudFormation resources.  
-CloudFormation resources that cannot / will not be implemented are noted in [resourcesBlacklist.yaml](resourcesBlacklist.yaml)
-
 ## Contributing
 
 Outstanding work should be documented in issues.  

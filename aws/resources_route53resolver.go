@@ -7,14 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53resolver"
 )
 
-func getRoute53Resolver(config aws.Config) (resources resourceMap) {
+func getRoute53Resolver(config aws.Config) (resources awsResourceMap) {
 	client := route53resolver.New(config)
 
 	route53ResolverResolverEndpointIDs := getRoute53ResolverResolverEndpointIDs(client)
 	route53ResolverResolverRuleIDs := getRoute53ResolverResolverRuleIDs(client)
 	route53ResolverResolverRuleAssociationIDs := getRoute53ResolverResolverRuleAssociationIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		route53ResolverResolverEndpoint:        route53ResolverResolverEndpointIDs,
 		route53ResolverResolverRule:            route53ResolverResolverRuleIDs,
 		route53ResolverResolverRuleAssociation: route53ResolverResolverRuleAssociationIDs,
@@ -26,7 +26,10 @@ func getRoute53ResolverResolverEndpointIDs(client *route53resolver.Client) (reso
 	req := client.ListResolverEndpointsRequest(&route53resolver.ListResolverEndpointsInput{})
 	p := route53resolver.NewListResolverEndpointsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ResolverEndpoints {
 			resources = append(resources, *resource.Id)
@@ -39,7 +42,10 @@ func getRoute53ResolverResolverRuleIDs(client *route53resolver.Client) (resource
 	req := client.ListResolverRulesRequest(&route53resolver.ListResolverRulesInput{})
 	p := route53resolver.NewListResolverRulesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ResolverRules {
 			resources = append(resources, *resource.Id)
@@ -52,7 +58,10 @@ func getRoute53ResolverResolverRuleAssociationIDs(client *route53resolver.Client
 	req := client.ListResolverRuleAssociationsRequest(&route53resolver.ListResolverRuleAssociationsInput{})
 	p := route53resolver.NewListResolverRuleAssociationsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ResolverRuleAssociations {
 			resources = append(resources, *resource.Id)

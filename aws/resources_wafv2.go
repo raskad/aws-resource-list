@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 )
 
-func getWafv2(config aws.Config) (resources resourceMap) {
+func getWafv2(config aws.Config) (resources awsResourceMap) {
 	client := wafv2.New(config)
 
 	wafv2IPSetIDs := getWafv2IPSetIDs(client)
@@ -15,7 +15,7 @@ func getWafv2(config aws.Config) (resources resourceMap) {
 	wafv2RuleGroupIDs := getWafv2RuleGroupIDs(client)
 	wafv2WebACLIDs := getWafv2WebACLIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		wafv2IPSet:           wafv2IPSetIDs,
 		wafv2RegexPatternSet: wafv2RegexPatternSetIDs,
 		wafv2RuleGroup:       wafv2RuleGroupIDs,
@@ -30,7 +30,10 @@ func getWafv2IPSetIDs(client *wafv2.Client) (resources []string) {
 	}
 	for {
 		page, err := client.ListIPSetsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.IPSets {
 			resources = append(resources, *resource.Id)
 		}
@@ -47,7 +50,10 @@ func getWafv2RegexPatternSetIDs(client *wafv2.Client) (resources []string) {
 	}
 	for {
 		page, err := client.ListRegexPatternSetsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.RegexPatternSets {
 			resources = append(resources, *resource.Id)
 		}
@@ -64,7 +70,10 @@ func getWafv2RuleGroupIDs(client *wafv2.Client) (resources []string) {
 	}
 	for {
 		page, err := client.ListRuleGroupsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.RuleGroups {
 			resources = append(resources, *resource.Id)
 		}
@@ -81,7 +90,10 @@ func getWafv2WebACLIDs(client *wafv2.Client) (resources []string) {
 	}
 	for {
 		page, err := client.ListWebACLsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.WebACLs {
 			resources = append(resources, *resource.Id)
 		}
