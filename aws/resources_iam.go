@@ -8,27 +8,41 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 )
 
-func getIam(config aws.Config) (resources resourceMap) {
+func getIam(config aws.Config) (resources awsResourceMap) {
 	client := iam.New(config)
 
 	iamUserNames := getIamUserNames(client)
 	iamAccessKeyIDs := getIamAccessKeyIDs(client, iamUserNames)
+	iamAccountAliasNames := getIamAccountAliasNames(client)
 	iamGroupNames := getIamGroupNames(client)
+	iamGroupPolicyNames := getIamGroupPolicyNames(client)
 	iamInstanceProfileNames := getIamInstanceProfileNames(client)
+	iamOpenidConnectProviderARNs := getIamOpenidConnectProviderARNs(client)
 	iamPolicyNames := getIamPolicyNames(client)
 	iamRoleNames := getIamRoleNames(client)
 	iamRolePolicyNames := getIamRolePolicyNames(client, iamRoleNames)
+	iamSamlProviderARNs := getIamSamlProviderARNs(client)
+	iamServerCertificateNames := getIamServerCertificateNames(client)
 	iamServiceLinkedRoleNames := getIamServiceLinkedRoleNames(client)
+	iamUserPolicyNames := getIamUserPolicyNames(client, iamUserNames)
+	iamUserSSHKeyIDs := getIamUserSSHKeyIDs(client, iamUserNames)
 
-	resources = resourceMap{
-		iamAccessKey:         iamAccessKeyIDs,
-		iamGroup:             iamGroupNames,
-		iamInstanceProfile:   iamInstanceProfileNames,
-		iamPolicy:            iamPolicyNames,
-		iamRole:              iamRoleNames,
-		iamRolePolicy:        iamRolePolicyNames,
-		iamServiceLinkedRole: iamServiceLinkedRoleNames,
-		iamUser:              iamUserNames,
+	resources = awsResourceMap{
+		iamAccessKey:             iamAccessKeyIDs,
+		iamAccountAlias:          iamAccountAliasNames,
+		iamGroup:                 iamGroupNames,
+		iamGroupPolicy:           iamGroupPolicyNames,
+		iamInstanceProfile:       iamInstanceProfileNames,
+		iamOpenidConnectProvider: iamOpenidConnectProviderARNs,
+		iamPolicy:                iamPolicyNames,
+		iamRole:                  iamRoleNames,
+		iamRolePolicy:            iamRolePolicyNames,
+		iamSamlProvider:          iamSamlProviderARNs,
+		iamServerCertificate:     iamServerCertificateNames,
+		iamServiceLinkedRole:     iamServiceLinkedRoleNames,
+		iamUser:                  iamUserNames,
+		iamUserPolicy:            iamUserPolicyNames,
+		iamUserSSHKey:            iamUserSSHKeyIDs,
 	}
 	return
 }
@@ -40,7 +54,10 @@ func getIamAccessKeyIDs(client *iam.Client, userNames []string) (resources []str
 		})
 		p := iam.NewListAccessKeysPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.AccessKeyMetadata {
 				resources = append(resources, *resource.AccessKeyId)
@@ -50,11 +67,28 @@ func getIamAccessKeyIDs(client *iam.Client, userNames []string) (resources []str
 	return
 }
 
+func getIamAccountAliasNames(client *iam.Client) (resources []string) {
+	req := client.ListAccountAliasesRequest(&iam.ListAccountAliasesInput{})
+	p := iam.NewListAccountAliasesPaginator(req)
+	for p.Next(context.Background()) {
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
+		page := p.CurrentPage()
+		resources = append(resources, page.AccountAliases...)
+	}
+	return
+}
+
 func getIamGroupNames(client *iam.Client) (resources []string) {
 	req := client.ListGroupsRequest(&iam.ListGroupsInput{})
 	p := iam.NewListGroupsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Groups {
 			resources = append(resources, *resource.GroupName)
@@ -63,15 +97,44 @@ func getIamGroupNames(client *iam.Client) (resources []string) {
 	return
 }
 
+func getIamGroupPolicyNames(client *iam.Client) (resources []string) {
+	req := client.ListGroupPoliciesRequest(&iam.ListGroupPoliciesInput{})
+	p := iam.NewListGroupPoliciesPaginator(req)
+	for p.Next(context.Background()) {
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
+		page := p.CurrentPage()
+		resources = append(resources, page.PolicyNames...)
+	}
+	return
+}
+
 func getIamInstanceProfileNames(client *iam.Client) (resources []string) {
 	req := client.ListInstanceProfilesRequest(&iam.ListInstanceProfilesInput{})
 	p := iam.NewListInstanceProfilesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.InstanceProfiles {
 			resources = append(resources, *resource.InstanceProfileName)
 		}
+	}
+	return
+}
+
+func getIamOpenidConnectProviderARNs(client *iam.Client) (resources []string) {
+	page, err := client.ListOpenIDConnectProvidersRequest(&iam.ListOpenIDConnectProvidersInput{}).Send(context.Background())
+	if err != nil {
+		logErr(err)
+		return
+	}
+	for _, resource := range page.OpenIDConnectProviderList {
+		resources = append(resources, *resource.Arn)
 	}
 	return
 }
@@ -82,7 +145,10 @@ func getIamPolicyNames(client *iam.Client) (resources []string) {
 	})
 	p := iam.NewListPoliciesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Policies {
 			resources = append(resources, *resource.PolicyName)
@@ -95,7 +161,10 @@ func getIamRoleNames(client *iam.Client) (resources []string) {
 	req := client.ListRolesRequest(&iam.ListRolesInput{})
 	p := iam.NewListRolesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Roles {
 			if !strings.HasPrefix(*resource.Path, "/aws-service-role/") {
@@ -113,9 +182,40 @@ func getIamRolePolicyNames(client *iam.Client, roleNames []string) (resources []
 		})
 		p := iam.NewListRolePoliciesPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			resources = append(resources, page.PolicyNames...)
+		}
+	}
+	return
+}
+
+func getIamSamlProviderARNs(client *iam.Client) (resources []string) {
+	page, err := client.ListSAMLProvidersRequest(&iam.ListSAMLProvidersInput{}).Send(context.Background())
+	if err != nil {
+		logErr(err)
+		return
+	}
+	for _, resource := range page.SAMLProviderList {
+		resources = append(resources, *resource.Arn)
+	}
+	return
+}
+
+func getIamServerCertificateNames(client *iam.Client) (resources []string) {
+	req := client.ListServerCertificatesRequest(&iam.ListServerCertificatesInput{})
+	p := iam.NewListServerCertificatesPaginator(req)
+	for p.Next(context.Background()) {
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
+		page := p.CurrentPage()
+		for _, resource := range page.ServerCertificateMetadataList {
+			resources = append(resources, *resource.ServerCertificateName)
 		}
 	}
 	return
@@ -127,7 +227,10 @@ func getIamServiceLinkedRoleNames(client *iam.Client) (resources []string) {
 	})
 	p := iam.NewListRolesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Roles {
 			resources = append(resources, *resource.RoleName)
@@ -140,10 +243,51 @@ func getIamUserNames(client *iam.Client) (resources []string) {
 	req := client.ListUsersRequest(&iam.ListUsersInput{})
 	p := iam.NewListUsersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Users {
 			resources = append(resources, *resource.UserName)
+		}
+	}
+	return
+}
+
+func getIamUserPolicyNames(client *iam.Client, iamUserNames []string) (resources []string) {
+	for _, iamUserName := range iamUserNames {
+		req := client.ListUserPoliciesRequest(&iam.ListUserPoliciesInput{
+			UserName: aws.String(iamUserName),
+		})
+		p := iam.NewListUserPoliciesPaginator(req)
+		for p.Next(context.Background()) {
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
+			page := p.CurrentPage()
+			resources = append(resources, page.PolicyNames...)
+		}
+	}
+	return
+}
+
+func getIamUserSSHKeyIDs(client *iam.Client, iamUserNames []string) (resources []string) {
+	for _, iamUserName := range iamUserNames {
+		req := client.ListSSHPublicKeysRequest(&iam.ListSSHPublicKeysInput{
+			UserName: aws.String(iamUserName),
+		})
+		p := iam.NewListSSHPublicKeysPaginator(req)
+		for p.Next(context.Background()) {
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
+			page := p.CurrentPage()
+			for _, resource := range page.SSHPublicKeys {
+				resources = append(resources, *resource.SSHPublicKeyId)
+			}
 		}
 	}
 	return

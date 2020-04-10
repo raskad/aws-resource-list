@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/firehose"
 )
 
-func getFirehose(config aws.Config) (resources resourceMap) {
+func getFirehose(config aws.Config) (resources awsResourceMap) {
 	client := firehose.New(config)
 
 	kinesisFirehoseDeliveryStreamNames := getKinesisFirehoseDeliveryStreamNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		kinesisFirehoseDeliveryStream: kinesisFirehoseDeliveryStreamNames,
 	}
 	return
@@ -20,7 +20,10 @@ func getFirehose(config aws.Config) (resources resourceMap) {
 
 func getKinesisFirehoseDeliveryStreamNames(client *firehose.Client) (resources []string) {
 	page, err := client.ListDeliveryStreamsRequest(&firehose.ListDeliveryStreamsInput{}).Send(context.Background())
-	logErr(err)
+	if err != nil {
+		logErr(err)
+		return
+	}
 	resources = append(resources, page.DeliveryStreamNames...)
 	return
 }

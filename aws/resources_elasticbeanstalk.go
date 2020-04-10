@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk"
 )
 
-func getElasticBeanstalk(config aws.Config) (resources resourceMap) {
+func getElasticBeanstalk(config aws.Config) (resources awsResourceMap) {
 	client := elasticbeanstalk.New(config)
 
 	elasticBeanstalkApplicationNames := getElasticBeanstalkApplicationNames(client)
@@ -15,7 +15,7 @@ func getElasticBeanstalk(config aws.Config) (resources resourceMap) {
 	elasticBeanstalkConfigurationTemplateNames := getElasticBeanstalkConfigurationTemplateNames(client)
 	elasticBeanstalkEnvironmentIDs := getElasticBeanstalkEnvironmentIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		elasticBeanstalkApplication:           elasticBeanstalkApplicationNames,
 		elasticBeanstalkApplicationVersion:    elasticBeanstalkApplicationVersionARNs,
 		elasticBeanstalkConfigurationTemplate: elasticBeanstalkConfigurationTemplateNames,
@@ -27,7 +27,10 @@ func getElasticBeanstalk(config aws.Config) (resources resourceMap) {
 func getElasticBeanstalkApplicationNames(client *elasticbeanstalk.Client) (resources []string) {
 	input := elasticbeanstalk.DescribeApplicationsInput{}
 	page, err := client.DescribeApplicationsRequest(&input).Send(context.Background())
-	logErr(err)
+	if err != nil {
+		logErr(err)
+		return
+	}
 	for _, resource := range page.Applications {
 		resources = append(resources, *resource.ApplicationName)
 	}
@@ -38,7 +41,10 @@ func getElasticBeanstalkApplicationVersionARNs(client *elasticbeanstalk.Client) 
 	input := elasticbeanstalk.DescribeApplicationVersionsInput{}
 	for {
 		page, err := client.DescribeApplicationVersionsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.ApplicationVersions {
 			resources = append(resources, *resource.ApplicationVersionArn)
 		}
@@ -52,7 +58,10 @@ func getElasticBeanstalkApplicationVersionARNs(client *elasticbeanstalk.Client) 
 func getElasticBeanstalkConfigurationTemplateNames(client *elasticbeanstalk.Client) (resources []string) {
 	input := elasticbeanstalk.DescribeApplicationsInput{}
 	page, err := client.DescribeApplicationsRequest(&input).Send(context.Background())
-	logErr(err)
+	if err != nil {
+		logErr(err)
+		return
+	}
 	for _, resource := range page.Applications {
 		resources = append(resources, resource.ConfigurationTemplates...)
 	}
@@ -63,7 +72,10 @@ func getElasticBeanstalkEnvironmentIDs(client *elasticbeanstalk.Client) (resourc
 	input := elasticbeanstalk.DescribeEnvironmentsInput{}
 	for {
 		page, err := client.DescribeEnvironmentsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Environments {
 			resources = append(resources, *resource.EnvironmentId)
 		}

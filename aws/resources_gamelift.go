@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/gamelift"
 )
 
-func getGameLift(config aws.Config) (resources resourceMap) {
+func getGameLift(config aws.Config) (resources awsResourceMap) {
 	client := gamelift.New(config)
 
 	getGameLiftAliasIDs := getGameLiftAliasIDs(client)
@@ -18,7 +18,7 @@ func getGameLift(config aws.Config) (resources resourceMap) {
 	getGameLiftMatchmakingRuleSetNames := getGameLiftMatchmakingRuleSetNames(client)
 	getGameLiftScriptIDs := getGameLiftScriptIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		gameLiftAlias:                    getGameLiftAliasIDs,
 		gameLiftBuild:                    getGameLiftBuildIDs,
 		gameLiftFleet:                    getGameLiftFleetIDs,
@@ -34,7 +34,10 @@ func getGameLiftAliasIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListAliasesInput{}
 	for {
 		page, err := client.ListAliasesRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Aliases {
 			resources = append(resources, *resource.AliasId)
 		}
@@ -49,7 +52,10 @@ func getGameLiftBuildIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListBuildsInput{}
 	for {
 		page, err := client.ListBuildsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Builds {
 			resources = append(resources, *resource.BuildId)
 		}
@@ -64,7 +70,10 @@ func getGameLiftFleetIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListFleetsInput{}
 	for {
 		page, err := client.ListFleetsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		resources = append(resources, page.FleetIds...)
 		if page.NextToken == nil {
 			return
@@ -77,7 +86,10 @@ func getGameLiftGameSessionQueueNames(client *gamelift.Client) (resources []stri
 	input := gamelift.DescribeGameSessionQueuesInput{}
 	for {
 		page, err := client.DescribeGameSessionQueuesRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.GameSessionQueues {
 			resources = append(resources, *resource.Name)
 		}
@@ -92,7 +104,10 @@ func getGameLiftMatchmakingConfigurationNames(client *gamelift.Client) (resource
 	input := gamelift.DescribeMatchmakingConfigurationsInput{}
 	for {
 		page, err := client.DescribeMatchmakingConfigurationsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Configurations {
 			resources = append(resources, *resource.Name)
 		}
@@ -107,7 +122,10 @@ func getGameLiftMatchmakingRuleSetNames(client *gamelift.Client) (resources []st
 	input := gamelift.DescribeMatchmakingRuleSetsInput{}
 	for {
 		page, err := client.DescribeMatchmakingRuleSetsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.RuleSets {
 			resources = append(resources, *resource.RuleSetName)
 		}
@@ -122,7 +140,10 @@ func getGameLiftScriptIDs(client *gamelift.Client) (resources []string) {
 	input := gamelift.ListScriptsInput{}
 	for {
 		page, err := client.ListScriptsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.Scripts {
 			resources = append(resources, *resource.ScriptId)
 		}

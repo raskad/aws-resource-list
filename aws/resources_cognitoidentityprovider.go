@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 )
 
-func getCognitoIdentityProvider(config aws.Config) (resources resourceMap) {
+func getCognitoIdentityProvider(config aws.Config) (resources awsResourceMap) {
 	client := cognitoidentityprovider.New(config)
 
 	cognitoUserPoolIDs := getCognitoUserPoolIDs(client)
@@ -17,7 +17,7 @@ func getCognitoIdentityProvider(config aws.Config) (resources resourceMap) {
 	cognitoUserPoolResourceServerNames := getCognitoUserPoolResourceServerNames(client, cognitoUserPoolIDs)
 	cognitoUserPoolUserNames := getCognitoUserPoolUserNames(client, cognitoUserPoolIDs)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		cognitoUserPool:                 cognitoUserPoolIDs,
 		cognitoUserPoolClient:           cognitoUserPoolClientNames,
 		cognitoUserPoolGroup:            cognitoUserPoolGroupNames,
@@ -34,7 +34,10 @@ func getCognitoUserPoolIDs(client *cognitoidentityprovider.Client) (resources []
 	})
 	p := cognitoidentityprovider.NewListUserPoolsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.UserPools {
 			resources = append(resources, *resource.Id)
@@ -50,7 +53,10 @@ func getCognitoUserPoolClientNames(client *cognitoidentityprovider.Client, userP
 		})
 		p := cognitoidentityprovider.NewListUserPoolClientsPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.UserPoolClients {
 				resources = append(resources, *resource.ClientName)
@@ -67,7 +73,10 @@ func getCognitoUserPoolGroupNames(client *cognitoidentityprovider.Client, userPo
 		})
 		p := cognitoidentityprovider.NewListGroupsPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.Groups {
 				resources = append(resources, *resource.GroupName)
@@ -84,7 +93,10 @@ func getCognitoUserPoolIdentityProviderNames(client *cognitoidentityprovider.Cli
 		})
 		p := cognitoidentityprovider.NewListIdentityProvidersPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.Providers {
 				resources = append(resources, *resource.ProviderName)
@@ -101,7 +113,10 @@ func getCognitoUserPoolResourceServerNames(client *cognitoidentityprovider.Clien
 		})
 		p := cognitoidentityprovider.NewListResourceServersPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.ResourceServers {
 				resources = append(resources, *resource.Name)
@@ -118,7 +133,10 @@ func getCognitoUserPoolUserNames(client *cognitoidentityprovider.Client, userPoo
 		})
 		p := cognitoidentityprovider.NewListUsersPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.Users {
 				resources = append(resources, *resource.Username)

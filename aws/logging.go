@@ -3,6 +3,7 @@ package aws
 import (
 	"log"
 	"os"
+	"runtime"
 )
 
 type logLevel int
@@ -54,8 +55,13 @@ func logError(s ...interface{}) {
 }
 
 func logErr(e error) {
+	pc, _, _, ok := runtime.Caller(1)
+	fn := "?"
+	if ok {
+		fn = runtime.FuncForPC(pc).Name()
+	}
 	if e != nil {
-		logError(e)
+		logError(fn, ":", e)
 	}
 }
 

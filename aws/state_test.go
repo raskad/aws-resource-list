@@ -5,120 +5,140 @@ import (
 	"testing"
 )
 
-func TestStateNotinCloudformation(t *testing.T) {
+func TestStateNotinCloudFormation(t *testing.T) {
 	state := state{
-		cfn: map[resourceType][]string{
-			s3Bucket:  []string{"arn1"},
-			ec2Volume: []string{},
+		Cfn: map[string][]string{
+			"AWS::S3::Bucket":  {"arn1"},
+			"AWS::EC2::Volume": {},
 		},
-		real: map[resourceType][]string{
-			s3Bucket:  []string{"arn1", "exists"},
-			ec2Volume: []string{"existstoo"},
+		Real: map[resourceType][]string{
+			s3Bucket:  {"arn1", "exists"},
+			ec2Volume: {"existstoo"},
 		},
 	}
-	expected := resourceMap{
+	expected := awsResourceMap{
 		s3Bucket:  []string{"exists"},
 		ec2Volume: []string{"existstoo"},
 	}
-	result := state.filter(real, cfn)
+	result := state.filter()
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("result  : %v", result)
 		t.Errorf("expected: %v", expected)
 	}
 }
 
-func TestStateCloudformationNotinreal(t *testing.T) {
+func TestStateNotinCloudFormationNull(t *testing.T) {
 	state := state{
-		real: map[resourceType][]string{
-			s3Bucket:  []string{"arn1"},
-			ec2Volume: []string{},
+		Cfn: map[string][]string{
+			"AWS::S3::Bucket":  {},
+			"AWS::EC2::Volume": {},
 		},
-		cfn: map[resourceType][]string{
-			s3Bucket:  []string{"arn1", "exists"},
-			ec2Volume: []string{"existstoo"},
+		Real: map[resourceType][]string{
+			s3Bucket:  {},
+			ec2Volume: {},
 		},
 	}
-	expected := resourceMap{
+	expected := awsResourceMap{}
+	result := state.filter()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("result  : %v", result)
+		t.Errorf("expected: %v", expected)
+	}
+}
+
+func TestStateNotinCloudFormationEqual(t *testing.T) {
+	state := state{
+		Cfn: map[string][]string{
+			"AWS::S3::Bucket":  {"arn1", "exists"},
+			"AWS::EC2::Volume": {"existstoo"},
+		},
+		Real: map[resourceType][]string{
+			s3Bucket:  {"arn1", "exists"},
+			ec2Volume: {"existstoo"},
+		},
+	}
+	expected := awsResourceMap{}
+	result := state.filter()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("result  : %v", result)
+		t.Errorf("expected: %v", expected)
+	}
+}
+
+func TestStateNotinCloudFormationMissingEntryInCloudFormation(t *testing.T) {
+	state := state{
+		Cfn: map[string][]string{
+			"AWS::S3::Bucket": {"arn1", "exists"},
+		},
+		Real: map[resourceType][]string{
+			s3Bucket:  {"arn1", "exists"},
+			ec2Volume: {"existstoo"},
+		},
+	}
+	expected := awsResourceMap{
+		ec2Volume: []string{"existstoo"},
+	}
+	result := state.filter()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("result  : %v", result)
+		t.Errorf("expected: %v", expected)
+	}
+}
+
+func TestStateNotinCloudFormationMissingEntryInreal(t *testing.T) {
+	state := state{
+		Cfn: map[string][]string{
+			"AWS::S3::Bucket":  {"arn1", "exists"},
+			"AWS::EC2::Volume": {"existstoo"},
+		},
+		Real: map[resourceType][]string{
+			s3Bucket: {"arn1", "exists"},
+		},
+	}
+	expected := awsResourceMap{}
+	result := state.filter()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("result  : %v", result)
+		t.Errorf("expected: %v", expected)
+	}
+}
+
+func TestStateNotinTerraform(t *testing.T) {
+	state := state{
+		Tf: map[string][]string{
+			"aws_s3_bucket": {"arn1"},
+			"aws_volume":    {},
+		},
+		Real: map[resourceType][]string{
+			s3Bucket:  {"arn1", "exists"},
+			ec2Volume: {"existstoo"},
+		},
+	}
+	expected := awsResourceMap{
 		s3Bucket:  []string{"exists"},
 		ec2Volume: []string{"existstoo"},
 	}
-	result := state.filter(cfn, real)
+	result := state.filter()
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("result  : %v", result)
 		t.Errorf("expected: %v", expected)
 	}
 }
 
-func TestStateNotinCloudformationNull(t *testing.T) {
+func TestStateNotinTerraformMultiple(t *testing.T) {
 	state := state{
-		cfn: map[resourceType][]string{
-			s3Bucket:  []string{},
-			ec2Volume: []string{},
+		Tf: map[string][]string{
+			"aws_fsx_lustre_file_system":  {"lustre1"},
+			"aws_fsx_windows_file_system": {"windows1"},
 		},
-		real: map[resourceType][]string{
-			s3Bucket:  []string{},
-			ec2Volume: []string{},
-		},
-	}
-	expected := resourceMap{}
-	result := state.filter(real, cfn)
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("result  : %v", result)
-		t.Errorf("expected: %v", expected)
-	}
-}
-
-func TestStateNotinCloudformationEqual(t *testing.T) {
-	state := state{
-		cfn: map[resourceType][]string{
-			s3Bucket:  []string{"arn1", "exists"},
-			ec2Volume: []string{"existstoo"},
-		},
-		real: map[resourceType][]string{
-			s3Bucket:  []string{"arn1", "exists"},
-			ec2Volume: []string{"existstoo"},
+		Real: map[resourceType][]string{
+			fsxFileSystem: {"lustre1", "windows1", "windows2"},
 		},
 	}
-	expected := resourceMap{}
-	result := state.filter(real, cfn)
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("result  : %v", result)
-		t.Errorf("expected: %v", expected)
+	expected := awsResourceMap{
+		fsxFileSystem: []string{"windows2"},
 	}
-}
-
-func TestStateNotinCloudformationMissingEntryInCloudformation(t *testing.T) {
-	state := state{
-		cfn: map[resourceType][]string{
-			s3Bucket: []string{"arn1", "exists"},
-		},
-		real: map[resourceType][]string{
-			s3Bucket:  []string{"arn1", "exists"},
-			ec2Volume: []string{"existstoo"},
-		},
-	}
-	expected := resourceMap{
-		ec2Volume: []string{"existstoo"},
-	}
-	result := state.filter(real, cfn)
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("result  : %v", result)
-		t.Errorf("expected: %v", expected)
-	}
-}
-
-func TestStateNotinCloudformationMissingEntryInreal(t *testing.T) {
-	state := state{
-		cfn: map[resourceType][]string{
-			s3Bucket:  []string{"arn1", "exists"},
-			ec2Volume: []string{"existstoo"},
-		},
-		real: map[resourceType][]string{
-			s3Bucket: []string{"arn1", "exists"},
-		},
-	}
-	expected := resourceMap{}
-	result := state.filter(real, cfn)
+	result := state.filter()
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("result  : %v", result)
 		t.Errorf("expected: %v", expected)

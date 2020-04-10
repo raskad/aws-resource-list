@@ -7,32 +7,26 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/fsx"
 )
 
-func getFsx(config aws.Config) (resources resourceMap) {
+func getFsx(config aws.Config) (resources awsResourceMap) {
 	client := fsx.New(config)
 
-	fsxFileSystemLustreIDs, fsxFileSystemWindowsIDs := getFsxFileSystemIDs(client)
-
-	resources = resourceMap{
-		fsxFileSystem:        append(fsxFileSystemLustreIDs, fsxFileSystemWindowsIDs...),
-		fsxFileSystemLustre:  fsxFileSystemLustreIDs,
-		fsxFileSystemWindows: fsxFileSystemWindowsIDs,
+	resources = awsResourceMap{
+		fsxFileSystem: getFsxFileSystemIDs(client),
 	}
 	return
 }
 
-func getFsxFileSystemIDs(client *fsx.Client) (fsxFileSystemLustreIDs []string, fsxFileSystemWindowsIDs []string) {
+func getFsxFileSystemIDs(client *fsx.Client) (resources []string) {
 	req := client.DescribeFileSystemsRequest(&fsx.DescribeFileSystemsInput{})
 	p := fsx.NewDescribeFileSystemsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.FileSystems {
-			if resource.FileSystemType == fsx.FileSystemTypeLustre {
-				fsxFileSystemLustreIDs = append(fsxFileSystemLustreIDs, *resource.FileSystemId)
-			}
-			if resource.FileSystemType == fsx.FileSystemTypeWindows {
-				fsxFileSystemWindowsIDs = append(fsxFileSystemWindowsIDs, *resource.FileSystemId)
-			}
+			resources = append(resources, *resource.FileSystemId)
 		}
 	}
 	return

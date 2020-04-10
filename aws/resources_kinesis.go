@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kinesis"
 )
 
-func getKinesis(config aws.Config) (resources resourceMap) {
+func getKinesis(config aws.Config) (resources awsResourceMap) {
 	client := kinesis.New(config)
 
 	kinesisStreamARNs := getKinesisStreamARNs(client)
 	kinesisStreamConsumerNames := getKinesisStreamConsumerNames(client, kinesisStreamARNs)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		kinesisStream:         kinesisStreamARNs,
 		kinesisStreamConsumer: kinesisStreamConsumerNames,
 	}
@@ -24,7 +24,10 @@ func getKinesisStreamARNs(client *kinesis.Client) (resources []string) {
 	req := client.ListStreamsRequest(&kinesis.ListStreamsInput{})
 	p := kinesis.NewListStreamsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.StreamNames {
 			req := client.DescribeStreamRequest(&kinesis.DescribeStreamInput{
@@ -32,7 +35,10 @@ func getKinesisStreamARNs(client *kinesis.Client) (resources []string) {
 			})
 			p := kinesis.NewDescribeStreamPaginator(req)
 			for p.Next(context.Background()) {
-				logErr(p.Err())
+				if p.Err() != nil {
+					logErr(p.Err())
+					return
+				}
 				page := p.CurrentPage()
 				resources = append(resources, *page.StreamDescription.StreamARN)
 			}
@@ -48,7 +54,10 @@ func getKinesisStreamConsumerNames(client *kinesis.Client, streamARNs []string) 
 		})
 		p := kinesis.NewListStreamConsumersPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.Consumers {
 				resources = append(resources, *resource.ConsumerName)

@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/pinpoint"
 )
 
-func getPinpoint(config aws.Config) (resources resourceMap) {
+func getPinpoint(config aws.Config) (resources awsResourceMap) {
 	client := pinpoint.New(config)
 
 	pinpointAppIDs := getPinpointAppIDs(client)
@@ -15,7 +15,7 @@ func getPinpoint(config aws.Config) (resources resourceMap) {
 	pinpointPushTemplateNames := getPinpointPushTemplateNames(client)
 	pinpointSmsTemplateNames := getPinpointSmsTemplateNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		pinpointApp:           pinpointAppIDs,
 		pinpointEmailTemplate: pinpointEmailTemplateNames,
 		pinpointPushTemplate:  pinpointPushTemplateNames,
@@ -28,7 +28,10 @@ func getPinpointAppIDs(client *pinpoint.Client) (resources []string) {
 	input := pinpoint.GetAppsInput{}
 	for {
 		page, err := client.GetAppsRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.ApplicationsResponse.Item {
 			resources = append(resources, *resource.Id)
 		}
@@ -43,7 +46,10 @@ func getPinpointEmailTemplateNames(client *pinpoint.Client) (resources []string)
 	input := pinpoint.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.TemplatesResponse.Item {
 			if resource.TemplateType == pinpoint.TemplateTypeEmail {
 				resources = append(resources, *resource.TemplateName)
@@ -60,7 +66,10 @@ func getPinpointPushTemplateNames(client *pinpoint.Client) (resources []string) 
 	input := pinpoint.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.TemplatesResponse.Item {
 			if resource.TemplateType == pinpoint.TemplateTypePush {
 				resources = append(resources, *resource.TemplateName)
@@ -77,7 +86,10 @@ func getPinpointSmsTemplateNames(client *pinpoint.Client) (resources []string) {
 	input := pinpoint.ListTemplatesInput{}
 	for {
 		page, err := client.ListTemplatesRequest(&input).Send(context.Background())
-		logErr(err)
+		if err != nil {
+			logErr(err)
+			return
+		}
 		for _, resource := range page.TemplatesResponse.Item {
 			if resource.TemplateType == pinpoint.TemplateTypeSms {
 				resources = append(resources, *resource.TemplateName)

@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 )
 
-func getElasticLoadBalancingV2(config aws.Config) (resources resourceMap) {
+func getElasticLoadBalancingV2(config aws.Config) (resources awsResourceMap) {
 	client := elasticloadbalancingv2.New(config)
 
 	elasticLoadBalancingV2LoadBalancerARNs := getElasticLoadBalancingV2LoadBalancerARNs(client)
@@ -15,7 +15,7 @@ func getElasticLoadBalancingV2(config aws.Config) (resources resourceMap) {
 	elasticLoadBalancingV2ListenerRuleARNs := getElasticLoadBalancingV2ListenerRuleARNs(client, elasticLoadBalancingV2ListenerARNs)
 	elasticLoadBalancingV2TargetGroupARNs := getElasticLoadBalancingV2TargetGroupARNs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		elasticLoadBalancingV2LoadBalancer: elasticLoadBalancingV2LoadBalancerARNs,
 		elasticLoadBalancingV2Listener:     elasticLoadBalancingV2ListenerARNs,
 		elasticLoadBalancingV2ListenerRule: elasticLoadBalancingV2ListenerRuleARNs,
@@ -31,7 +31,10 @@ func getElasticLoadBalancingV2ListenerARNs(client *elasticloadbalancingv2.Client
 		})
 		p := elasticloadbalancingv2.NewDescribeListenersPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.Listeners {
 				resources = append(resources, *resource.ListenerArn)
@@ -48,7 +51,10 @@ func getElasticLoadBalancingV2ListenerRuleARNs(client *elasticloadbalancingv2.Cl
 		}
 		for {
 			page, err := client.DescribeRulesRequest(&input).Send(context.Background())
-			logErr(err)
+			if err != nil {
+				logErr(err)
+				break
+			}
 			for _, resource := range page.Rules {
 				resources = append(resources, *resource.RuleArn)
 			}
@@ -65,7 +71,10 @@ func getElasticLoadBalancingV2LoadBalancerARNs(client *elasticloadbalancingv2.Cl
 	req := client.DescribeLoadBalancersRequest(&elasticloadbalancingv2.DescribeLoadBalancersInput{})
 	p := elasticloadbalancingv2.NewDescribeLoadBalancersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.LoadBalancers {
 			resources = append(resources, *resource.LoadBalancerArn)
@@ -78,7 +87,10 @@ func getElasticLoadBalancingV2TargetGroupARNs(client *elasticloadbalancingv2.Cli
 	req := client.DescribeTargetGroupsRequest(&elasticloadbalancingv2.DescribeTargetGroupsInput{})
 	p := elasticloadbalancingv2.NewDescribeTargetGroupsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.TargetGroups {
 			resources = append(resources, *resource.TargetGroupArn)

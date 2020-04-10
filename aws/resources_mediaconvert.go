@@ -7,14 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/mediaconvert"
 )
 
-func getMediaConvert(config aws.Config) (resources resourceMap) {
+func getMediaConvert(config aws.Config) (resources awsResourceMap) {
 	client := mediaconvert.New(config)
 
 	mediaConvertJobTemplateNames := getMediaConvertJobTemplateNames(client)
 	mediaConvertPresetNames := getMediaConvertPresetNames(client)
 	mediaConvertQueueNames := getMediaConvertQueueNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		mediaConvertJobTemplate: mediaConvertJobTemplateNames,
 		mediaConvertPreset:      mediaConvertPresetNames,
 		mediaConvertQueue:       mediaConvertQueueNames,
@@ -26,7 +26,10 @@ func getMediaConvertJobTemplateNames(client *mediaconvert.Client) (resources []s
 	req := client.ListJobTemplatesRequest(&mediaconvert.ListJobTemplatesInput{})
 	p := mediaconvert.NewListJobTemplatesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.JobTemplates {
 			resources = append(resources, *resource.Name)
@@ -39,7 +42,10 @@ func getMediaConvertPresetNames(client *mediaconvert.Client) (resources []string
 	req := client.ListPresetsRequest(&mediaconvert.ListPresetsInput{})
 	p := mediaconvert.NewListPresetsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Presets {
 			resources = append(resources, *resource.Name)
@@ -52,7 +58,10 @@ func getMediaConvertQueueNames(client *mediaconvert.Client) (resources []string)
 	req := client.ListQueuesRequest(&mediaconvert.ListQueuesInput{})
 	p := mediaconvert.NewListQueuesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Queues {
 			resources = append(resources, *resource.Name)

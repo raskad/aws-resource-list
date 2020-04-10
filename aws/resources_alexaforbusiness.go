@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/alexaforbusiness"
 )
 
-func getAlexaForBusiness(config aws.Config) (resources resourceMap) {
+func getAlexaForBusiness(config aws.Config) (resources awsResourceMap) {
 	client := alexaforbusiness.New(config)
 
 	alexaAskSkillNames := getAlexaAskSkillNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		alexaAskSkill: alexaAskSkillNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getAlexaAskSkillNames(client *alexaforbusiness.Client) (resources []string)
 	req := client.ListSkillsRequest(&alexaforbusiness.ListSkillsInput{})
 	p := alexaforbusiness.NewListSkillsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.SkillSummaries {
 			resources = append(resources, *resource.SkillName)

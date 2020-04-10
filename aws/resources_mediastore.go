@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/mediastore"
 )
 
-func getMediaStore(config aws.Config) (resources resourceMap) {
+func getMediaStore(config aws.Config) (resources awsResourceMap) {
 	client := mediastore.New(config)
 
 	mediaStoreContainerNames := getMediaStoreContainerNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		mediaStoreContainer: mediaStoreContainerNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getMediaStoreContainerNames(client *mediastore.Client) (resources []string)
 	req := client.ListContainersRequest(&mediastore.ListContainersInput{})
 	p := mediastore.NewListContainersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Containers {
 			resources = append(resources, *resource.Name)

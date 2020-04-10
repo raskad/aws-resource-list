@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/apigateway"
 )
 
-func getAPIGateway(config aws.Config) (resources resourceMap) {
+func getAPIGateway(config aws.Config) (resources awsResourceMap) {
 	client := apigateway.New(config)
 
 	apiGatewayAPIKeyIDs := getAPIGatewayAPIKeyIDs(client)
@@ -17,7 +17,7 @@ func getAPIGateway(config aws.Config) (resources resourceMap) {
 	apiGatewayUsagePlanIDs := getAPIGatewayUsagePlanIDs(client)
 	apiGatewayVpcLinkIDs := getAPIGatewayVpcLinkIDs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		apiGatewayAPIKey:            apiGatewayAPIKeyIDs,
 		apiGatewayClientCertificate: apiGatewayClientCertificateIDs,
 		apiGatewayDomainName:        apiGatewayDomainNames,
@@ -32,7 +32,10 @@ func getAPIGatewayAPIKeyIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetApiKeysRequest(&apigateway.GetApiKeysInput{})
 	p := apigateway.NewGetApiKeysPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.Id)
@@ -45,7 +48,10 @@ func getAPIGatewayClientCertificateIDs(client *apigateway.Client) (resources []s
 	req := client.GetClientCertificatesRequest(&apigateway.GetClientCertificatesInput{})
 	p := apigateway.NewGetClientCertificatesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.ClientCertificateId)
@@ -58,7 +64,10 @@ func getAPIGatewayDomainNames(client *apigateway.Client) (resources []string) {
 	req := client.GetDomainNamesRequest(&apigateway.GetDomainNamesInput{})
 	p := apigateway.NewGetDomainNamesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.DomainName)
@@ -71,7 +80,10 @@ func getAPIGatewayRestAPIIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetRestApisRequest(&apigateway.GetRestApisInput{})
 	p := apigateway.NewGetRestApisPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.Id)
@@ -84,7 +96,10 @@ func getAPIGatewayUsagePlanIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetUsagePlanKeysRequest(&apigateway.GetUsagePlanKeysInput{})
 	p := apigateway.NewGetUsagePlanKeysPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.Id)
@@ -97,7 +112,10 @@ func getAPIGatewayVpcLinkIDs(client *apigateway.Client) (resources []string) {
 	req := client.GetVpcLinksRequest(&apigateway.GetVpcLinksInput{})
 	p := apigateway.NewGetVpcLinksPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.Id)

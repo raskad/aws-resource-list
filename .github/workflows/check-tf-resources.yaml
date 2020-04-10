@@ -7,30 +7,10 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Check out aws-terraform-resource-types
-      uses: actions/checkout@v2
-      with:
-        repository: raskad/aws-terraform-resource-types
     - name: Check out this repository
       uses: actions/checkout@v2
-      with:
-        path: this
-    - name: Get all current Terraform resources
-      run: go run main.go > resources
-    - name: Filter out resources in scope
-      run: |
-        while read tfResource; do
-            if grep -q $tfResource "this/resources.yaml"; then
-                echo [OK] $tfResource
-            else
-                if grep -q $tfResource "this/resourcesBlacklist.yaml"; then
-                    echo [OK] $tfResource
-                else
-                    echo [MISS] $tfResource
-                    echo $tfResource >> missing
-                fi
-            fi
-        done <resources
+    - name: Get all missing Terraform resources
+      run: go run main.go types missing tf types missing cfn > missing
     - name: Create issue with all missing resources
       uses: actions/github-script@0.4.0
       with:

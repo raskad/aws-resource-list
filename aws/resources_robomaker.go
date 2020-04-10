@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/robomaker"
 )
 
-func getRoboMaker(config aws.Config) (resources resourceMap) {
+func getRoboMaker(config aws.Config) (resources awsResourceMap) {
 	client := robomaker.New(config)
 
 	roboMakerFleetNames := getRoboMakerFleetNames(client)
@@ -15,7 +15,7 @@ func getRoboMaker(config aws.Config) (resources resourceMap) {
 	roboMakerRobotApplicationNames := getRoboMakerRobotApplicationNames(client)
 	roboMakerSimulationApplicationNames := getRoboMakerSimulationApplicationNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		roboMakerFleet:                 roboMakerFleetNames,
 		roboMakerRobot:                 roboMakerRobotNames,
 		roboMakerRobotApplication:      roboMakerRobotApplicationNames,
@@ -28,7 +28,10 @@ func getRoboMakerFleetNames(client *robomaker.Client) (resources []string) {
 	req := client.ListFleetsRequest(&robomaker.ListFleetsInput{})
 	p := robomaker.NewListFleetsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.FleetDetails {
 			resources = append(resources, *resource.Name)
@@ -41,7 +44,10 @@ func getRoboMakerRobotNames(client *robomaker.Client) (resources []string) {
 	req := client.ListRobotsRequest(&robomaker.ListRobotsInput{})
 	p := robomaker.NewListRobotsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Robots {
 			resources = append(resources, *resource.Name)
@@ -54,7 +60,10 @@ func getRoboMakerRobotApplicationNames(client *robomaker.Client) (resources []st
 	req := client.ListRobotApplicationsRequest(&robomaker.ListRobotApplicationsInput{})
 	p := robomaker.NewListRobotApplicationsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.RobotApplicationSummaries {
 			resources = append(resources, *resource.Name)
@@ -67,7 +76,10 @@ func getRoboMakerSimulationApplicationNames(client *robomaker.Client) (resources
 	req := client.ListSimulationApplicationsRequest(&robomaker.ListSimulationApplicationsInput{})
 	p := robomaker.NewListSimulationApplicationsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.SimulationApplicationSummaries {
 			resources = append(resources, *resource.Name)

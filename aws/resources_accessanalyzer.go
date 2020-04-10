@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/accessanalyzer"
 )
 
-func getAccessAnalyzer(config aws.Config) (resources resourceMap) {
+func getAccessAnalyzer(config aws.Config) (resources awsResourceMap) {
 	client := accessanalyzer.New(config)
 
 	accessAnalyzerAnalyzerNames := getAccessAnalyzerAnalyzerNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		accessAnalyzerAnalyzer: accessAnalyzerAnalyzerNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getAccessAnalyzerAnalyzerNames(client *accessanalyzer.Client) (resources []
 	req := client.ListAnalyzersRequest(&accessanalyzer.ListAnalyzersInput{})
 	p := accessanalyzer.NewListAnalyzersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Analyzers {
 			resources = append(resources, *resource.Name)

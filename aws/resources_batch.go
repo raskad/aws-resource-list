@@ -7,14 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/batch"
 )
 
-func getBatch(config aws.Config) (resources resourceMap) {
+func getBatch(config aws.Config) (resources awsResourceMap) {
 	client := batch.New(config)
 
 	batchComputeEnvironmentNames := getBatchComputeEnvironmentNames(client)
 	batchJobDefinitionARNs := getBatchJobDefinitionARNs(client)
 	batchJobQueueARNs := getBatchJobQueueARNs(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		batchComputeEnvironment: batchComputeEnvironmentNames,
 		batchJobDefinition:      batchJobDefinitionARNs,
 		batchJobQueue:           batchJobQueueARNs,
@@ -26,7 +26,10 @@ func getBatchComputeEnvironmentNames(client *batch.Client) (resources []string) 
 	req := client.DescribeComputeEnvironmentsRequest(&batch.DescribeComputeEnvironmentsInput{})
 	p := batch.NewDescribeComputeEnvironmentsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.ComputeEnvironments {
 			resources = append(resources, *resource.ComputeEnvironmentName)
@@ -39,7 +42,10 @@ func getBatchJobDefinitionARNs(client *batch.Client) (resources []string) {
 	req := client.DescribeJobDefinitionsRequest(&batch.DescribeJobDefinitionsInput{})
 	p := batch.NewDescribeJobDefinitionsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.JobDefinitions {
 			resources = append(resources, *resource.JobDefinitionArn)
@@ -52,7 +58,10 @@ func getBatchJobQueueARNs(client *batch.Client) (resources []string) {
 	req := client.DescribeJobQueuesRequest(&batch.DescribeJobQueuesInput{})
 	p := batch.NewDescribeJobQueuesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.JobQueues {
 			resources = append(resources, *resource.JobQueueArn)

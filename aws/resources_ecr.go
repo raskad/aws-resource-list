@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
 )
 
-func getEcr(config aws.Config) (resources resourceMap) {
+func getEcr(config aws.Config) (resources awsResourceMap) {
 	client := ecr.New(config)
 
 	ecrRepositoryNames := getEcrRepositoryNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		ecrRepository: ecrRepositoryNames,
 	}
 	return
@@ -22,7 +22,10 @@ func getEcrRepositoryNames(client *ecr.Client) (resources []string) {
 	req := client.DescribeRepositoriesRequest(&ecr.DescribeRepositoriesInput{})
 	p := ecr.NewDescribeRepositoriesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Repositories {
 			resources = append(resources, *resource.RepositoryName)

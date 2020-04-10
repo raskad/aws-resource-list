@@ -7,32 +7,21 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 )
 
-func getLambda(config aws.Config) (resources resourceMap) {
+func getLambda(config aws.Config) (resources awsResourceMap) {
 	client := lambda.New(config)
 
 	lambdaFunctionNames := getLambdaFunctionNames(client)
 	lambdaLayerNames := getLambdaLayerNames(client)
 	lambdaAliasNames := getLambdaAliasNames(client, lambdaFunctionNames)
+	lambdaEventSourceMappingIDs := getLambdaEventSourceMappingIDs(client)
 	lambdaLayerVersionARNs := getLambdaLayerVersionARNs(client, lambdaLayerNames)
 
-	resources = resourceMap{
-		lambdaFunction:     lambdaFunctionNames,
-		lambdaLayer:        lambdaLayerNames,
-		lambdaAlias:        lambdaAliasNames,
-		lambdaLayerVersion: lambdaLayerVersionARNs,
-	}
-	return
-}
-
-func getLambdaFunctionNames(client *lambda.Client) (resources []string) {
-	req := client.ListFunctionsRequest(&lambda.ListFunctionsInput{})
-	p := lambda.NewListFunctionsPaginator(req)
-	for p.Next(context.Background()) {
-		logErr(p.Err())
-		page := p.CurrentPage()
-		for _, resource := range page.Functions {
-			resources = append(resources, *resource.FunctionName)
-		}
+	resources = awsResourceMap{
+		lambdaAlias:              lambdaAliasNames,
+		lambdaEventSourceMapping: lambdaEventSourceMappingIDs,
+		lambdaFunction:           lambdaFunctionNames,
+		lambdaLayer:              lambdaLayerNames,
+		lambdaLayerVersion:       lambdaLayerVersionARNs,
 	}
 	return
 }
@@ -44,7 +33,10 @@ func getLambdaAliasNames(client *lambda.Client, lambdaFunctionNames []string) (r
 		})
 		p := lambda.NewListAliasesPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.Aliases {
 				resources = append(resources, *resource.Name)
@@ -54,11 +46,46 @@ func getLambdaAliasNames(client *lambda.Client, lambdaFunctionNames []string) (r
 	return
 }
 
+func getLambdaEventSourceMappingIDs(client *lambda.Client) (resources []string) {
+	req := client.ListEventSourceMappingsRequest(&lambda.ListEventSourceMappingsInput{})
+	p := lambda.NewListEventSourceMappingsPaginator(req)
+	for p.Next(context.Background()) {
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
+		page := p.CurrentPage()
+		for _, resource := range page.EventSourceMappings {
+			resources = append(resources, *resource.UUID)
+		}
+	}
+	return
+}
+
+func getLambdaFunctionNames(client *lambda.Client) (resources []string) {
+	req := client.ListFunctionsRequest(&lambda.ListFunctionsInput{})
+	p := lambda.NewListFunctionsPaginator(req)
+	for p.Next(context.Background()) {
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
+		page := p.CurrentPage()
+		for _, resource := range page.Functions {
+			resources = append(resources, *resource.FunctionName)
+		}
+	}
+	return
+}
+
 func getLambdaLayerNames(client *lambda.Client) (resources []string) {
 	req := client.ListLayersRequest(&lambda.ListLayersInput{})
 	p := lambda.NewListLayersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Layers {
 			resources = append(resources, *resource.LayerName)
@@ -74,7 +101,10 @@ func getLambdaLayerVersionARNs(client *lambda.Client, lambdaLayerNames []string)
 		})
 		p := lambda.NewListLayerVersionsPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.LayerVersions {
 				resources = append(resources, *resource.LayerVersionArn)

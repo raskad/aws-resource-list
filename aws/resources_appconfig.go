@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/appconfig"
 )
 
-func getAppConfig(config aws.Config) (resources resourceMap) {
+func getAppConfig(config aws.Config) (resources awsResourceMap) {
 	client := appconfig.New(config)
 
 	appConfigApplicationNames := getAppConfigApplicationNames(client)
 	appConfigDeploymentStrategyNames := getAppConfigDeploymentStrategyNames(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		appConfigApplication:        appConfigApplicationNames,
 		appConfigDeploymentStrategy: appConfigDeploymentStrategyNames,
 	}
@@ -24,7 +24,10 @@ func getAppConfigApplicationNames(client *appconfig.Client) (resources []string)
 	req := client.ListApplicationsRequest(&appconfig.ListApplicationsInput{})
 	p := appconfig.NewListApplicationsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.Name)
@@ -37,7 +40,10 @@ func getAppConfigDeploymentStrategyNames(client *appconfig.Client) (resources []
 	req := client.ListDeploymentStrategiesRequest(&appconfig.ListDeploymentStrategiesInput{})
 	p := appconfig.NewListDeploymentStrategiesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Items {
 			resources = append(resources, *resource.Name)

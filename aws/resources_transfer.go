@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/transfer"
 )
 
-func getTransfer(config aws.Config) (resources resourceMap) {
+func getTransfer(config aws.Config) (resources awsResourceMap) {
 	client := transfer.New(config)
 
 	transferServerIDs := getTransferServerIDs(client)
 	transferUserARNs := getTransferUserARNs(client, transferServerIDs)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		transferServer: transferServerIDs,
 		transferUser:   transferUserARNs,
 	}
@@ -24,7 +24,10 @@ func getTransferServerIDs(client *transfer.Client) (resources []string) {
 	req := client.ListServersRequest(&transfer.ListServersInput{})
 	p := transfer.NewListServersPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.Servers {
 			resources = append(resources, *resource.ServerId)
@@ -40,7 +43,10 @@ func getTransferUserARNs(client *transfer.Client, serverIDs []string) (resources
 		})
 		p := transfer.NewListUsersPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			for _, resource := range page.Users {
 				resources = append(resources, *resource.Arn)

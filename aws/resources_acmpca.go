@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/acmpca"
 )
 
-func getAcmpca(config aws.Config) (resources resourceMap) {
+func getAcmpca(config aws.Config) (resources awsResourceMap) {
 	client := acmpca.New(config)
 
 	acmpcaCertificateAuthorityArns := getAcmpcaCertificateAuthorityArns(client)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		acmpcaCertificateAuthority: acmpcaCertificateAuthorityArns,
 	}
 	return
@@ -22,7 +22,10 @@ func getAcmpcaCertificateAuthorityArns(client *acmpca.Client) (resources []strin
 	req := client.ListCertificateAuthoritiesRequest(&acmpca.ListCertificateAuthoritiesInput{})
 	p := acmpca.NewListCertificateAuthoritiesPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.CertificateAuthorities {
 			resources = append(resources, *resource.Arn)

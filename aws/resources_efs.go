@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/efs"
 )
 
-func getEfs(config aws.Config) (resources resourceMap) {
+func getEfs(config aws.Config) (resources awsResourceMap) {
 	client := efs.New(config)
 
 	efsFileSystemIDs := getEfsFileSystemIDs(client)
 	efsMountTargetIDs := getEfsMountTargetIDs(client, efsFileSystemIDs)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		efsFileSystem:  efsFileSystemIDs,
 		efsMountTarget: efsMountTargetIDs,
 	}
@@ -24,7 +24,10 @@ func getEfsFileSystemIDs(client *efs.Client) (resources []string) {
 	req := client.DescribeFileSystemsRequest(&efs.DescribeFileSystemsInput{})
 	p := efs.NewDescribeFileSystemsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		for _, resource := range page.FileSystems {
 			resources = append(resources, *resource.FileSystemId)
@@ -40,7 +43,10 @@ func getEfsMountTargetIDs(client *efs.Client, fileSystemIDs []string) (resources
 		}
 		for {
 			page, err := client.DescribeMountTargetsRequest(&input).Send(context.Background())
-			logErr(err)
+			if err != nil {
+				logErr(err)
+				break
+			}
 			for _, resource := range page.MountTargets {
 				resources = append(resources, *resource.MountTargetId)
 			}

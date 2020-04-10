@@ -7,14 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/codedeploy"
 )
 
-func getCodeDeploy(config aws.Config) (resources resourceMap) {
+func getCodeDeploy(config aws.Config) (resources awsResourceMap) {
 	client := codedeploy.New(config)
 
 	codeDeployApplicationNames := getCodeDeployApplicationNames(client)
 	codeDeployDeploymentConfigNames := getCodeDeployDeploymentConfigNames(client)
 	codeDeployDeploymentGroupNames := getCodeDeployDeploymentGroupNames(client, codeDeployApplicationNames)
 
-	resources = resourceMap{
+	resources = awsResourceMap{
 		codeDeployApplication:      codeDeployApplicationNames,
 		codeDeployDeploymentConfig: codeDeployDeploymentConfigNames,
 		codeDeployDeploymentGroup:  codeDeployDeploymentGroupNames,
@@ -26,7 +26,10 @@ func getCodeDeployApplicationNames(client *codedeploy.Client) (resources []strin
 	req := client.ListApplicationsRequest(&codedeploy.ListApplicationsInput{})
 	p := codedeploy.NewListApplicationsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.Applications...)
 	}
@@ -37,7 +40,10 @@ func getCodeDeployDeploymentConfigNames(client *codedeploy.Client) (resources []
 	req := client.ListDeploymentConfigsRequest(&codedeploy.ListDeploymentConfigsInput{})
 	p := codedeploy.NewListDeploymentConfigsPaginator(req)
 	for p.Next(context.Background()) {
-		logErr(p.Err())
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
 		page := p.CurrentPage()
 		resources = append(resources, page.DeploymentConfigsList...)
 	}
@@ -51,7 +57,10 @@ func getCodeDeployDeploymentGroupNames(client *codedeploy.Client, applicationNam
 		})
 		p := codedeploy.NewListDeploymentGroupsPaginator(req)
 		for p.Next(context.Background()) {
-			logErr(p.Err())
+			if p.Err() != nil {
+				logErr(p.Err())
+				return
+			}
 			page := p.CurrentPage()
 			resources = append(resources, page.DeploymentGroups...)
 		}
