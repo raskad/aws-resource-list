@@ -414,7 +414,9 @@ func getEc2NetworkInterfaceAttachmentIDs(client *ec2.Client) (resources []string
 		}
 		page := p.CurrentPage()
 		for _, resource := range page.NetworkInterfaces {
-			resources = append(resources, *resource.Attachment.AttachmentId)
+			if resource.Attachment != nil {
+				resources = append(resources, *resource.Attachment.AttachmentId)
+			}
 		}
 	}
 	return

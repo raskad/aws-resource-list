@@ -65,7 +65,9 @@ func getRdsDBClusterEndpointIDs(client *rds.Client) (resources []string) {
 			return
 		}
 		for _, resource := range page.DBClusterEndpoints {
-			resources = append(resources, *resource.DBClusterEndpointIdentifier)
+			if *resource.EndpointType == "CUSTOM" {
+				resources = append(resources, *resource.DBClusterEndpointIdentifier)
+			}
 		}
 		if page.Marker == nil {
 			return

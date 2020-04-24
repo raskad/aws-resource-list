@@ -59,7 +59,6 @@ func getTerraformResources(module *tfjson.StateModule, resources *extResourceMap
 	for _, module := range module.ChildModules {
 		getTerraformResources(module, resources)
 	}
-	return
 }
 
 func appendIfMissing(slice []string, s string) []string {
