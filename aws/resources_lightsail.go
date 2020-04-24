@@ -25,6 +25,11 @@ func getLightsail(config aws.Config) (resources awsResourceMap) {
 }
 
 func getLightsailDomainNames(client *lightsail.Client) (resources []string) {
+	// Domain-related APIs are only available in the us-east-1 Region
+	if client.Config.Region != "us-east-1" {
+		return
+	}
+
 	input := lightsail.GetDomainsInput{}
 	for {
 		page, err := client.GetDomainsRequest(&input).Send(context.Background())
