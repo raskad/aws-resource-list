@@ -10,7 +10,7 @@ jobs:
     - name: Check out this repository
       uses: actions/checkout@v2
     - name: Get all missing CloudFormation resources
-      run: go run main.go types missing cfn types missing cfn > missing
+      run: go run main.go types missing cfn > missing
     - name: Create issue with all missing resources
       uses: actions/github-script@0.4.0
       with:

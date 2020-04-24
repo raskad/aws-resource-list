@@ -1,99 +1,19 @@
 package aws
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strings"
-
-	"golang.org/x/net/html"
 )
 
-type awsCloudformationDocJSON struct {
-	Contents []struct {
-		Title    string
-		Href     string
-		Contents []struct {
-			Title    string
-			Href     string
-			Contents []struct {
-				Title string
-				Href  string
-			}
-		}
-	}
-}
-
-func getCloudFormationResources() (resources []string, err error) {
-	cloudformationServices, err := getCloudformationServices()
-	if err != nil {
-		return resources, err
-	}
-	for _, service := range cloudformationServices {
-		url := fmt.Sprintf("https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/toc-%v.json", service)
-		serviceResource, err := getResourceTypes(url)
-		if err != nil {
-			return resources, err
-		}
-		resources = append(resources, serviceResource...)
-	}
-	return resources, nil
-}
-
-func getCloudformationServices() (cloudformationServices []string, err error) {
-	url := "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.partial.html"
-	resp, err := http.Get(url)
-	if err != nil {
-		return cloudformationServices, err
-	}
-	defer resp.Body.Close()
-	if err != nil {
-		return cloudformationServices, err
-	}
-	z := html.NewTokenizer(resp.Body)
-	for {
-		token := z.Next()
-		switch {
-		case token == html.ErrorToken:
-			return cloudformationServices, nil
-		case token == html.StartTagToken:
-			token := z.Token()
-			if token.Data == "li" {
-				_ = z.Next()
-				token := z.Token()
-				if token.Data == "a" {
-					service := token.Attr[0].Val
-					service = strings.Replace(service, "./", "", -1)
-					service = strings.Replace(service, ".html", "", -1)
-					if service != "cfn-reference-shared" {
-						cloudformationServices = append(cloudformationServices, service)
-					}
-				}
-			}
-		}
-	}
-}
-
-func getResourceTypes(url string) (resources []string, err error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return resources, err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return resources, err
-	}
-	var doc awsCloudformationDocJSON
-	err = json.Unmarshal(body, &doc)
-	if err != nil {
-		return resources, err
-	}
-	for _, resource := range doc.Contents[0].Contents {
-		resources = append(resources, resource.Title)
-	}
-	return
+type awsCloudFormationTypesJOSN struct {
+	PropertyTypes                interface{}
+	ResourceTypes                map[string]interface{}
+	ResourceSpecificationVersion string
 }
 
 func printMissingCloudformationResources() {
@@ -124,4 +44,64 @@ func printMissingCloudformationResources() {
 			fmt.Println(resource)
 		}
 	}
+}
+
+func getCloudFormationResources() (resources []string, err error) {
+	cloudFormationResourceTypeJSONUrls, err := getCloudFormationResourceTypeJSONUrls()
+	if err != nil {
+		return resources, err
+	}
+
+	for _, cloudFormationResourceTypeJSONUrl := range cloudFormationResourceTypeJSONUrls {
+		types, err := getCloudFormationTypes(cloudFormationResourceTypeJSONUrl)
+		if err != nil {
+			return resources, err
+		}
+
+		for _, resourceType := range types {
+			resources = appendIfMissing(resources, resourceType)
+		}
+	}
+	return resources, nil
+}
+
+func getCloudFormationTypes(url string) (resourceTypes []string, err error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	var responseJSON awsCloudFormationTypesJOSN
+
+	err = json.NewDecoder(resp.Body).Decode(&responseJSON)
+	if err != nil {
+		return
+	}
+
+	for resourceType := range responseJSON.ResourceTypes {
+		resourceTypes = append(resourceTypes, resourceType)
+	}
+
+	return resourceTypes, nil
+}
+
+func getCloudFormationResourceTypeJSONUrls() (urls []string, err error) {
+	resp, err := http.Get("https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html")
+	if err != nil {
+		return urls, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return urls, err
+	}
+	scanner := bufio.NewScanner(strings.NewReader(string(body)))
+	re := regexp.MustCompile(`https\:\/\/(.*)\.cloudfront\.net\/latest\/gzip\/CloudFormationResourceSpecification\.json`)
+	for scanner.Scan() {
+		matches := re.FindStringSubmatch(scanner.Text())
+		if len(matches) > 0 {
+			urls = append(urls, fmt.Sprintf("https://%s.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json", matches[1]))
+		}
+	}
+	return
 }
