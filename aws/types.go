@@ -99,6 +99,7 @@ const (
 	configOrganizationConformancePack         resourceType = "configOrganizationConformancePack"
 	configRemediationConfiguration            resourceType = "configRemediationConfiguration"
 	costAndUsageReportServiceReportDefinition resourceType = "costAndUsageReportServiceReportDefinition"
+	costExplorerCostCategory                  resourceType = "costExplorerCostCategory"
 	dataPipelinePipeline                      resourceType = "dataPipelinePipeline"
 	dataSyncAgent                             resourceType = "dataSyncAgent"
 	dataSyncLocation                          resourceType = "dataSyncLocation"
@@ -106,6 +107,8 @@ const (
 	daxCluster                                resourceType = "daxCluster"
 	daxParameterGroup                         resourceType = "daxParameterGroup"
 	daxSubnetGroup                            resourceType = "daxSubnetGroup"
+	detectiveInvitation                       resourceType = "detectiveInvitation"
+	detectiveGraph                            resourceType = "detectiveGraph"
 	deviceFarmProject                         resourceType = "deviceFarmProject"
 	directConnectConnection                   resourceType = "directConnectConnection"
 	directConnectGateway                      resourceType = "directConnectGateway"
@@ -246,6 +249,11 @@ const (
 	iamUser                                   resourceType = "iamUser"
 	iamUserPolicy                             resourceType = "iamUserPolicy"
 	iamUserSSHKey                             resourceType = "iamUserSSHKey"
+	imageBuilderDistributionConfiguration     resourceType = "imageBuilderDistributionConfiguration"
+	imageBuilderComponent                     resourceType = "imageBuilderComponent"
+	imageBuilderInfrastructureConfiguration   resourceType = "imageBuilderInfrastructureConfiguration"
+	imageBuilderImageRecipe                   resourceType = "imageBuilderImageRecipe"
+	imageBuilderImagePipeline                 resourceType = "imageBuilderImagePipeline"
 	inspectorAssessmentTarget                 resourceType = "inspectorAssessmentTarget"
 	inspectorAssessmentTemplate               resourceType = "inspectorAssessmentTemplate"
 	ioTCertificate                            resourceType = "ioTCertificate"
@@ -530,10 +538,13 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::Config::OrganizationConfigRule":             configOrganizationConfigRule,
 	"AWS::Config::OrganizationConformancePack":        configOrganizationConformancePack,
 	"AWS::Config::RemediationConfiguration":           configRemediationConfiguration,
+	"AWS::CE::CostCategory":                           costExplorerCostCategory,
 	"AWS::DataPipeline::Pipeline":                     dataPipelinePipeline,
 	"AWS::DAX::Cluster":                               daxCluster,
 	"AWS::DAX::ParameterGroup":                        daxParameterGroup,
 	"AWS::DAX::SubnetGroup":                           daxSubnetGroup,
+	"AWS::Detective::MemberInvitation":                detectiveInvitation,
+	"AWS::Detective::Graph":                           detectiveGraph,
 	"AWS::DirectoryService::MicrosoftAD":              directoryServiceDirectory,
 	"AWS::DirectoryService::SimpleAD":                 directoryServiceDirectory,
 	"AWS::DLM::LifecyclePolicy":                       dlmLifecyclePolicy,
@@ -646,6 +657,11 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::IAM::Policy":                                iamRolePolicy,
 	"AWS::IAM::ServiceLinkedRole":                     iamServiceLinkedRole,
 	"AWS::IAM::User":                                  iamUser,
+	"AWS::ImageBuilder::DistributionConfiguration":    imageBuilderDistributionConfiguration,
+	"AWS::ImageBuilder::Component":                    imageBuilderComponent,
+	"AWS::ImageBuilder::InfrastructureConfiguration":  imageBuilderInfrastructureConfiguration,
+	"AWS::ImageBuilder::ImageRecipe":                  imageBuilderImageRecipe,
+	"AWS::ImageBuilder::ImagePipeline":                imageBuilderImagePipeline,
 	"AWS::Inspector::AssessmentTarget":                inspectorAssessmentTarget,
 	"AWS::Inspector::AssessmentTemplate":              inspectorAssessmentTemplate,
 	"AWS::IoT::Certificate":                           ioTCertificate,
@@ -810,6 +826,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_api_gateway_usage_plan":                              apiGatewayUsagePlan,
 	"aws_api_gateway_vpc_link":                                apiGatewayVpcLink,
 	"aws_apigatewayv2_api":                                    apiGatewayV2Api,
+	"aws_apigatewayv2_domain_name":                            apiGatewayV2DomainName,
 	"aws_appautoscaling_scheduled_action":                     applicationAutoScalingScheduledAction,
 	"aws_appmesh_mesh":                                        appMeshMesh,
 	"aws_appsync_function":                                    appSyncFunctions,
@@ -898,6 +915,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_dlm_lifecycle_policy":                                dlmLifecyclePolicy,
 	"aws_dms_certificate":                                     dmsCertificate,
 	"aws_dms_endpoint":                                        dmsEndpoint,
+	"aws_dms_event_subscription":                              dmsEventSubscription,
 	"aws_dms_replication_instance":                            dmsReplicationInstance,
 	"aws_dms_replication_subnet_group":                        dmsReplicationSubnetGroup,
 	"aws_dms_replication_task":                                dmsReplicationTask,
@@ -932,7 +950,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_security_group":                                      ec2SecurityGroup,
 	"aws_ebs_snapshot":                                        ec2Snapshot,
 	"aws_ebs_snapshot_copy":                                   ec2Snapshot,
-	"aws_AWS::EC2::SpotFleet":                                 ec2SpotFleet,
+	"aws_spot_fleet_request":                                  ec2SpotFleet,
 	"aws_subnet":                                              ec2Subnet,
 	"aws_route_table_association":                             ec2RouteTableSubnetAssociation,
 	"aws_ec2_traffic_mirror_filter":                           ec2TrafficMirrorFilter,
@@ -1273,6 +1291,7 @@ var terraformPhysicalResourceIDs = map[resourceType]string{
 	dlmLifecyclePolicy:                        "id",
 	dmsCertificate:                            "certificate_id",
 	dmsEndpoint:                               "endpoint_id",
+	dmsEventSubscription:                      "name",
 	dmsReplicationInstance:                    "replication_instance_id",
 	dmsReplicationSubnetGroup:                 "replication_subnet_group_id",
 	dmsReplicationTask:                        "replication_task_id",
@@ -1792,6 +1811,7 @@ var resourceBlacklistMap = map[string][]string{
 		"aws_ebs_default_kms_key",
 		"aws_ebs_encryption_by_default",
 		"aws_ec2_transit_gateway_route",
+		"AWS::EC2::TransitGatewayRoute",
 		"aws_snapshot_create_volume_permission",
 		"aws_spot_datafeed_subscription",
 		"aws_ecr_lifecycle_policy",
@@ -1850,6 +1870,7 @@ var resourceBlacklistMap = map[string][]string{
 		"aws_transfer_ssh_key",
 		"aws_main_route_table_association",
 		"aws_route",
+		"AWS::EC2::Route",
 		"aws_network_interface_sg_attachment",
 		"aws_vpc_endpoint_route_table_association",
 		"aws_vpc_endpoint_service_allowed_principal",
@@ -1862,6 +1883,19 @@ var resourceBlacklistMap = map[string][]string{
 		"AWS::NetworkManager::CustomerGatewayAssociation",
 		"AWS::NetworkManager::LinkAssociation",
 		"AWS::NetworkManager::TransitGatewayRegistration",
+		"AWS::SES::ReceiptRule",
+		"aws_ec2_availability_zone_group",
+		"aws_lambda_function_event_invoke_config",
+		"aws_apigatewayv2_api_mapping",
+		"aws_apigatewayv2_authorizer",
+		"aws_apigatewayv2_deployment",
+		"aws_apigatewayv2_integration",
+		"aws_apigatewayv2_integration_response",
+		"aws_apigatewayv2_model",
+		"aws_apigatewayv2_route",
+		"aws_apigatewayv2_route_response",
+		"aws_apigatewayv2_stage",
+		"aws_apigatewayv2_vpc_link",
 	},
 	"not in the scope of this application": {
 		"aws_dynamodb_table_item",
@@ -1896,6 +1930,7 @@ var resourceBlacklistMap = map[string][]string{
 		"AWS::CodeStarConnections::Connection",
 		"AWS::Chatbot::SlackChannelConfiguration",
 		"AWS::ApiGatewayV2::VpcLink",
+		"AWS::Synthetics::Canary",
 	},
 	"No aws api": {
 		"AWS::ACMPCA::Certificate",
