@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"reflect"
+	"runtime"
+	"strings"
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -11,8 +14,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/urfave/cli/v2"
 )
-
-var accountID = ""
 
 // Start is the entrypoint in the application
 func Start(gitTag string, gitCommit string) {
@@ -192,6 +193,8 @@ func Start(gitTag string, gitCommit string) {
 	}
 }
 
+var accountID = ""
+
 func getAccountID(config aws.Config) (err error) {
 	svc := sts.New(config)
 
@@ -204,155 +207,177 @@ func getAccountID(config aws.Config) (err error) {
 	return nil
 }
 
-func run(f func(config aws.Config) (resources awsResourceMap), config aws.Config, c chan awsResourceMap, wg *sync.WaitGroup) {
-	wg.Add(1)
-	c <- f(config)
-	wg.Done()
-}
-
 func getRealState(config aws.Config) (resources awsResourceMap) {
-	r := []awsResourceMap{}
-	c := make(chan awsResourceMap)
-	var wg sync.WaitGroup
+	serviceFunctions := []func(config aws.Config) (resources awsResourceMap){
+		getAccessAnalyzer,
+		getAcm,
+		getAcmpca,
+		getAlexaForBusiness,
+		getAmplify,
+		getAPIGateway,
+		getAPIGatewayV2,
+		getAppConfig,
+		getApplicationAutoScaling,
+		getAppMesh,
+		getAppStream,
+		getAppSync,
+		getAthena,
+		getAutoScaling,
+		getAutoScalingPlans,
+		getBackup,
+		getBatch,
+		getCloud9,
+		getCloudfront,
+		getCloudHSMV2,
+		getCloudTrail,
+		getCloudWatch,
+		getCloudWatchEvents,
+		getCodeBuild,
+		getCodeCommit,
+		getCodeDeploy,
+		getCodeGuruProfiler,
+		getCodePipeline,
+		getCognitoIdentity,
+		getCognitoIdentityProvider,
+		getConfig,
+		getCostAndUsageReportService,
+		getDataPipeline,
+		getDataSync,
+		getDAX,
+		getDeviceFarm,
+		getDirectConnect,
+		getDirectoryService,
+		getDLM,
+		getDms,
+		getDocDB,
+		getDynamoDB,
+		getEc2,
+		getEcr,
+		getEcs,
+		getEfs,
+		getEks,
+		getElasticache,
+		getElasticsearch,
+		getElasticTranscoder,
+		getElasticBeanstalk,
+		getElasticLoadBalancing,
+		getElasticLoadBalancingV2,
+		getEmr,
+		getFirehose,
+		getFsx,
+		getGameLift,
+		getGlacier,
+		getGlobalAccelerator,
+		getGlue,
+		getGreengrass,
+		getGroundStation,
+		getGuardDuty,
+		getIam,
+		getInspector,
+		getIoT,
+		getIoT1ClickDevicesService,
+		getIoT1ClickProjects,
+		getIoTAnalytics,
+		getIoTEvents,
+		getKinesis,
+		getKinesisAnalytics,
+		getKinesisAnalyticsV2,
+		getKinesisVideo,
+		getKms,
+		getLakeFormation,
+		getLambda,
+		getLicenseManager,
+		getLightsail,
+		getCloudwatchLogs,
+		getMacie,
+		getMq,
+		getMediaConvert,
+		getMediaLive,
+		getMediaStore,
+		getMsk,
+		getNeptune,
+		getNetworkManager,
+		getOpsWorks,
+		getOrganizations,
+		getPinpoint,
+		getQLDB,
+		getQuickSight,
+		getRds,
+		getRedshift,
+		getResourceGroups,
+		getRoboMaker,
+		getRoute53,
+		getRoute53Resolver,
+		getS3,
+		getS3Control,
+		getSageMaker,
+		getSchemas,
+		getSdb,
+		getSecretsManager,
+		getServiceDiscovery,
+		getSes,
+		getSfn,
+		getShield,
+		getSns,
+		getSns,
+		getSqs,
+		getSsm,
+		getStorageGateway,
+		getSWF,
+		getTransfer,
+		getWaf,
+		getWafRegional,
+		getWafv2,
+		getWorkLink,
+		getWorkSpaces,
+		getXray,
+	}
 
-	go run(getAccessAnalyzer, config, c, &wg)
-	go run(getAcm, config, c, &wg)
-	go run(getAcmpca, config, c, &wg)
-	go run(getAlexaForBusiness, config, c, &wg)
-	go run(getAmplify, config, c, &wg)
-	go run(getAPIGateway, config, c, &wg)
-	go run(getAPIGatewayV2, config, c, &wg)
-	go run(getAppConfig, config, c, &wg)
-	go run(getApplicationAutoScaling, config, c, &wg)
-	go run(getAppMesh, config, c, &wg)
-	go run(getAppStream, config, c, &wg)
-	go run(getAppSync, config, c, &wg)
-	go run(getAthena, config, c, &wg)
-	go run(getAutoScaling, config, c, &wg)
-	go run(getAutoScalingPlans, config, c, &wg)
-	go run(getBackup, config, c, &wg)
-	go run(getBatch, config, c, &wg)
-	go run(getCloud9, config, c, &wg)
-	go run(getCloudfront, config, c, &wg)
-	go run(getCloudHSMV2, config, c, &wg)
-	go run(getCloudTrail, config, c, &wg)
-	go run(getCloudWatch, config, c, &wg)
-	go run(getCloudWatchEvents, config, c, &wg)
-	go run(getCodeBuild, config, c, &wg)
-	go run(getCodeCommit, config, c, &wg)
-	go run(getCodeDeploy, config, c, &wg)
-	go run(getCodeGuruProfiler, config, c, &wg)
-	go run(getCodePipeline, config, c, &wg)
-	go run(getCognitoIdentity, config, c, &wg)
-	go run(getCognitoIdentityProvider, config, c, &wg)
-	go run(getConfig, config, c, &wg)
-	go run(getCostAndUsageReportService, config, c, &wg)
-	go run(getDataPipeline, config, c, &wg)
-	go run(getDataSync, config, c, &wg)
-	go run(getDAX, config, c, &wg)
-	go run(getDeviceFarm, config, c, &wg)
-	go run(getDirectConnect, config, c, &wg)
-	go run(getDirectoryService, config, c, &wg)
-	go run(getDLM, config, c, &wg)
-	go run(getDms, config, c, &wg)
-	go run(getDocDB, config, c, &wg)
-	go run(getDynamoDB, config, c, &wg)
-	go run(getEc2, config, c, &wg)
-	go run(getEcr, config, c, &wg)
-	go run(getEcs, config, c, &wg)
-	go run(getEfs, config, c, &wg)
-	go run(getEks, config, c, &wg)
-	go run(getElasticache, config, c, &wg)
-	go run(getElasticsearch, config, c, &wg)
-	go run(getElasticTranscoder, config, c, &wg)
-	go run(getElasticBeanstalk, config, c, &wg)
-	go run(getElasticLoadBalancing, config, c, &wg)
-	go run(getElasticLoadBalancingV2, config, c, &wg)
-	go run(getEmr, config, c, &wg)
-	go run(getFirehose, config, c, &wg)
-	go run(getFsx, config, c, &wg)
-	go run(getGameLift, config, c, &wg)
-	go run(getGlacier, config, c, &wg)
-	go run(getGlobalAccelerator, config, c, &wg)
-	go run(getGlue, config, c, &wg)
-	go run(getGreengrass, config, c, &wg)
-	go run(getGroundStation, config, c, &wg)
-	go run(getGuardDuty, config, c, &wg)
-	go run(getIam, config, c, &wg)
-	go run(getInspector, config, c, &wg)
-	go run(getIoT, config, c, &wg)
-	go run(getIoT1ClickDevicesService, config, c, &wg)
-	go run(getIoT1ClickProjects, config, c, &wg)
-	go run(getIoTAnalytics, config, c, &wg)
-	go run(getIoTEvents, config, c, &wg)
-	go run(getKinesis, config, c, &wg)
-	go run(getKinesisAnalytics, config, c, &wg)
-	go run(getKinesisAnalyticsV2, config, c, &wg)
-	go run(getKinesisVideo, config, c, &wg)
-	go run(getKms, config, c, &wg)
-	go run(getLakeFormation, config, c, &wg)
-	go run(getLambda, config, c, &wg)
-	go run(getLicenseManager, config, c, &wg)
-	go run(getLightsail, config, c, &wg)
-	go run(getCloudwatchLogs, config, c, &wg)
-	go run(getMacie, config, c, &wg)
-	go run(getMq, config, c, &wg)
-	go run(getMediaConvert, config, c, &wg)
-	go run(getMediaLive, config, c, &wg)
-	go run(getMediaStore, config, c, &wg)
-	go run(getMsk, config, c, &wg)
-	go run(getNeptune, config, c, &wg)
-	go run(getNetworkManager, config, c, &wg)
-	go run(getOpsWorks, config, c, &wg)
-	go run(getOrganizations, config, c, &wg)
-	go run(getPinpoint, config, c, &wg)
-	go run(getQLDB, config, c, &wg)
-	go run(getQuickSight, config, c, &wg)
-	go run(getRds, config, c, &wg)
-	go run(getRedshift, config, c, &wg)
-	go run(getResourceGroups, config, c, &wg)
-	go run(getRoboMaker, config, c, &wg)
-	go run(getRoute53, config, c, &wg)
-	go run(getRoute53Resolver, config, c, &wg)
-	go run(getS3, config, c, &wg)
-	go run(getS3Control, config, c, &wg)
-	go run(getSageMaker, config, c, &wg)
-	go run(getSchemas, config, c, &wg)
-	go run(getSdb, config, c, &wg)
-	go run(getSecretsManager, config, c, &wg)
-	go run(getServiceDiscovery, config, c, &wg)
-	go run(getSes, config, c, &wg)
-	go run(getSfn, config, c, &wg)
-	go run(getShield, config, c, &wg)
-	go run(getSns, config, c, &wg)
-	go run(getSns, config, c, &wg)
-	go run(getSqs, config, c, &wg)
-	go run(getSsm, config, c, &wg)
-	go run(getStorageGateway, config, c, &wg)
-	go run(getSWF, config, c, &wg)
-	go run(getTransfer, config, c, &wg)
-	go run(getWaf, config, c, &wg)
-	go run(getWafRegional, config, c, &wg)
-	go run(getWafv2, config, c, &wg)
-	go run(getWorkLink, config, c, &wg)
-	go run(getWorkSpaces, config, c, &wg)
-	go run(getXray, config, c, &wg)
+	resourceMapAllServices := []awsResourceMap{}
+	resourceMapChannel := make(chan awsResourceMap)
+	var resourceMapWaitGroup sync.WaitGroup
+	parallelServices := 10
 
-	// Append the awsResourceMaps to the slice until all are listed
-	first := true
-	for rMap := range c {
-		r = append(r, rMap)
-		if first {
-			// Wait for all functions to finish
-			go func() {
-				wg.Wait()
-				close(c)
-			}()
-			first = false
+	servicesCount := len(serviceFunctions) - 1
+
+	count := 1
+	for index, serviceFunction := range serviceFunctions {
+		go func(serviceFunction func(config aws.Config) (resources awsResourceMap)) {
+			resourceMapWaitGroup.Add(1)
+
+			functionName := runtime.FuncForPC(reflect.ValueOf(serviceFunction).Pointer()).Name()
+			functionName = functionName[(strings.LastIndex(functionName, ".") + 1):]
+
+			logDebug("Starting", functionName)
+			resourceMapChannel <- serviceFunction(config)
+			logDebug("Finished", functionName)
+
+			resourceMapWaitGroup.Done()
+		}(serviceFunction)
+
+		if count == parallelServices || index == servicesCount {
+			// Append the awsResourceMaps to the slice until all are listed
+			first := true
+			for rMap := range resourceMapChannel {
+				resourceMapAllServices = append(resourceMapAllServices, rMap)
+				if first {
+					// Wait for all functions to finish
+					go func() {
+						resourceMapWaitGroup.Wait()
+						logDebug("Got all services for this batch. Closing channel...")
+						close(resourceMapChannel)
+					}()
+					first = false
+				}
+			}
+			resourceMapChannel = make(chan awsResourceMap)
+			count = 1
+		} else {
+			count++
 		}
 	}
 
-	resources = reduce(r...)
+	resources = reduce(resourceMapAllServices...)
 	return
 }
 
