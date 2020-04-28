@@ -242,11 +242,13 @@ func getRealState(config aws.Config) (resources awsResourceMap) {
 		getCognitoIdentityProvider,
 		getConfigService,
 		getCostAndUsageReportService,
+		getCostExplorer,
 		getDAX,
 		getDLM,
 		getDataPipeline,
 		getDataSync,
 		getDatabaseMigrationService,
+		getDetective,
 		getDeviceFarm,
 		getDirectConnect,
 		getDirectoryService,
@@ -274,6 +276,7 @@ func getRealState(config aws.Config) (resources awsResourceMap) {
 		getGroundStation,
 		getGuardDuty,
 		getIam,
+		getImageBuilder,
 		getInspector,
 		getIoT,
 		getIoT1ClickDevicesService,
@@ -342,9 +345,8 @@ func getRealState(config aws.Config) (resources awsResourceMap) {
 
 	count := 1
 	for index, serviceFunction := range serviceFunctions {
+		resourceMapWaitGroup.Add(1)
 		go func(serviceFunction func(config aws.Config) (resources awsResourceMap)) {
-			resourceMapWaitGroup.Add(1)
-
 			functionName := runtime.FuncForPC(reflect.ValueOf(serviceFunction).Pointer()).Name()
 			functionName = functionName[(strings.LastIndex(functionName, ".") + 1):]
 
