@@ -10,22 +10,22 @@ import (
 func getNeptune(config aws.Config) (resources awsResourceMap) {
 	client := neptune.New(config)
 
-	getNeptuneDBClusterIDs := getNeptuneDBClusterIDs(client)
-	getNeptuneDBClusterParameterGroupNames := getNeptuneDBClusterParameterGroupNames(client)
+	neptuneDBClusterIDs := getNeptuneDBClusterIDs(client)
+	neptuneDBClusterParameterGroupNames := getNeptuneDBClusterParameterGroupNames(client)
 	neptuneDBClusterSnapshotIDs := getNeptuneDBClusterSnapshotIDs(client)
 	neptuneDBEventSubscriptionIDs := getNeptuneDBEventSubscriptionIDs(client)
-	getNeptuneDBInstanceIDs := getNeptuneDBInstanceIDs(client)
-	getNeptuneDBParameterGroupNames := getNeptuneDBParameterGroupNames(client)
-	getNeptuneDBSubnetGroupNames := getNeptuneDBSubnetGroupNames(client)
+	neptuneDBInstanceIDs := getNeptuneDBInstanceIDs(client)
+	neptuneDBParameterGroupNames := getNeptuneDBParameterGroupNames(client)
+	neptuneDBSubnetGroupNames := getNeptuneDBSubnetGroupNames(client)
 
 	resources = awsResourceMap{
-		neptuneDBCluster:               getNeptuneDBClusterIDs,
-		neptuneDBClusterParameterGroup: getNeptuneDBClusterParameterGroupNames,
+		neptuneDBCluster:               neptuneDBClusterIDs,
+		neptuneDBClusterParameterGroup: neptuneDBClusterParameterGroupNames,
 		neptuneDBClusterSnapshot:       neptuneDBClusterSnapshotIDs,
 		neptuneDBEventSubscription:     neptuneDBEventSubscriptionIDs,
-		neptuneDBInstance:              getNeptuneDBInstanceIDs,
-		neptuneDBParameterGroup:        getNeptuneDBParameterGroupNames,
-		neptuneDBSubnetGroup:           getNeptuneDBSubnetGroupNames,
+		neptuneDBInstance:              neptuneDBInstanceIDs,
+		neptuneDBParameterGroup:        neptuneDBParameterGroupNames,
+		neptuneDBSubnetGroup:           neptuneDBSubnetGroupNames,
 	}
 	return
 }

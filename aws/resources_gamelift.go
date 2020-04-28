@@ -10,22 +10,22 @@ import (
 func getGameLift(config aws.Config) (resources awsResourceMap) {
 	client := gamelift.New(config)
 
-	getGameLiftAliasIDs := getGameLiftAliasIDs(client)
-	getGameLiftBuildIDs := getGameLiftBuildIDs(client)
-	getGameLiftFleetIDs := getGameLiftFleetIDs(client)
-	getGameLiftGameSessionQueueNames := getGameLiftGameSessionQueueNames(client)
-	getGameLiftMatchmakingConfigurationNames := getGameLiftMatchmakingConfigurationNames(client)
-	getGameLiftMatchmakingRuleSetNames := getGameLiftMatchmakingRuleSetNames(client)
-	getGameLiftScriptIDs := getGameLiftScriptIDs(client)
+	gameLiftAliasIDs := getGameLiftAliasIDs(client)
+	gameLiftBuildIDs := getGameLiftBuildIDs(client)
+	gameLiftFleetIDs := getGameLiftFleetIDs(client)
+	gameLiftGameSessionQueueNames := getGameLiftGameSessionQueueNames(client)
+	gameLiftMatchmakingConfigurationNames := getGameLiftMatchmakingConfigurationNames(client)
+	gameLiftMatchmakingRuleSetNames := getGameLiftMatchmakingRuleSetNames(client)
+	gameLiftScriptIDs := getGameLiftScriptIDs(client)
 
 	resources = awsResourceMap{
-		gameLiftAlias:                    getGameLiftAliasIDs,
-		gameLiftBuild:                    getGameLiftBuildIDs,
-		gameLiftFleet:                    getGameLiftFleetIDs,
-		gameLiftGameSessionQueue:         getGameLiftGameSessionQueueNames,
-		gameLiftMatchmakingConfiguration: getGameLiftMatchmakingConfigurationNames,
-		gameLiftMatchmakingRuleSet:       getGameLiftMatchmakingRuleSetNames,
-		gameLiftScript:                   getGameLiftScriptIDs,
+		gameLiftAlias:                    gameLiftAliasIDs,
+		gameLiftBuild:                    gameLiftBuildIDs,
+		gameLiftFleet:                    gameLiftFleetIDs,
+		gameLiftGameSessionQueue:         gameLiftGameSessionQueueNames,
+		gameLiftMatchmakingConfiguration: gameLiftMatchmakingConfigurationNames,
+		gameLiftMatchmakingRuleSet:       gameLiftMatchmakingRuleSetNames,
+		gameLiftScript:                   gameLiftScriptIDs,
 	}
 	return
 }

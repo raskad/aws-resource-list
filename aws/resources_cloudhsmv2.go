@@ -10,7 +10,7 @@ import (
 func getCloudHSMV2(config aws.Config) (resources awsResourceMap) {
 	client := cloudhsmv2.New(config)
 
-	cloudHSMV2ClusterIDs, cloudHSMV2HSMIDs := getCloudHSMV2ClusterIDs(client)
+	cloudHSMV2ClusterIDs, cloudHSMV2HSMIDs := getCloudHSMV2ClusterIDsAndCloudHSMV2HSMIDs(client)
 
 	resources = awsResourceMap{
 		cloudHSMV2Cluster: cloudHSMV2ClusterIDs,
@@ -19,7 +19,7 @@ func getCloudHSMV2(config aws.Config) (resources awsResourceMap) {
 	return
 }
 
-func getCloudHSMV2ClusterIDs(client *cloudhsmv2.Client) (cloudHSMV2ClusterIDs []string, cloudHSMV2HSMIDs []string) {
+func getCloudHSMV2ClusterIDsAndCloudHSMV2HSMIDs(client *cloudhsmv2.Client) (cloudHSMV2ClusterIDs []string, cloudHSMV2HSMIDs []string) {
 	buckets, err := client.DescribeClustersRequest(&cloudhsmv2.DescribeClustersInput{}).Send(context.Background())
 	if err != nil {
 		logErr(err)

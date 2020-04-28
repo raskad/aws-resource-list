@@ -91,3 +91,39 @@ func TestResourcesFileNaming(t *testing.T) {
 		}
 	}
 }
+
+func TestResourcesFileVariableAssignmentNaming(t *testing.T) {
+	var fileNames []string
+	err := filepath.Walk(".", func(fileName string, info os.FileInfo, err error) error {
+		if strings.HasPrefix(fileName, "resources_") {
+			fileNames = append(fileNames, fileName)
+		}
+		return nil
+	})
+
+	if err != nil {
+		t.Errorf("Error reading filenames: %v", err)
+	}
+
+	for _, fileName := range fileNames {
+		file, err := os.Open(fileName)
+		if err != nil {
+			t.Errorf("Error opening file: %v", err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		regexVariableAssignment := regexp.MustCompile(`	(.*) := (.*)\(client\)`)
+		for scanner.Scan() {
+			matchesVariableAssignment := regexVariableAssignment.FindStringSubmatch(scanner.Text())
+			if len(matchesVariableAssignment) > 0 {
+				functionName0 := strings.ToLower(fmt.Sprintf("get%s", matchesVariableAssignment[1]))
+				functionName1 := strings.ToLower(matchesVariableAssignment[2])
+				functionNames := strings.ReplaceAll(functionName0, ", ", "and")
+				if !(functionName0 == functionName1) && !(functionNames == functionName1) {
+					t.Errorf("Variable %s has incorrect name", matchesVariableAssignment[1])
+				}
+			}
+		}
+	}
+}

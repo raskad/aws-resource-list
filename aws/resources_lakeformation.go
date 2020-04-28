@@ -10,10 +10,10 @@ import (
 func getLakeFormation(config aws.Config) (resources awsResourceMap) {
 	client := lakeformation.New(config)
 
-	getLakeFormationResourceARNs := getLakeFormationResourceARNs(client)
+	lakeFormationResourceARNs := getLakeFormationResourceARNs(client)
 
 	resources = awsResourceMap{
-		lakeFormationResource: getLakeFormationResourceARNs,
+		lakeFormationResource: lakeFormationResourceARNs,
 	}
 	return
 }

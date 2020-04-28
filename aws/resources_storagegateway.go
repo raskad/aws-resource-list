@@ -12,7 +12,7 @@ func getStorageGateway(config aws.Config) (resources awsResourceMap) {
 
 	storageGatewayCachedISCSIVolumeIDs := getStorageGatewayCachedISCSIVolumeIDs(client)
 	storageGatewayGatewayIDs := getStorageGatewayGatewayIDs(client)
-	storageGatewayNFSFileShareIDs, storageGatewaySMBFileShareIDs := getStorageGatewayFileShareIDs(client)
+	storageGatewayNFSFileShareIDs, storageGatewaySMBFileShareIDs := getStorageGatewayNFSFileShareIDsAndStorageGatewaySMBFileShareIDs(client)
 
 	resources = awsResourceMap{
 		storageGatewayCachedISCSIVolume: storageGatewayCachedISCSIVolumeIDs,
@@ -55,7 +55,7 @@ func getStorageGatewayGatewayIDs(client *storagegateway.Client) (resources []str
 	return
 }
 
-func getStorageGatewayFileShareIDs(client *storagegateway.Client) (storageGatewayNFSFileShareIDs []string, storageGatewaySMBFileShareIDs []string) {
+func getStorageGatewayNFSFileShareIDsAndStorageGatewaySMBFileShareIDs(client *storagegateway.Client) (storageGatewayNFSFileShareIDs []string, storageGatewaySMBFileShareIDs []string) {
 	req := client.ListFileSharesRequest(&storagegateway.ListFileSharesInput{})
 	p := storagegateway.NewListFileSharesPaginator(req)
 	for p.Next(context.Background()) {
