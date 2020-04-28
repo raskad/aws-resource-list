@@ -10,17 +10,17 @@ import (
 func getSchemas(config aws.Config) (resources awsResourceMap) {
 	client := schemas.New(config)
 
-	eventSchemasDiscovererIDs := getEventSchemasDiscovererIDs(client)
-	eventSchemasRegistryNames := getEventSchemasRegistryNames(client)
+	schemasDiscovererIDs := getSchemasDiscovererIDs(client)
+	schemasRegistryNames := getSchemasRegistryNames(client)
 
 	resources = awsResourceMap{
-		eventSchemasDiscoverer: eventSchemasDiscovererIDs,
-		eventSchemasRegistry:   eventSchemasRegistryNames,
+		schemasDiscoverer: schemasDiscovererIDs,
+		schemasRegistry:   schemasRegistryNames,
 	}
 	return
 }
 
-func getEventSchemasDiscovererIDs(client *schemas.Client) (resources []string) {
+func getSchemasDiscovererIDs(client *schemas.Client) (resources []string) {
 	req := client.ListDiscoverersRequest(&schemas.ListDiscoverersInput{})
 	p := schemas.NewListDiscoverersPaginator(req)
 	for p.Next(context.Background()) {
@@ -36,7 +36,7 @@ func getEventSchemasDiscovererIDs(client *schemas.Client) (resources []string) {
 	return
 }
 
-func getEventSchemasRegistryNames(client *schemas.Client) (resources []string) {
+func getSchemasRegistryNames(client *schemas.Client) (resources []string) {
 	req := client.ListRegistriesRequest(&schemas.ListRegistriesInput{})
 	p := schemas.NewListRegistriesPaginator(req)
 	for p.Next(context.Background()) {

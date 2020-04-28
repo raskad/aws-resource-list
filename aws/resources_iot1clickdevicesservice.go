@@ -10,15 +10,15 @@ import (
 func getIoT1ClickDevicesService(config aws.Config) (resources awsResourceMap) {
 	client := iot1clickdevicesservice.New(config)
 
-	ioT1ClickDeviceIDs := getIoT1ClickDeviceIDs(client)
+	ioT1ClickDevicesServiceDeviceIDs := getIoT1ClickDevicesServiceDeviceIDs(client)
 
 	resources = awsResourceMap{
-		ioT1ClickDevice: ioT1ClickDeviceIDs,
+		ioT1ClickDevicesServiceDevice: ioT1ClickDevicesServiceDeviceIDs,
 	}
 	return
 }
 
-func getIoT1ClickDeviceIDs(client *iot1clickdevicesservice.Client) (resources []string) {
+func getIoT1ClickDevicesServiceDeviceIDs(client *iot1clickdevicesservice.Client) (resources []string) {
 	input := iot1clickdevicesservice.ListDevicesInput{}
 	for {
 		page, err := client.ListDevicesRequest(&input).Send(context.Background())

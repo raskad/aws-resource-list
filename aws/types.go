@@ -3,462 +3,462 @@ package aws
 type resourceType string
 
 const (
-	accessAnalyzerAnalyzer                    resourceType = "accessAnalyzerAnalyzer"
-	acmpcaCertificateAuthority                resourceType = "acmpcaCertificateAuthority"
-	alexaAskSkill                             resourceType = "alexaAskSkill"
-	amazonMQBroker                            resourceType = "amazonMQBroker"
-	amazonMQConfiguration                     resourceType = "amazonMQConfiguration"
-	amplifyApp                                resourceType = "amplifyApp"
-	amplifyBranch                             resourceType = "amplifyBranch"
-	amplifyDomain                             resourceType = "amplifyDomain"
-	apiGatewayAPIKey                          resourceType = "apiGatewayAPIKey"
-	apiGatewayClientCertificate               resourceType = "apiGatewayClientCertificate"
-	apiGatewayDomainName                      resourceType = "apiGatewayDomainName"
-	apiGatewayRestAPI                         resourceType = "apiGatewayRestAPI"
-	apiGatewayUsagePlan                       resourceType = "apiGatewayUsagePlan"
-	apiGatewayV2Api                           resourceType = "apiGatewayV2Api"
-	apiGatewayV2DomainName                    resourceType = "apiGatewayV2DomainName"
-	apiGatewayVpcLink                         resourceType = "apiGatewayVpcLink"
-	appConfigApplication                      resourceType = "appConfigApplication"
-	appConfigDeploymentStrategy               resourceType = "appConfigDeploymentStrategy"
-	appMeshMesh                               resourceType = "appMeshMesh"
-	appStreamDirectoryConfig                  resourceType = "appStreamDirectoryConfig"
-	appStreamFleet                            resourceType = "appStreamFleet"
-	appStreamImageBuilder                     resourceType = "appStreamImageBuilder"
-	appStreamStack                            resourceType = "appStreamStack"
-	appSyncFunctions                          resourceType = "appSyncFunctions"
-	appSyncGraphQLApi                         resourceType = "appSyncGraphQLApi"
-	applicationAutoScalingScheduledAction     resourceType = "applicationAutoScalingScheduledAction"
-	athenaNamedQuery                          resourceType = "athenaNamedQuery"
-	athenaWorkGroup                           resourceType = "athenaWorkGroup"
-	autoScalingAutoScalingGroup               resourceType = "autoScalingAutoScalingGroup"
-	autoScalingLaunchConfiguration            resourceType = "autoScalingLaunchConfiguration"
-	autoScalingPlansScalingPlan               resourceType = "autoScalingPlansScalingPlan"
-	autoScalingScalingPolicy                  resourceType = "autoScalingScalingPolicy"
-	autoScalingScheduledAction                resourceType = "autoScalingScheduledAction"
-	backupBackupPlan                          resourceType = "backupBackupPlan"
-	backupBackupSelection                     resourceType = "backupBackupSelection"
-	backupBackupVault                         resourceType = "backupBackupVault"
-	batchComputeEnvironment                   resourceType = "batchComputeEnvironment"
-	batchJobDefinition                        resourceType = "batchJobDefinition"
-	batchJobQueue                             resourceType = "batchJobQueue"
-	budgetsBudget                             resourceType = "budgetsBudget"
-	certificateManagerCertificate             resourceType = "certificateManagerCertificate"
-	cloud9EnvironmentEC2                      resourceType = "cloud9EnvironmentEC2"
-	cloudFrontCloudFrontOriginAccessIdentity  resourceType = "cloudFrontCloudFrontOriginAccessIdentity"
-	cloudFrontDistribution                    resourceType = "cloudFrontDistribution"
-	cloudFrontPublicKey                       resourceType = "cloudFrontPublicKey"
-	cloudFrontStreamingDistribution           resourceType = "cloudFrontStreamingDistribution"
-	cloudHSMV2Cluster                         resourceType = "cloudHSMV2Cluster"
-	cloudHSMV2HSM                             resourceType = "cloudHSMV2HSM"
-	cloudTrailTrail                           resourceType = "cloudTrailTrail"
-	cloudWatchAlarm                           resourceType = "cloudWatchAlarm"
-	cloudWatchDashboard                       resourceType = "cloudWatchDashboard"
-	cloudWatchInsightRule                     resourceType = "cloudWatchInsightRule"
-	codeBuildProject                          resourceType = "codeBuildProject"
-	codeBuildReportGroup                      resourceType = "codeBuildReportGroup"
-	codeBuildSourceCredential                 resourceType = "codeBuildSourceCredential"
-	codeCommitRepository                      resourceType = "codeCommitRepository"
-	codeCommitTrigger                         resourceType = "codeCommitTrigger"
-	codeDeployApplication                     resourceType = "codeDeployApplication"
-	codeDeployDeploymentConfig                resourceType = "codeDeployDeploymentConfig"
-	codeDeployDeploymentGroup                 resourceType = "codeDeployDeploymentGroup"
-	codeGuruProfilerProfilingGroup            resourceType = "codeGuruProfilerProfilingGroup"
-	codePipelinePipeline                      resourceType = "codePipelinePipeline"
-	codePipelineWebhook                       resourceType = "codePipelineWebhook"
-	codeStarGitHubRepository                  resourceType = "codeStarGitHubRepository"
-	codeStarNotificationsNotificationRule     resourceType = "codeStarNotificationsNotificationRule"
-	cognitoIdentityPool                       resourceType = "cognitoIdentityPool"
-	cognitoUserPool                           resourceType = "cognitoUserPool"
-	cognitoUserPoolClient                     resourceType = "cognitoUserPoolClient"
-	cognitoUserPoolGroup                      resourceType = "cognitoUserPoolGroup"
-	cognitoUserPoolIdentityProvider           resourceType = "cognitoUserPoolIdentityProvider"
-	cognitoUserPoolResourceServer             resourceType = "cognitoUserPoolResourceServer"
-	cognitoUserPoolUser                       resourceType = "cognitoUserPoolUser"
-	configAggregationAuthorization            resourceType = "configAggregationAuthorization"
-	configConfigRule                          resourceType = "configConfigRule"
-	configConfigurationAggregator             resourceType = "configConfigurationAggregator"
-	configConfigurationRecorder               resourceType = "configConfigurationRecorder"
-	configConformancePack                     resourceType = "configConformancePack"
-	configDeliveryChannel                     resourceType = "configDeliveryChannel"
-	configOrganizationConfigRule              resourceType = "configOrganizationConfigRule"
-	configOrganizationConformancePack         resourceType = "configOrganizationConformancePack"
-	configRemediationConfiguration            resourceType = "configRemediationConfiguration"
-	costAndUsageReportServiceReportDefinition resourceType = "costAndUsageReportServiceReportDefinition"
-	costExplorerCostCategory                  resourceType = "costExplorerCostCategory"
-	dataPipelinePipeline                      resourceType = "dataPipelinePipeline"
-	dataSyncAgent                             resourceType = "dataSyncAgent"
-	dataSyncLocation                          resourceType = "dataSyncLocation"
-	dataSyncTask                              resourceType = "dataSyncTask"
-	daxCluster                                resourceType = "daxCluster"
-	daxParameterGroup                         resourceType = "daxParameterGroup"
-	daxSubnetGroup                            resourceType = "daxSubnetGroup"
-	detectiveGraph                            resourceType = "detectiveGraph"
-	detectiveInvitation                       resourceType = "detectiveInvitation"
-	deviceFarmProject                         resourceType = "deviceFarmProject"
-	directConnectConnection                   resourceType = "directConnectConnection"
-	directConnectGateway                      resourceType = "directConnectGateway"
-	directConnectGatewayAssociation           resourceType = "directConnectGatewayAssociation"
-	directConnectGatewayAssociationProposal   resourceType = "directConnectGatewayAssociationProposal"
-	directConnectLAG                          resourceType = "directConnectLAG"
-	directConnectVirtualInterface             resourceType = "directConnectVirtualInterface"
-	directoryServiceDirectory                 resourceType = "directoryServiceDirectory"
-	dlmLifecyclePolicy                        resourceType = "dlmLifecyclePolicy"
-	dmsCertificate                            resourceType = "dmsCertificate"
-	dmsEndpoint                               resourceType = "dmsEndpoint"
-	dmsEventSubscription                      resourceType = "dmsEventSubscription"
-	dmsReplicationInstance                    resourceType = "dmsReplicationInstance"
-	dmsReplicationSubnetGroup                 resourceType = "dmsReplicationSubnetGroup"
-	dmsReplicationTask                        resourceType = "dmsReplicationTask"
-	docDBDBCluster                            resourceType = "docDBDBCluster"
-	docDBDBClusterParameterGroup              resourceType = "docDBDBClusterParameterGroup"
-	docDBDBClusterSnapshot                    resourceType = "docDBDBClusterSnapshot"
-	docDBDBInstance                           resourceType = "docDBDBInstance"
-	docDBDBSubnetGroup                        resourceType = "docDBDBSubnetGroup"
-	dynamoDBGlobalTable                       resourceType = "dynamoDBGlobalTable"
-	dynamoDBTable                             resourceType = "dynamoDBTable"
-	ec2CapacityReservation                    resourceType = "ec2CapacityReservation"
-	ec2ClientVpnEndpoint                      resourceType = "ec2ClientVpnEndpoint"
-	ec2CustomerGateway                        resourceType = "ec2CustomerGateway"
-	ec2DHCPOptions                            resourceType = "ec2DHCPOptions"
-	ec2EC2Fleet                               resourceType = "ec2EC2Fleet"
-	ec2EIP                                    resourceType = "ec2EIP"
-	ec2EIPAssociation                         resourceType = "ec2EIPAssociation"
-	ec2EgressOnlyInternetGateway              resourceType = "ec2EgressOnlyInternetGateway"
-	ec2FlowLog                                resourceType = "ec2FlowLog"
-	ec2Host                                   resourceType = "ec2Host"
-	ec2Image                                  resourceType = "ec2Image"
-	ec2Instance                               resourceType = "ec2Instance"
-	ec2InternetGateway                        resourceType = "ec2InternetGateway"
-	ec2KeyPair                                resourceType = "ec2KeyPair"
-	ec2LaunchTemplate                         resourceType = "ec2LaunchTemplate"
-	ec2NatGateway                             resourceType = "ec2NatGateway"
-	ec2NetworkACL                             resourceType = "ec2NetworkACL"
-	ec2NetworkACLSubnetAssociation            resourceType = "ec2NetworkACLSubnetAssociation"
-	ec2NetworkInterface                       resourceType = "ec2NetworkInterface"
-	ec2NetworkInterfaceAttachment             resourceType = "ec2NetworkInterfaceAttachment"
-	ec2NetworkInterfacePermission             resourceType = "ec2NetworkInterfacePermission"
-	ec2PlacementGroup                         resourceType = "ec2PlacementGroup"
-	ec2RouteTable                             resourceType = "ec2RouteTable"
-	ec2RouteTableSubnetAssociation            resourceType = "ec2RouteTableSubnetAssociation"
-	ec2SecurityGroup                          resourceType = "ec2SecurityGroup"
-	ec2Snapshot                               resourceType = "ec2Snapshot"
-	ec2SpotFleet                              resourceType = "ec2SpotFleet"
-	ec2SpotInstanceRequest                    resourceType = "ec2SpotInstanceRequest"
-	ec2Subnet                                 resourceType = "ec2Subnet"
-	ec2TrafficMirrorFilter                    resourceType = "ec2TrafficMirrorFilter"
-	ec2TrafficMirrorFilterRule                resourceType = "ec2TrafficMirrorFilterRule"
-	ec2TrafficMirrorSession                   resourceType = "ec2TrafficMirrorSession"
-	ec2TrafficMirrorTarget                    resourceType = "ec2TrafficMirrorTarget"
-	ec2TransitGateway                         resourceType = "ec2TransitGateway"
-	ec2TransitGatewayAttachment               resourceType = "ec2TransitGatewayAttachment"
-	ec2TransitGatewayRouteTable               resourceType = "ec2TransitGatewayRouteTable"
-	ec2VPC                                    resourceType = "ec2VPC"
-	ec2VPCCidrBlock                           resourceType = "ec2VPCCidrBlock"
-	ec2VPCEndpoint                            resourceType = "ec2VPCEndpoint"
-	ec2VPCEndpointConnectionNotification      resourceType = "ec2VPCEndpointConnectionNotification"
-	ec2VPCEndpointService                     resourceType = "ec2VPCEndpointService"
-	ec2VPCPeeringConnection                   resourceType = "ec2VPCPeeringConnection"
-	ec2VPNConnection                          resourceType = "ec2VPNConnection"
-	ec2VPNGateway                             resourceType = "ec2VPNGateway"
-	ec2Volume                                 resourceType = "ec2Volume"
-	ecrRepository                             resourceType = "ecrRepository"
-	ecsCapacityProvider                       resourceType = "ecsCapacityProvider"
-	ecsCluster                                resourceType = "ecsCluster"
-	ecsService                                resourceType = "ecsService"
-	ecsTaskDefinition                         resourceType = "ecsTaskDefinition"
-	efsFileSystem                             resourceType = "efsFileSystem"
-	efsMountTarget                            resourceType = "efsMountTarget"
-	eksCluster                                resourceType = "eksCluster"
-	eksFargateProfile                         resourceType = "eksFargateProfile"
-	eksNodegroup                              resourceType = "eksNodegroup"
-	elastiCacheCacheCluster                   resourceType = "elastiCacheCacheCluster"
-	elastiCacheParameterGroup                 resourceType = "elastiCacheParameterGroup"
-	elastiCacheReplicationGroup               resourceType = "elastiCacheReplicationGroup"
-	elastiCacheSecurityGroup                  resourceType = "elastiCacheSecurityGroup"
-	elastiCacheSubnetGroup                    resourceType = "elastiCacheSubnetGroup"
-	elasticBeanstalkApplication               resourceType = "elasticBeanstalkApplication"
-	elasticBeanstalkApplicationVersion        resourceType = "elasticBeanstalkApplicationVersion"
-	elasticBeanstalkConfigurationTemplate     resourceType = "elasticBeanstalkConfigurationTemplate"
-	elasticBeanstalkEnvironment               resourceType = "elasticBeanstalkEnvironment"
-	elasticLoadBalancingLoadBalancer          resourceType = "elasticLoadBalancingLoadBalancer"
-	elasticLoadBalancingV2Listener            resourceType = "elasticLoadBalancingV2Listener"
-	elasticLoadBalancingV2ListenerRule        resourceType = "elasticLoadBalancingV2ListenerRule"
-	elasticLoadBalancingV2LoadBalancer        resourceType = "elasticLoadBalancingV2LoadBalancer"
-	elasticLoadBalancingV2TargetGroup         resourceType = "elasticLoadBalancingV2TargetGroup"
-	elasticTranscoderPipeline                 resourceType = "elasticTranscoderPipeline"
-	elasticTranscoderPreset                   resourceType = "elasticTranscoderPreset"
-	elasticsearchDomain                       resourceType = "elasticsearchDomain"
-	emrCluster                                resourceType = "emrCluster"
-	emrInstanceGroup                          resourceType = "emrInstanceGroup"
-	emrSecurityConfiguration                  resourceType = "emrSecurityConfiguration"
-	eventSchemasDiscoverer                    resourceType = "eventSchemasDiscoverer"
-	eventSchemasRegistry                      resourceType = "eventSchemasRegistry"
-	eventsEventBus                            resourceType = "eventsEventBus"
-	eventsRule                                resourceType = "eventsRule"
-	eventsTarget                              resourceType = "eventsTarget"
-	fsxFileSystem                             resourceType = "fsxFileSystem"
-	gameLiftAlias                             resourceType = "gameLiftAlias"
-	gameLiftBuild                             resourceType = "gameLiftBuild"
-	gameLiftFleet                             resourceType = "gameLiftFleet"
-	gameLiftGameSessionQueue                  resourceType = "gameLiftGameSessionQueue"
-	gameLiftMatchmakingConfiguration          resourceType = "gameLiftMatchmakingConfiguration"
-	gameLiftMatchmakingRuleSet                resourceType = "gameLiftMatchmakingRuleSet"
-	gameLiftScript                            resourceType = "gameLiftScript"
-	glacierVault                              resourceType = "glacierVault"
-	globalAcceleratorAccelerator              resourceType = "globalAcceleratorAccelerator"
-	globalAcceleratorEndpointGroup            resourceType = "globalAcceleratorEndpointGroup"
-	globalAcceleratorListener                 resourceType = "globalAcceleratorListener"
-	glueConnection                            resourceType = "glueConnection"
-	glueCrawler                               resourceType = "glueCrawler"
-	glueDatabase                              resourceType = "glueDatabase"
-	glueDevEndpoint                           resourceType = "glueDevEndpoint"
-	glueJob                                   resourceType = "glueJob"
-	glueMLTransform                           resourceType = "glueMLTransform"
-	glueSecurityConfiguration                 resourceType = "glueSecurityConfiguration"
-	glueTable                                 resourceType = "glueTable"
-	glueTrigger                               resourceType = "glueTrigger"
-	glueWorkflow                              resourceType = "glueWorkflow"
-	greengrassConnectorDefinition             resourceType = "greengrassConnectorDefinition"
-	greengrassConnectorDefinitionVersion      resourceType = "greengrassConnectorDefinitionVersion"
-	greengrassCoreDefinition                  resourceType = "greengrassCoreDefinition"
-	greengrassCoreDefinitionVersion           resourceType = "greengrassCoreDefinitionVersion"
-	greengrassDeviceDefinition                resourceType = "greengrassDeviceDefinition"
-	greengrassDeviceDefinitionVersion         resourceType = "greengrassDeviceDefinitionVersion"
-	greengrassFunctionDefinition              resourceType = "greengrassFunctionDefinition"
-	greengrassFunctionDefinitionVersion       resourceType = "greengrassFunctionDefinitionVersion"
-	greengrassGroup                           resourceType = "greengrassGroup"
-	greengrassGroupVersion                    resourceType = "greengrassGroupVersion"
-	greengrassLoggerDefinition                resourceType = "greengrassLoggerDefinition"
-	greengrassLoggerDefinitionVersion         resourceType = "greengrassLoggerDefinitionVersion"
-	greengrassResourceDefinition              resourceType = "greengrassResourceDefinition"
-	greengrassResourceDefinitionVersion       resourceType = "greengrassResourceDefinitionVersion"
-	greengrassSubscriptionDefinition          resourceType = "greengrassSubscriptionDefinition"
-	greengrassSubscriptionDefinitionVersion   resourceType = "greengrassSubscriptionDefinitionVersion"
-	groundStationConfig                       resourceType = "groundStationConfig"
-	groundStationDataflowEndpointGroup        resourceType = "groundStationDataflowEndpointGroup"
-	groundStationMissionProfile               resourceType = "groundStationMissionProfile"
-	guardDutyDetector                         resourceType = "guardDutyDetector"
-	iamAccessKey                              resourceType = "iamAccessKey"
-	iamAccountAlias                           resourceType = "iamAccountAlias"
-	iamGroup                                  resourceType = "iamGroup"
-	iamGroupPolicy                            resourceType = "iamGroupPolicy"
-	iamInstanceProfile                        resourceType = "iamInstanceProfile"
-	iamOpenidConnectProvider                  resourceType = "iamOpenidConnectProvider"
-	iamPolicy                                 resourceType = "iamPolicy"
-	iamRole                                   resourceType = "iamRole"
-	iamRolePolicy                             resourceType = "iamRolePolicy"
-	iamSamlProvider                           resourceType = "iamSamlProvider"
-	iamServerCertificate                      resourceType = "iamServerCertificate"
-	iamServiceLinkedRole                      resourceType = "iamServiceLinkedRole"
-	iamUser                                   resourceType = "iamUser"
-	iamUserPolicy                             resourceType = "iamUserPolicy"
-	iamUserSSHKey                             resourceType = "iamUserSSHKey"
-	imageBuilderComponent                     resourceType = "imageBuilderComponent"
-	imageBuilderDistributionConfiguration     resourceType = "imageBuilderDistributionConfiguration"
-	imageBuilderImagePipeline                 resourceType = "imageBuilderImagePipeline"
-	imageBuilderImageRecipe                   resourceType = "imageBuilderImageRecipe"
-	imageBuilderInfrastructureConfiguration   resourceType = "imageBuilderInfrastructureConfiguration"
-	inspectorAssessmentTarget                 resourceType = "inspectorAssessmentTarget"
-	inspectorAssessmentTemplate               resourceType = "inspectorAssessmentTemplate"
-	ioT1ClickDevice                           resourceType = "ioT1ClickDevice"
-	ioT1ClickProject                          resourceType = "ioT1ClickProject"
-	ioTAnalyticsChannel                       resourceType = "ioTAnalyticsChannel"
-	ioTAnalyticsDataset                       resourceType = "ioTAnalyticsDataset"
-	ioTAnalyticsDatastore                     resourceType = "ioTAnalyticsDatastore"
-	ioTAnalyticsPipeline                      resourceType = "ioTAnalyticsPipeline"
-	ioTCertificate                            resourceType = "ioTCertificate"
-	ioTEventsDetectorModel                    resourceType = "ioTEventsDetectorModel"
-	ioTEventsInput                            resourceType = "ioTEventsInput"
-	ioTPolicy                                 resourceType = "ioTPolicy"
-	ioTThing                                  resourceType = "ioTThing"
-	ioTThingsGraphFlowTemplate                resourceType = "ioTThingsGraphFlowTemplate"
-	ioTTopicRule                              resourceType = "ioTTopicRule"
-	iotRoleAlias                              resourceType = "iotRoleAlias"
-	iotThingType                              resourceType = "iotThingType"
-	kinesisAnalyticsApplication               resourceType = "kinesisAnalyticsApplication"
-	kinesisAnalyticsV2Application             resourceType = "kinesisAnalyticsV2Application"
-	kinesisFirehoseDeliveryStream             resourceType = "kinesisFirehoseDeliveryStream"
-	kinesisStream                             resourceType = "kinesisStream"
-	kinesisStreamConsumer                     resourceType = "kinesisStreamConsumer"
-	kinesisVideoStream                        resourceType = "kinesisVideoStream"
-	kmsAlias                                  resourceType = "kmsAlias"
-	kmsGrant                                  resourceType = "kmsGrant"
-	kmsKey                                    resourceType = "kmsKey"
-	lakeFormationResource                     resourceType = "lakeFormationResource"
-	lambdaAlias                               resourceType = "lambdaAlias"
-	lambdaEventSourceMapping                  resourceType = "lambdaEventSourceMapping"
-	lambdaFunction                            resourceType = "lambdaFunction"
-	lambdaLayer                               resourceType = "lambdaLayer"
-	lambdaLayerVersion                        resourceType = "lambdaLayerVersion"
-	licenseManagerLicenseConfiguration        resourceType = "licenseManagerLicenseConfiguration"
-	lightsailDomain                           resourceType = "lightsailDomain"
-	lightsailInstance                         resourceType = "lightsailInstance"
-	lightsailKeyPair                          resourceType = "lightsailKeyPair"
-	lightsailStaticIP                         resourceType = "lightsailStaticIP"
-	logsDestination                           resourceType = "logsDestination"
-	logsLogGroup                              resourceType = "logsLogGroup"
-	logsMetricFilter                          resourceType = "logsMetricFilter"
-	logsResourcePolicy                        resourceType = "logsResourcePolicy"
-	logsSubscriptionFilter                    resourceType = "logsSubscriptionFilter"
-	macieMemberAccountAssociation             resourceType = "macieMemberAccountAssociation"
-	macieS3BucketAssociation                  resourceType = "macieS3BucketAssociation"
-	mediaConvertJobTemplate                   resourceType = "mediaConvertJobTemplate"
-	mediaConvertPreset                        resourceType = "mediaConvertPreset"
-	mediaConvertQueue                         resourceType = "mediaConvertQueue"
-	mediaLiveChannel                          resourceType = "mediaLiveChannel"
-	mediaLiveInput                            resourceType = "mediaLiveInput"
-	mediaLiveInputSecurityGroup               resourceType = "mediaLiveInputSecurityGroup"
-	mediaStoreContainer                       resourceType = "mediaStoreContainer"
-	mskCluster                                resourceType = "mskCluster"
-	mskConfiguration                          resourceType = "mskConfiguration"
-	neptuneDBCluster                          resourceType = "neptuneDBCluster"
-	neptuneDBClusterParameterGroup            resourceType = "neptuneDBClusterParameterGroup"
-	neptuneDBClusterSnapshot                  resourceType = "neptuneDBClusterSnapshot"
-	neptuneDBEventSubscription                resourceType = "neptuneDBEventSubscription"
-	neptuneDBInstance                         resourceType = "neptuneDBInstance"
-	neptuneDBParameterGroup                   resourceType = "neptuneDBParameterGroup"
-	neptuneDBSubnetGroup                      resourceType = "neptuneDBSubnetGroup"
-	networkManagerDevice                      resourceType = "networkManagerDevice"
-	networkManagerGlobalNetwork               resourceType = "networkManagerGlobalNetwork"
-	networkManagerLink                        resourceType = "networkManagerLink"
-	networkManagerSite                        resourceType = "networkManagerSite"
-	opsWorkRdsDbInstance                      resourceType = "opsWorkRdsDbInstance"
-	opsWorksApp                               resourceType = "opsWorksApp"
-	opsWorksInstance                          resourceType = "opsWorksInstance"
-	opsWorksLayer                             resourceType = "opsWorksLayer"
-	opsWorksStack                             resourceType = "opsWorksStack"
-	opsWorksUserProfile                       resourceType = "opsWorksUserProfile"
-	opsWorksVolume                            resourceType = "opsWorksVolume"
-	organizationsAccount                      resourceType = "organizationsAccount"
-	organizationsOrganization                 resourceType = "organizationsOrganization"
-	organizationsOrganizationalUnit           resourceType = "organizationsOrganizationalUnit"
-	organizationsPolicy                       resourceType = "organizationsPolicy"
-	pinpointApp                               resourceType = "pinpointApp"
-	pinpointEmailTemplate                     resourceType = "pinpointEmailTemplate"
-	pinpointPushTemplate                      resourceType = "pinpointPushTemplate"
-	pinpointSmsTemplate                       resourceType = "pinpointSmsTemplate"
-	qLDBLedger                                resourceType = "qLDBLedger"
-	quickSightGroup                           resourceType = "quickSightGroup"
-	quickSightUser                            resourceType = "quickSightUser"
-	rdsDBCluster                              resourceType = "rdsDBCluster"
-	rdsDBClusterEndpoint                      resourceType = "rdsDBClusterEndpoint"
-	rdsDBClusterParameterGroup                resourceType = "rdsDBClusterParameterGroup"
-	rdsDBClusterSnapshot                      resourceType = "rdsDBClusterSnapshot"
-	rdsDBInstance                             resourceType = "rdsDBInstance"
-	rdsDBParameterGroup                       resourceType = "rdsDBParameterGroup"
-	rdsDBSecurityGroup                        resourceType = "rdsDBSecurityGroup"
-	rdsDBSnapshot                             resourceType = "rdsDBSnapshot"
-	rdsDBSubnetGroup                          resourceType = "rdsDBSubnetGroup"
-	rdsEventSubscription                      resourceType = "rdsEventSubscription"
-	rdsGlobalCluster                          resourceType = "rdsGlobalCluster"
-	rdsOptionGroup                            resourceType = "rdsOptionGroup"
-	redshiftCluster                           resourceType = "redshiftCluster"
-	redshiftClusterParameterGroup             resourceType = "redshiftClusterParameterGroup"
-	redshiftClusterSecurityGroup              resourceType = "redshiftClusterSecurityGroup"
-	redshiftClusterSubnetGroup                resourceType = "redshiftClusterSubnetGroup"
-	redshiftEventSubscription                 resourceType = "redshiftEventSubscription"
-	redshiftSnapshotCopyGrant                 resourceType = "redshiftSnapshotCopyGrant"
-	redshiftSnapshotSchedule                  resourceType = "redshiftSnapshotSchedule"
-	resourceGroupsGroup                       resourceType = "resourceGroupsGroup"
-	roboMakerFleet                            resourceType = "roboMakerFleet"
-	roboMakerRobot                            resourceType = "roboMakerRobot"
-	roboMakerRobotApplication                 resourceType = "roboMakerRobotApplication"
-	roboMakerSimulationApplication            resourceType = "roboMakerSimulationApplication"
-	route53DelegationSet                      resourceType = "route53DelegationSet"
-	route53HealthCheck                        resourceType = "route53HealthCheck"
-	route53HostedZone                         resourceType = "route53HostedZone"
-	route53QueryLog                           resourceType = "route53QueryLog"
-	route53RecordSet                          resourceType = "route53RecordSet"
-	route53ResolverResolverEndpoint           resourceType = "route53ResolverResolverEndpoint"
-	route53ResolverResolverRule               resourceType = "route53ResolverResolverRule"
-	route53ResolverResolverRuleAssociation    resourceType = "route53ResolverResolverRuleAssociation"
-	s3AccessPoint                             resourceType = "s3AccessPoint"
-	s3Bucket                                  resourceType = "s3Bucket"
-	sageMakerCodeRepository                   resourceType = "sageMakerCodeRepository"
-	sageMakerEndpoint                         resourceType = "sageMakerEndpoint"
-	sageMakerEndpointConfig                   resourceType = "sageMakerEndpointConfig"
-	sageMakerModel                            resourceType = "sageMakerModel"
-	sageMakerNotebookInstance                 resourceType = "sageMakerNotebookInstance"
-	sageMakerNotebookInstanceLifecycleConfig  resourceType = "sageMakerNotebookInstanceLifecycleConfig"
-	sageMakerWorkteam                         resourceType = "sageMakerWorkteam"
-	sdbDomain                                 resourceType = "sdbDomain"
-	secretsManagerSecret                      resourceType = "secretsManagerSecret"
-	secretsManagerSecretVersion               resourceType = "secretsManagerSecretVersion"
-	serviceDiscoveryHTTPNamespace             resourceType = "serviceDiscoveryHTTPNamespace"
-	serviceDiscoveryPrivateDNSNamespace       resourceType = "serviceDiscoveryPrivateDNSNamespace"
-	serviceDiscoveryPublicDNSNamespace        resourceType = "serviceDiscoveryPublicDNSNamespace"
-	serviceDiscoveryService                   resourceType = "serviceDiscoveryService"
-	sesConfigurationSet                       resourceType = "sesConfigurationSet"
-	sesDomainIdentity                         resourceType = "sesDomainIdentity"
-	sesEmailIdentity                          resourceType = "sesEmailIdentity"
-	sesReceiptFilter                          resourceType = "sesReceiptFilter"
-	sesReceiptRuleSet                         resourceType = "sesReceiptRuleSet"
-	sesTemplate                               resourceType = "sesTemplate"
-	shieldProtection                          resourceType = "shieldProtection"
-	snsPlatformApplication                    resourceType = "snsPlatformApplication"
-	snsSubscription                           resourceType = "snsSubscription"
-	snsTopic                                  resourceType = "snsTopic"
-	sqsQueue                                  resourceType = "sqsQueue"
-	ssmActivation                             resourceType = "ssmActivation"
-	ssmAssociation                            resourceType = "ssmAssociation"
-	ssmDocument                               resourceType = "ssmDocument"
-	ssmMaintenanceWindow                      resourceType = "ssmMaintenanceWindow"
-	ssmMaintenanceWindowTarget                resourceType = "ssmMaintenanceWindowTarget"
-	ssmMaintenanceWindowTask                  resourceType = "ssmMaintenanceWindowTask"
-	ssmParameter                              resourceType = "ssmParameter"
-	ssmPatchBaseline                          resourceType = "ssmPatchBaseline"
-	ssmPatchGroup                             resourceType = "ssmPatchGroup"
-	ssmResourceDataSync                       resourceType = "ssmResourceDataSync"
-	stepFunctionsActivity                     resourceType = "stepFunctionsActivity"
-	stepFunctionsStateMachine                 resourceType = "stepFunctionsStateMachine"
-	storageGatewayCachedISCSIVolume           resourceType = "storageGatewayCachedISCSIVolume"
-	storageGatewayGateway                     resourceType = "storageGatewayGateway"
-	storageGatewayNFSFileShare                resourceType = "storageGatewayNFSFileShare"
-	storageGatewaySMBFileShare                resourceType = "storageGatewaySMBFileShare"
-	swfDomain                                 resourceType = "swfDomain"
-	transferServer                            resourceType = "transferServer"
-	transferUser                              resourceType = "transferUser"
-	wafByteMatchSet                           resourceType = "wafByteMatchSet"
-	wafGeoMatchSet                            resourceType = "wafGeoMatchSet"
-	wafIPSet                                  resourceType = "wafIPSet"
-	wafRateBasedRule                          resourceType = "wafRateBasedRule"
-	wafRegexMatchSet                          resourceType = "wafRegexMatchSet"
-	wafRegexPatternSet                        resourceType = "wafRegexPatternSet"
-	wafRegionalByteMatchSet                   resourceType = "wafRegionalByteMatchSet"
-	wafRegionalGeoMatchSet                    resourceType = "wafRegionalGeoMatchSet"
-	wafRegionalIPSet                          resourceType = "wafRegionalIPSet"
-	wafRegionalRateBasedRule                  resourceType = "wafRegionalRateBasedRule"
-	wafRegionalRegexPatternSet                resourceType = "wafRegionalRegexPatternSet"
-	wafRegionalRule                           resourceType = "wafRegionalRule"
-	wafRegionalSQLInjectionMatchSet           resourceType = "wafRegionalSQLInjectionMatchSet"
-	wafRegionalSizeConstraintSet              resourceType = "wafRegionalSizeConstraintSet"
-	wafRegionalWebACL                         resourceType = "wafRegionalWebACL"
-	wafRegionalXSSMatchSet                    resourceType = "wafRegionalXSSMatchSet"
-	wafRule                                   resourceType = "wafRule"
-	wafRuleGroup                              resourceType = "wafRuleGroup"
-	wafSQLInjectionMatchSet                   resourceType = "wafSQLInjectionMatchSet"
-	wafSizeConstraintSet                      resourceType = "wafSizeConstraintSet"
-	wafWebACL                                 resourceType = "wafWebACL"
-	wafXSSMatchSet                            resourceType = "wafXSSMatchSet"
-	wafregionalRegexMatchSet                  resourceType = "wafregionalRegexMatchSet"
-	wafregionalRuleGroup                      resourceType = "wafregionalRuleGroup"
-	wafv2IPSet                                resourceType = "wafv2IPSet"
-	wafv2RegexPatternSet                      resourceType = "wafv2RegexPatternSet"
-	wafv2RuleGroup                            resourceType = "wafv2RuleGroup"
-	wafv2WebACL                               resourceType = "wafv2WebACL"
-	workLinkFleet                             resourceType = "workLinkFleet"
-	workSpacesDirectory                       resourceType = "workSpacesDirectory"
-	workSpacesWorkspace                       resourceType = "workSpacesWorkspace"
-	workspacesIPGroup                         resourceType = "workspacesIPGroup"
-	xraySamplingRule                          resourceType = "xraySamplingRule"
+	accessAnalyzerAnalyzer                          resourceType = "accessAnalyzerAnalyzer"
+	acmCertificate                                  resourceType = "acmCertificate"
+	acmpcaCertificateAuthority                      resourceType = "acmpcaCertificateAuthority"
+	alexaForBusinessSkill                           resourceType = "alexaForBusinessSkill"
+	amplifyApp                                      resourceType = "amplifyApp"
+	amplifyBranch                                   resourceType = "amplifyBranch"
+	amplifyDomain                                   resourceType = "amplifyDomain"
+	apiGatewayAPIKey                                resourceType = "apiGatewayAPIKey"
+	apiGatewayClientCertificate                     resourceType = "apiGatewayClientCertificate"
+	apiGatewayDomainName                            resourceType = "apiGatewayDomainName"
+	apiGatewayRestAPI                               resourceType = "apiGatewayRestAPI"
+	apiGatewayUsagePlan                             resourceType = "apiGatewayUsagePlan"
+	apiGatewayV2Api                                 resourceType = "apiGatewayV2Api"
+	apiGatewayV2DomainName                          resourceType = "apiGatewayV2DomainName"
+	apiGatewayVpcLink                               resourceType = "apiGatewayVpcLink"
+	appConfigApplication                            resourceType = "appConfigApplication"
+	appConfigDeploymentStrategy                     resourceType = "appConfigDeploymentStrategy"
+	appMeshMesh                                     resourceType = "appMeshMesh"
+	appStreamDirectoryConfig                        resourceType = "appStreamDirectoryConfig"
+	appStreamFleet                                  resourceType = "appStreamFleet"
+	appStreamImageBuilder                           resourceType = "appStreamImageBuilder"
+	appStreamStack                                  resourceType = "appStreamStack"
+	appSyncFunctions                                resourceType = "appSyncFunctions"
+	appSyncGraphQLApi                               resourceType = "appSyncGraphQLApi"
+	applicationAutoScalingScheduledAction           resourceType = "applicationAutoScalingScheduledAction"
+	athenaNamedQuery                                resourceType = "athenaNamedQuery"
+	athenaWorkGroup                                 resourceType = "athenaWorkGroup"
+	autoScalingAutoScalingGroup                     resourceType = "autoScalingAutoScalingGroup"
+	autoScalingLaunchConfiguration                  resourceType = "autoScalingLaunchConfiguration"
+	autoScalingPlansScalingPlan                     resourceType = "autoScalingPlansScalingPlan"
+	autoScalingScalingPolicy                        resourceType = "autoScalingScalingPolicy"
+	autoScalingScheduledAction                      resourceType = "autoScalingScheduledAction"
+	backupBackupPlan                                resourceType = "backupBackupPlan"
+	backupBackupSelection                           resourceType = "backupBackupSelection"
+	backupBackupVault                               resourceType = "backupBackupVault"
+	batchComputeEnvironment                         resourceType = "batchComputeEnvironment"
+	batchJobDefinition                              resourceType = "batchJobDefinition"
+	batchJobQueue                                   resourceType = "batchJobQueue"
+	budgetsBudget                                   resourceType = "budgetsBudget"
+	cloud9EnvironmentEC2                            resourceType = "cloud9EnvironmentEC2"
+	cloudFrontCloudFrontOriginAccessIdentity        resourceType = "cloudFrontCloudFrontOriginAccessIdentity"
+	cloudFrontDistribution                          resourceType = "cloudFrontDistribution"
+	cloudFrontPublicKey                             resourceType = "cloudFrontPublicKey"
+	cloudFrontStreamingDistribution                 resourceType = "cloudFrontStreamingDistribution"
+	cloudHSMV2Cluster                               resourceType = "cloudHSMV2Cluster"
+	cloudHSMV2HSM                                   resourceType = "cloudHSMV2HSM"
+	cloudTrailTrail                                 resourceType = "cloudTrailTrail"
+	cloudWatchAlarm                                 resourceType = "cloudWatchAlarm"
+	cloudWatchDashboard                             resourceType = "cloudWatchDashboard"
+	cloudWatchEventsEventBus                        resourceType = "cloudWatchEventsEventBus"
+	cloudWatchEventsRule                            resourceType = "cloudWatchEventsRule"
+	cloudWatchEventsTarget                          resourceType = "cloudWatchEventsTarget"
+	cloudWatchInsightRule                           resourceType = "cloudWatchInsightRule"
+	cloudwatchLogsDestination                       resourceType = "cloudwatchLogsDestination"
+	cloudwatchLogsLogGroup                          resourceType = "cloudwatchLogsLogGroup"
+	cloudwatchLogsMetricFilter                      resourceType = "cloudwatchLogsMetricFilter"
+	cloudwatchLogsResourcePolicy                    resourceType = "cloudwatchLogsResourcePolicy"
+	cloudwatchLogsSubscriptionFilter                resourceType = "cloudwatchLogsSubscriptionFilter"
+	codeBuildProject                                resourceType = "codeBuildProject"
+	codeBuildReportGroup                            resourceType = "codeBuildReportGroup"
+	codeBuildSourceCredential                       resourceType = "codeBuildSourceCredential"
+	codeCommitRepository                            resourceType = "codeCommitRepository"
+	codeCommitTrigger                               resourceType = "codeCommitTrigger"
+	codeDeployApplication                           resourceType = "codeDeployApplication"
+	codeDeployDeploymentConfig                      resourceType = "codeDeployDeploymentConfig"
+	codeDeployDeploymentGroup                       resourceType = "codeDeployDeploymentGroup"
+	codeGuruProfilerProfilingGroup                  resourceType = "codeGuruProfilerProfilingGroup"
+	codePipelinePipeline                            resourceType = "codePipelinePipeline"
+	codePipelineWebhook                             resourceType = "codePipelineWebhook"
+	codeStarGitHubRepository                        resourceType = "codeStarGitHubRepository"
+	codeStarNotificationsNotificationRule           resourceType = "codeStarNotificationsNotificationRule"
+	cognitoIdentityPool                             resourceType = "cognitoIdentityPool"
+	cognitoIdentityProviderUserPool                 resourceType = "cognitoIdentityProviderUserPool"
+	cognitoIdentityProviderUserPoolClient           resourceType = "cognitoIdentityProviderUserPoolClient"
+	cognitoIdentityProviderUserPoolGroup            resourceType = "cognitoIdentityProviderUserPoolGroup"
+	cognitoIdentityProviderUserPoolIdentityProvider resourceType = "cognitoIdentityProviderUserPoolIdentityProvider"
+	cognitoIdentityProviderUserPoolResourceServer   resourceType = "cognitoIdentityProviderUserPoolResourceServer"
+	cognitoIdentityProviderUserPoolUser             resourceType = "cognitoIdentityProviderUserPoolUser"
+	configServiceAggregationAuthorization           resourceType = "configServiceAggregationAuthorization"
+	configServiceConfigRule                         resourceType = "configServiceConfigRule"
+	configServiceConfigurationAggregator            resourceType = "configServiceConfigurationAggregator"
+	configServiceConfigurationRecorder              resourceType = "configServiceConfigurationRecorder"
+	configServiceConformancePack                    resourceType = "configServiceConformancePack"
+	configServiceDeliveryChannel                    resourceType = "configServiceDeliveryChannel"
+	configServiceOrganizationConfigRule             resourceType = "configServiceOrganizationConfigRule"
+	configServiceOrganizationConformancePack        resourceType = "configServiceOrganizationConformancePack"
+	configServiceRemediationConfiguration           resourceType = "configServiceRemediationConfiguration"
+	costAndUsageReportServiceReportDefinition       resourceType = "costAndUsageReportServiceReportDefinition"
+	costExplorerCostCategory                        resourceType = "costExplorerCostCategory"
+	dataPipelinePipeline                            resourceType = "dataPipelinePipeline"
+	dataSyncAgent                                   resourceType = "dataSyncAgent"
+	dataSyncLocation                                resourceType = "dataSyncLocation"
+	dataSyncTask                                    resourceType = "dataSyncTask"
+	databaseMigrationServiceCertificate             resourceType = "databaseMigrationServiceCertificate"
+	databaseMigrationServiceEndpoint                resourceType = "databaseMigrationServiceEndpoint"
+	databaseMigrationServiceEventSubscription       resourceType = "databaseMigrationServiceEventSubscription"
+	databaseMigrationServiceReplicationInstance     resourceType = "databaseMigrationServiceReplicationInstance"
+	databaseMigrationServiceReplicationSubnetGroup  resourceType = "databaseMigrationServiceReplicationSubnetGroup"
+	databaseMigrationServiceReplicationTask         resourceType = "databaseMigrationServiceReplicationTask"
+	daxCluster                                      resourceType = "daxCluster"
+	daxParameterGroup                               resourceType = "daxParameterGroup"
+	daxSubnetGroup                                  resourceType = "daxSubnetGroup"
+	detectiveGraph                                  resourceType = "detectiveGraph"
+	detectiveInvitation                             resourceType = "detectiveInvitation"
+	deviceFarmProject                               resourceType = "deviceFarmProject"
+	directConnectConnection                         resourceType = "directConnectConnection"
+	directConnectGateway                            resourceType = "directConnectGateway"
+	directConnectGatewayAssociation                 resourceType = "directConnectGatewayAssociation"
+	directConnectGatewayAssociationProposal         resourceType = "directConnectGatewayAssociationProposal"
+	directConnectLAG                                resourceType = "directConnectLAG"
+	directConnectVirtualInterface                   resourceType = "directConnectVirtualInterface"
+	directoryServiceDirectory                       resourceType = "directoryServiceDirectory"
+	dlmLifecyclePolicy                              resourceType = "dlmLifecyclePolicy"
+	docDBDBCluster                                  resourceType = "docDBDBCluster"
+	docDBDBClusterParameterGroup                    resourceType = "docDBDBClusterParameterGroup"
+	docDBDBClusterSnapshot                          resourceType = "docDBDBClusterSnapshot"
+	docDBDBInstance                                 resourceType = "docDBDBInstance"
+	docDBDBSubnetGroup                              resourceType = "docDBDBSubnetGroup"
+	dynamoDBGlobalTable                             resourceType = "dynamoDBGlobalTable"
+	dynamoDBTable                                   resourceType = "dynamoDBTable"
+	ec2CapacityReservation                          resourceType = "ec2CapacityReservation"
+	ec2ClientVpnEndpoint                            resourceType = "ec2ClientVpnEndpoint"
+	ec2CustomerGateway                              resourceType = "ec2CustomerGateway"
+	ec2DHCPOptions                                  resourceType = "ec2DHCPOptions"
+	ec2EC2Fleet                                     resourceType = "ec2EC2Fleet"
+	ec2EIP                                          resourceType = "ec2EIP"
+	ec2EIPAssociation                               resourceType = "ec2EIPAssociation"
+	ec2EgressOnlyInternetGateway                    resourceType = "ec2EgressOnlyInternetGateway"
+	ec2FlowLog                                      resourceType = "ec2FlowLog"
+	ec2Host                                         resourceType = "ec2Host"
+	ec2Image                                        resourceType = "ec2Image"
+	ec2Instance                                     resourceType = "ec2Instance"
+	ec2InternetGateway                              resourceType = "ec2InternetGateway"
+	ec2KeyPair                                      resourceType = "ec2KeyPair"
+	ec2LaunchTemplate                               resourceType = "ec2LaunchTemplate"
+	ec2NatGateway                                   resourceType = "ec2NatGateway"
+	ec2NetworkACL                                   resourceType = "ec2NetworkACL"
+	ec2NetworkACLSubnetAssociation                  resourceType = "ec2NetworkACLSubnetAssociation"
+	ec2NetworkInterface                             resourceType = "ec2NetworkInterface"
+	ec2NetworkInterfaceAttachment                   resourceType = "ec2NetworkInterfaceAttachment"
+	ec2NetworkInterfacePermission                   resourceType = "ec2NetworkInterfacePermission"
+	ec2PlacementGroup                               resourceType = "ec2PlacementGroup"
+	ec2RouteTable                                   resourceType = "ec2RouteTable"
+	ec2RouteTableSubnetAssociation                  resourceType = "ec2RouteTableSubnetAssociation"
+	ec2SecurityGroup                                resourceType = "ec2SecurityGroup"
+	ec2Snapshot                                     resourceType = "ec2Snapshot"
+	ec2SpotFleet                                    resourceType = "ec2SpotFleet"
+	ec2SpotInstanceRequest                          resourceType = "ec2SpotInstanceRequest"
+	ec2Subnet                                       resourceType = "ec2Subnet"
+	ec2TrafficMirrorFilter                          resourceType = "ec2TrafficMirrorFilter"
+	ec2TrafficMirrorFilterRule                      resourceType = "ec2TrafficMirrorFilterRule"
+	ec2TrafficMirrorSession                         resourceType = "ec2TrafficMirrorSession"
+	ec2TrafficMirrorTarget                          resourceType = "ec2TrafficMirrorTarget"
+	ec2TransitGateway                               resourceType = "ec2TransitGateway"
+	ec2TransitGatewayAttachment                     resourceType = "ec2TransitGatewayAttachment"
+	ec2TransitGatewayRouteTable                     resourceType = "ec2TransitGatewayRouteTable"
+	ec2VPC                                          resourceType = "ec2VPC"
+	ec2VPCCidrBlock                                 resourceType = "ec2VPCCidrBlock"
+	ec2VPCEndpoint                                  resourceType = "ec2VPCEndpoint"
+	ec2VPCEndpointConnectionNotification            resourceType = "ec2VPCEndpointConnectionNotification"
+	ec2VPCEndpointService                           resourceType = "ec2VPCEndpointService"
+	ec2VPCPeeringConnection                         resourceType = "ec2VPCPeeringConnection"
+	ec2VPNConnection                                resourceType = "ec2VPNConnection"
+	ec2VPNGateway                                   resourceType = "ec2VPNGateway"
+	ec2Volume                                       resourceType = "ec2Volume"
+	ecrRepository                                   resourceType = "ecrRepository"
+	ecsCapacityProvider                             resourceType = "ecsCapacityProvider"
+	ecsCluster                                      resourceType = "ecsCluster"
+	ecsService                                      resourceType = "ecsService"
+	ecsTaskDefinition                               resourceType = "ecsTaskDefinition"
+	efsFileSystem                                   resourceType = "efsFileSystem"
+	efsMountTarget                                  resourceType = "efsMountTarget"
+	eksCluster                                      resourceType = "eksCluster"
+	eksFargateProfile                               resourceType = "eksFargateProfile"
+	eksNodegroup                                    resourceType = "eksNodegroup"
+	elastiCacheCacheCluster                         resourceType = "elastiCacheCacheCluster"
+	elastiCacheParameterGroup                       resourceType = "elastiCacheParameterGroup"
+	elastiCacheReplicationGroup                     resourceType = "elastiCacheReplicationGroup"
+	elastiCacheSecurityGroup                        resourceType = "elastiCacheSecurityGroup"
+	elastiCacheSubnetGroup                          resourceType = "elastiCacheSubnetGroup"
+	elasticBeanstalkApplication                     resourceType = "elasticBeanstalkApplication"
+	elasticBeanstalkApplicationVersion              resourceType = "elasticBeanstalkApplicationVersion"
+	elasticBeanstalkConfigurationTemplate           resourceType = "elasticBeanstalkConfigurationTemplate"
+	elasticBeanstalkEnvironment                     resourceType = "elasticBeanstalkEnvironment"
+	elasticLoadBalancingLoadBalancer                resourceType = "elasticLoadBalancingLoadBalancer"
+	elasticLoadBalancingV2Listener                  resourceType = "elasticLoadBalancingV2Listener"
+	elasticLoadBalancingV2ListenerRule              resourceType = "elasticLoadBalancingV2ListenerRule"
+	elasticLoadBalancingV2LoadBalancer              resourceType = "elasticLoadBalancingV2LoadBalancer"
+	elasticLoadBalancingV2TargetGroup               resourceType = "elasticLoadBalancingV2TargetGroup"
+	elasticSearchServiceDomain                      resourceType = "elasticSearchServiceDomain"
+	elasticTranscoderPipeline                       resourceType = "elasticTranscoderPipeline"
+	elasticTranscoderPreset                         resourceType = "elasticTranscoderPreset"
+	emrCluster                                      resourceType = "emrCluster"
+	emrInstanceGroup                                resourceType = "emrInstanceGroup"
+	emrSecurityConfiguration                        resourceType = "emrSecurityConfiguration"
+	firehoseDeliveryStream                          resourceType = "firehoseDeliveryStream"
+	fsxFileSystem                                   resourceType = "fsxFileSystem"
+	gameLiftAlias                                   resourceType = "gameLiftAlias"
+	gameLiftBuild                                   resourceType = "gameLiftBuild"
+	gameLiftFleet                                   resourceType = "gameLiftFleet"
+	gameLiftGameSessionQueue                        resourceType = "gameLiftGameSessionQueue"
+	gameLiftMatchmakingConfiguration                resourceType = "gameLiftMatchmakingConfiguration"
+	gameLiftMatchmakingRuleSet                      resourceType = "gameLiftMatchmakingRuleSet"
+	gameLiftScript                                  resourceType = "gameLiftScript"
+	glacierVault                                    resourceType = "glacierVault"
+	globalAcceleratorAccelerator                    resourceType = "globalAcceleratorAccelerator"
+	globalAcceleratorEndpointGroup                  resourceType = "globalAcceleratorEndpointGroup"
+	globalAcceleratorListener                       resourceType = "globalAcceleratorListener"
+	glueConnection                                  resourceType = "glueConnection"
+	glueCrawler                                     resourceType = "glueCrawler"
+	glueDatabase                                    resourceType = "glueDatabase"
+	glueDevEndpoint                                 resourceType = "glueDevEndpoint"
+	glueJob                                         resourceType = "glueJob"
+	glueMLTransform                                 resourceType = "glueMLTransform"
+	glueSecurityConfiguration                       resourceType = "glueSecurityConfiguration"
+	glueTable                                       resourceType = "glueTable"
+	glueTrigger                                     resourceType = "glueTrigger"
+	glueWorkflow                                    resourceType = "glueWorkflow"
+	greengrassConnectorDefinition                   resourceType = "greengrassConnectorDefinition"
+	greengrassConnectorDefinitionVersion            resourceType = "greengrassConnectorDefinitionVersion"
+	greengrassCoreDefinition                        resourceType = "greengrassCoreDefinition"
+	greengrassCoreDefinitionVersion                 resourceType = "greengrassCoreDefinitionVersion"
+	greengrassDeviceDefinition                      resourceType = "greengrassDeviceDefinition"
+	greengrassDeviceDefinitionVersion               resourceType = "greengrassDeviceDefinitionVersion"
+	greengrassFunctionDefinition                    resourceType = "greengrassFunctionDefinition"
+	greengrassFunctionDefinitionVersion             resourceType = "greengrassFunctionDefinitionVersion"
+	greengrassGroup                                 resourceType = "greengrassGroup"
+	greengrassGroupVersion                          resourceType = "greengrassGroupVersion"
+	greengrassLoggerDefinition                      resourceType = "greengrassLoggerDefinition"
+	greengrassLoggerDefinitionVersion               resourceType = "greengrassLoggerDefinitionVersion"
+	greengrassResourceDefinition                    resourceType = "greengrassResourceDefinition"
+	greengrassResourceDefinitionVersion             resourceType = "greengrassResourceDefinitionVersion"
+	greengrassSubscriptionDefinition                resourceType = "greengrassSubscriptionDefinition"
+	greengrassSubscriptionDefinitionVersion         resourceType = "greengrassSubscriptionDefinitionVersion"
+	groundStationConfig                             resourceType = "groundStationConfig"
+	groundStationDataflowEndpointGroup              resourceType = "groundStationDataflowEndpointGroup"
+	groundStationMissionProfile                     resourceType = "groundStationMissionProfile"
+	guardDutyDetector                               resourceType = "guardDutyDetector"
+	iamAccessKey                                    resourceType = "iamAccessKey"
+	iamAccountAlias                                 resourceType = "iamAccountAlias"
+	iamGroup                                        resourceType = "iamGroup"
+	iamGroupPolicy                                  resourceType = "iamGroupPolicy"
+	iamInstanceProfile                              resourceType = "iamInstanceProfile"
+	iamOpenidConnectProvider                        resourceType = "iamOpenidConnectProvider"
+	iamPolicy                                       resourceType = "iamPolicy"
+	iamRole                                         resourceType = "iamRole"
+	iamRolePolicy                                   resourceType = "iamRolePolicy"
+	iamSamlProvider                                 resourceType = "iamSamlProvider"
+	iamServerCertificate                            resourceType = "iamServerCertificate"
+	iamServiceLinkedRole                            resourceType = "iamServiceLinkedRole"
+	iamUser                                         resourceType = "iamUser"
+	iamUserPolicy                                   resourceType = "iamUserPolicy"
+	iamUserSSHKey                                   resourceType = "iamUserSSHKey"
+	imageBuilderComponent                           resourceType = "imageBuilderComponent"
+	imageBuilderDistributionConfiguration           resourceType = "imageBuilderDistributionConfiguration"
+	imageBuilderImagePipeline                       resourceType = "imageBuilderImagePipeline"
+	imageBuilderImageRecipe                         resourceType = "imageBuilderImageRecipe"
+	imageBuilderInfrastructureConfiguration         resourceType = "imageBuilderInfrastructureConfiguration"
+	inspectorAssessmentTarget                       resourceType = "inspectorAssessmentTarget"
+	inspectorAssessmentTemplate                     resourceType = "inspectorAssessmentTemplate"
+	ioT1ClickDevicesServiceDevice                   resourceType = "ioT1ClickDevicesServiceDevice"
+	ioT1ClickProjectsProject                        resourceType = "ioT1ClickProjectsProject"
+	ioTAnalyticsChannel                             resourceType = "ioTAnalyticsChannel"
+	ioTAnalyticsDataset                             resourceType = "ioTAnalyticsDataset"
+	ioTAnalyticsDatastore                           resourceType = "ioTAnalyticsDatastore"
+	ioTAnalyticsPipeline                            resourceType = "ioTAnalyticsPipeline"
+	ioTCertificate                                  resourceType = "ioTCertificate"
+	ioTEventsDetectorModel                          resourceType = "ioTEventsDetectorModel"
+	ioTEventsInput                                  resourceType = "ioTEventsInput"
+	ioTPolicy                                       resourceType = "ioTPolicy"
+	ioTThing                                        resourceType = "ioTThing"
+	ioTThingsGraphFlowTemplate                      resourceType = "ioTThingsGraphFlowTemplate"
+	ioTTopicRule                                    resourceType = "ioTTopicRule"
+	iotRoleAlias                                    resourceType = "iotRoleAlias"
+	iotThingType                                    resourceType = "iotThingType"
+	kafkaCluster                                    resourceType = "kafkaCluster"
+	kafkaConfiguration                              resourceType = "kafkaConfiguration"
+	kinesisAnalyticsApplication                     resourceType = "kinesisAnalyticsApplication"
+	kinesisAnalyticsV2Application                   resourceType = "kinesisAnalyticsV2Application"
+	kinesisStream                                   resourceType = "kinesisStream"
+	kinesisStreamConsumer                           resourceType = "kinesisStreamConsumer"
+	kinesisVideoStream                              resourceType = "kinesisVideoStream"
+	kmsAlias                                        resourceType = "kmsAlias"
+	kmsGrant                                        resourceType = "kmsGrant"
+	kmsKey                                          resourceType = "kmsKey"
+	lakeFormationResource                           resourceType = "lakeFormationResource"
+	lambdaAlias                                     resourceType = "lambdaAlias"
+	lambdaEventSourceMapping                        resourceType = "lambdaEventSourceMapping"
+	lambdaFunction                                  resourceType = "lambdaFunction"
+	lambdaLayer                                     resourceType = "lambdaLayer"
+	lambdaLayerVersion                              resourceType = "lambdaLayerVersion"
+	licenseManagerLicenseConfiguration              resourceType = "licenseManagerLicenseConfiguration"
+	lightsailDomain                                 resourceType = "lightsailDomain"
+	lightsailInstance                               resourceType = "lightsailInstance"
+	lightsailKeyPair                                resourceType = "lightsailKeyPair"
+	lightsailStaticIP                               resourceType = "lightsailStaticIP"
+	macieMemberAccountAssociation                   resourceType = "macieMemberAccountAssociation"
+	macieS3BucketAssociation                        resourceType = "macieS3BucketAssociation"
+	mediaConvertJobTemplate                         resourceType = "mediaConvertJobTemplate"
+	mediaConvertPreset                              resourceType = "mediaConvertPreset"
+	mediaConvertQueue                               resourceType = "mediaConvertQueue"
+	mediaLiveChannel                                resourceType = "mediaLiveChannel"
+	mediaLiveInput                                  resourceType = "mediaLiveInput"
+	mediaLiveInputSecurityGroup                     resourceType = "mediaLiveInputSecurityGroup"
+	mediaStoreContainer                             resourceType = "mediaStoreContainer"
+	mqBroker                                        resourceType = "mqBroker"
+	mqConfiguration                                 resourceType = "mqConfiguration"
+	neptuneDBCluster                                resourceType = "neptuneDBCluster"
+	neptuneDBClusterParameterGroup                  resourceType = "neptuneDBClusterParameterGroup"
+	neptuneDBClusterSnapshot                        resourceType = "neptuneDBClusterSnapshot"
+	neptuneDBEventSubscription                      resourceType = "neptuneDBEventSubscription"
+	neptuneDBInstance                               resourceType = "neptuneDBInstance"
+	neptuneDBParameterGroup                         resourceType = "neptuneDBParameterGroup"
+	neptuneDBSubnetGroup                            resourceType = "neptuneDBSubnetGroup"
+	networkManagerDevice                            resourceType = "networkManagerDevice"
+	networkManagerGlobalNetwork                     resourceType = "networkManagerGlobalNetwork"
+	networkManagerLink                              resourceType = "networkManagerLink"
+	networkManagerSite                              resourceType = "networkManagerSite"
+	opsWorksApp                                     resourceType = "opsWorksApp"
+	opsWorksInstance                                resourceType = "opsWorksInstance"
+	opsWorksLayer                                   resourceType = "opsWorksLayer"
+	opsWorksRdsDbInstance                           resourceType = "opsWorksRdsDbInstance"
+	opsWorksStack                                   resourceType = "opsWorksStack"
+	opsWorksUserProfile                             resourceType = "opsWorksUserProfile"
+	opsWorksVolume                                  resourceType = "opsWorksVolume"
+	organizationsAccount                            resourceType = "organizationsAccount"
+	organizationsOrganization                       resourceType = "organizationsOrganization"
+	organizationsOrganizationalUnit                 resourceType = "organizationsOrganizationalUnit"
+	organizationsPolicy                             resourceType = "organizationsPolicy"
+	pinpointApp                                     resourceType = "pinpointApp"
+	pinpointEmailTemplate                           resourceType = "pinpointEmailTemplate"
+	pinpointPushTemplate                            resourceType = "pinpointPushTemplate"
+	pinpointSmsTemplate                             resourceType = "pinpointSmsTemplate"
+	qLDBLedger                                      resourceType = "qLDBLedger"
+	quickSightGroup                                 resourceType = "quickSightGroup"
+	quickSightUser                                  resourceType = "quickSightUser"
+	rdsDBCluster                                    resourceType = "rdsDBCluster"
+	rdsDBClusterEndpoint                            resourceType = "rdsDBClusterEndpoint"
+	rdsDBClusterParameterGroup                      resourceType = "rdsDBClusterParameterGroup"
+	rdsDBClusterSnapshot                            resourceType = "rdsDBClusterSnapshot"
+	rdsDBInstance                                   resourceType = "rdsDBInstance"
+	rdsDBParameterGroup                             resourceType = "rdsDBParameterGroup"
+	rdsDBSecurityGroup                              resourceType = "rdsDBSecurityGroup"
+	rdsDBSnapshot                                   resourceType = "rdsDBSnapshot"
+	rdsDBSubnetGroup                                resourceType = "rdsDBSubnetGroup"
+	rdsEventSubscription                            resourceType = "rdsEventSubscription"
+	rdsGlobalCluster                                resourceType = "rdsGlobalCluster"
+	rdsOptionGroup                                  resourceType = "rdsOptionGroup"
+	redshiftCluster                                 resourceType = "redshiftCluster"
+	redshiftClusterParameterGroup                   resourceType = "redshiftClusterParameterGroup"
+	redshiftClusterSecurityGroup                    resourceType = "redshiftClusterSecurityGroup"
+	redshiftClusterSubnetGroup                      resourceType = "redshiftClusterSubnetGroup"
+	redshiftEventSubscription                       resourceType = "redshiftEventSubscription"
+	redshiftSnapshotCopyGrant                       resourceType = "redshiftSnapshotCopyGrant"
+	redshiftSnapshotSchedule                        resourceType = "redshiftSnapshotSchedule"
+	resourceGroupsGroup                             resourceType = "resourceGroupsGroup"
+	roboMakerFleet                                  resourceType = "roboMakerFleet"
+	roboMakerRobot                                  resourceType = "roboMakerRobot"
+	roboMakerRobotApplication                       resourceType = "roboMakerRobotApplication"
+	roboMakerSimulationApplication                  resourceType = "roboMakerSimulationApplication"
+	route53DelegationSet                            resourceType = "route53DelegationSet"
+	route53HealthCheck                              resourceType = "route53HealthCheck"
+	route53HostedZone                               resourceType = "route53HostedZone"
+	route53QueryLog                                 resourceType = "route53QueryLog"
+	route53RecordSet                                resourceType = "route53RecordSet"
+	route53ResolverResolverEndpoint                 resourceType = "route53ResolverResolverEndpoint"
+	route53ResolverResolverRule                     resourceType = "route53ResolverResolverRule"
+	route53ResolverResolverRuleAssociation          resourceType = "route53ResolverResolverRuleAssociation"
+	s3Bucket                                        resourceType = "s3Bucket"
+	s3ControlAccessPoint                            resourceType = "s3ControlAccessPoint"
+	sageMakerCodeRepository                         resourceType = "sageMakerCodeRepository"
+	sageMakerEndpoint                               resourceType = "sageMakerEndpoint"
+	sageMakerEndpointConfig                         resourceType = "sageMakerEndpointConfig"
+	sageMakerModel                                  resourceType = "sageMakerModel"
+	sageMakerNotebookInstance                       resourceType = "sageMakerNotebookInstance"
+	sageMakerNotebookInstanceLifecycleConfig        resourceType = "sageMakerNotebookInstanceLifecycleConfig"
+	sageMakerWorkteam                               resourceType = "sageMakerWorkteam"
+	schemasDiscoverer                               resourceType = "schemasDiscoverer"
+	schemasRegistry                                 resourceType = "schemasRegistry"
+	secretsManagerSecret                            resourceType = "secretsManagerSecret"
+	secretsManagerSecretVersion                     resourceType = "secretsManagerSecretVersion"
+	serviceDiscoveryHTTPNamespace                   resourceType = "serviceDiscoveryHTTPNamespace"
+	serviceDiscoveryPrivateDNSNamespace             resourceType = "serviceDiscoveryPrivateDNSNamespace"
+	serviceDiscoveryPublicDNSNamespace              resourceType = "serviceDiscoveryPublicDNSNamespace"
+	serviceDiscoveryService                         resourceType = "serviceDiscoveryService"
+	sesConfigurationSet                             resourceType = "sesConfigurationSet"
+	sesDomainIdentity                               resourceType = "sesDomainIdentity"
+	sesEmailIdentity                                resourceType = "sesEmailIdentity"
+	sesReceiptFilter                                resourceType = "sesReceiptFilter"
+	sesReceiptRuleSet                               resourceType = "sesReceiptRuleSet"
+	sesTemplate                                     resourceType = "sesTemplate"
+	sfnActivity                                     resourceType = "sfnActivity"
+	sfnStateMachine                                 resourceType = "sfnStateMachine"
+	shieldProtection                                resourceType = "shieldProtection"
+	simpleDBDomain                                  resourceType = "simpleDBDomain"
+	snsPlatformApplication                          resourceType = "snsPlatformApplication"
+	snsSubscription                                 resourceType = "snsSubscription"
+	snsTopic                                        resourceType = "snsTopic"
+	sqsQueue                                        resourceType = "sqsQueue"
+	ssmActivation                                   resourceType = "ssmActivation"
+	ssmAssociation                                  resourceType = "ssmAssociation"
+	ssmDocument                                     resourceType = "ssmDocument"
+	ssmMaintenanceWindow                            resourceType = "ssmMaintenanceWindow"
+	ssmMaintenanceWindowTarget                      resourceType = "ssmMaintenanceWindowTarget"
+	ssmMaintenanceWindowTask                        resourceType = "ssmMaintenanceWindowTask"
+	ssmParameter                                    resourceType = "ssmParameter"
+	ssmPatchBaseline                                resourceType = "ssmPatchBaseline"
+	ssmPatchGroup                                   resourceType = "ssmPatchGroup"
+	ssmResourceDataSync                             resourceType = "ssmResourceDataSync"
+	storageGatewayCachedISCSIVolume                 resourceType = "storageGatewayCachedISCSIVolume"
+	storageGatewayGateway                           resourceType = "storageGatewayGateway"
+	storageGatewayNFSFileShare                      resourceType = "storageGatewayNFSFileShare"
+	storageGatewaySMBFileShare                      resourceType = "storageGatewaySMBFileShare"
+	swfDomain                                       resourceType = "swfDomain"
+	transferServer                                  resourceType = "transferServer"
+	transferUser                                    resourceType = "transferUser"
+	wafByteMatchSet                                 resourceType = "wafByteMatchSet"
+	wafGeoMatchSet                                  resourceType = "wafGeoMatchSet"
+	wafIPSet                                        resourceType = "wafIPSet"
+	wafRateBasedRule                                resourceType = "wafRateBasedRule"
+	wafRegexMatchSet                                resourceType = "wafRegexMatchSet"
+	wafRegexPatternSet                              resourceType = "wafRegexPatternSet"
+	wafRegionalByteMatchSet                         resourceType = "wafRegionalByteMatchSet"
+	wafRegionalGeoMatchSet                          resourceType = "wafRegionalGeoMatchSet"
+	wafRegionalIPSet                                resourceType = "wafRegionalIPSet"
+	wafRegionalRateBasedRule                        resourceType = "wafRegionalRateBasedRule"
+	wafRegionalRegexPatternSet                      resourceType = "wafRegionalRegexPatternSet"
+	wafRegionalRule                                 resourceType = "wafRegionalRule"
+	wafRegionalSQLInjectionMatchSet                 resourceType = "wafRegionalSQLInjectionMatchSet"
+	wafRegionalSizeConstraintSet                    resourceType = "wafRegionalSizeConstraintSet"
+	wafRegionalWebACL                               resourceType = "wafRegionalWebACL"
+	wafRegionalXSSMatchSet                          resourceType = "wafRegionalXSSMatchSet"
+	wafRule                                         resourceType = "wafRule"
+	wafRuleGroup                                    resourceType = "wafRuleGroup"
+	wafSQLInjectionMatchSet                         resourceType = "wafSQLInjectionMatchSet"
+	wafSizeConstraintSet                            resourceType = "wafSizeConstraintSet"
+	wafWebACL                                       resourceType = "wafWebACL"
+	wafXSSMatchSet                                  resourceType = "wafXSSMatchSet"
+	wafregionalRegexMatchSet                        resourceType = "wafregionalRegexMatchSet"
+	wafregionalRuleGroup                            resourceType = "wafregionalRuleGroup"
+	wafv2IPSet                                      resourceType = "wafv2IPSet"
+	wafv2RegexPatternSet                            resourceType = "wafv2RegexPatternSet"
+	wafv2RuleGroup                                  resourceType = "wafv2RuleGroup"
+	wafv2WebACL                                     resourceType = "wafv2WebACL"
+	workLinkFleet                                   resourceType = "workLinkFleet"
+	workSpacesDirectory                             resourceType = "workSpacesDirectory"
+	workSpacesWorkspace                             resourceType = "workSpacesWorkspace"
+	workspacesIPGroup                               resourceType = "workspacesIPGroup"
+	xraySamplingRule                                resourceType = "xraySamplingRule"
 )
 
 var cloudformationTypeMap = map[string]resourceType{
 	"AWS::ACMPCA::CertificateAuthority":               acmpcaCertificateAuthority,
 	"AWS::AccessAnalyzer::Analyzer":                   accessAnalyzerAnalyzer,
-	"AWS::AmazonMQ::Broker":                           amazonMQBroker,
-	"AWS::AmazonMQ::Configuration":                    amazonMQConfiguration,
+	"AWS::AmazonMQ::Broker":                           mqBroker,
+	"AWS::AmazonMQ::Configuration":                    mqConfiguration,
 	"AWS::Amplify::App":                               amplifyApp,
 	"AWS::Amplify::Branch":                            amplifyBranch,
 	"AWS::Amplify::Domain":                            amplifyDomain,
@@ -493,7 +493,7 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::Batch::JobQueue":                            batchJobQueue,
 	"AWS::Budgets::Budget":                            budgetsBudget,
 	"AWS::CE::CostCategory":                           costExplorerCostCategory,
-	"AWS::CertificateManager::Certificate":            certificateManagerCertificate,
+	"AWS::CertificateManager::Certificate":            acmCertificate,
 	"AWS::Cloud9::EnvironmentEC2":                     cloud9EnvironmentEC2,
 	"AWS::CloudFront::CloudFrontOriginAccessIdentity": cloudFrontCloudFrontOriginAccessIdentity,
 	"AWS::CloudFront::Distribution":                   cloudFrontDistribution,
@@ -513,31 +513,31 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::CodePipeline::Pipeline":                     codePipelinePipeline,
 	"AWS::CodePipeline::Webhook":                      codePipelineWebhook,
 	"AWS::Cognito::IdentityPool":                      cognitoIdentityPool,
-	"AWS::Cognito::UserPool":                          cognitoUserPool,
-	"AWS::Cognito::UserPoolClient":                    cognitoUserPoolClient,
-	"AWS::Cognito::UserPoolGroup":                     cognitoUserPoolGroup,
-	"AWS::Cognito::UserPoolIdentityProvider":          cognitoUserPoolIdentityProvider,
-	"AWS::Cognito::UserPoolResourceServer":            cognitoUserPoolResourceServer,
-	"AWS::Cognito::UserPoolUser":                      cognitoUserPoolUser,
-	"AWS::Config::AggregationAuthorization":           configAggregationAuthorization,
-	"AWS::Config::ConfigRule":                         configConfigRule,
-	"AWS::Config::ConfigurationAggregator":            configConfigurationAggregator,
-	"AWS::Config::ConfigurationRecorder":              configConfigurationRecorder,
-	"AWS::Config::ConformancePack":                    configConformancePack,
-	"AWS::Config::DeliveryChannel":                    configDeliveryChannel,
-	"AWS::Config::OrganizationConfigRule":             configOrganizationConfigRule,
-	"AWS::Config::OrganizationConformancePack":        configOrganizationConformancePack,
-	"AWS::Config::RemediationConfiguration":           configRemediationConfiguration,
+	"AWS::Cognito::UserPool":                          cognitoIdentityProviderUserPool,
+	"AWS::Cognito::UserPoolClient":                    cognitoIdentityProviderUserPoolClient,
+	"AWS::Cognito::UserPoolGroup":                     cognitoIdentityProviderUserPoolGroup,
+	"AWS::Cognito::UserPoolIdentityProvider":          cognitoIdentityProviderUserPoolIdentityProvider,
+	"AWS::Cognito::UserPoolResourceServer":            cognitoIdentityProviderUserPoolResourceServer,
+	"AWS::Cognito::UserPoolUser":                      cognitoIdentityProviderUserPoolUser,
+	"AWS::Config::AggregationAuthorization":           configServiceAggregationAuthorization,
+	"AWS::Config::ConfigRule":                         configServiceConfigRule,
+	"AWS::Config::ConfigurationAggregator":            configServiceConfigurationAggregator,
+	"AWS::Config::ConfigurationRecorder":              configServiceConfigurationRecorder,
+	"AWS::Config::ConformancePack":                    configServiceConformancePack,
+	"AWS::Config::DeliveryChannel":                    configServiceDeliveryChannel,
+	"AWS::Config::OrganizationConfigRule":             configServiceOrganizationConfigRule,
+	"AWS::Config::OrganizationConformancePack":        configServiceOrganizationConformancePack,
+	"AWS::Config::RemediationConfiguration":           configServiceRemediationConfiguration,
 	"AWS::DAX::Cluster":                               daxCluster,
 	"AWS::DAX::ParameterGroup":                        daxParameterGroup,
 	"AWS::DAX::SubnetGroup":                           daxSubnetGroup,
 	"AWS::DLM::LifecyclePolicy":                       dlmLifecyclePolicy,
-	"AWS::DMS::Certificate":                           dmsCertificate,
-	"AWS::DMS::Endpoint":                              dmsEndpoint,
-	"AWS::DMS::EventSubscription":                     dmsEventSubscription,
-	"AWS::DMS::ReplicationInstance":                   dmsReplicationInstance,
-	"AWS::DMS::ReplicationSubnetGroup":                dmsReplicationSubnetGroup,
-	"AWS::DMS::ReplicationTask":                       dmsReplicationTask,
+	"AWS::DMS::Certificate":                           databaseMigrationServiceCertificate,
+	"AWS::DMS::Endpoint":                              databaseMigrationServiceEndpoint,
+	"AWS::DMS::EventSubscription":                     databaseMigrationServiceEventSubscription,
+	"AWS::DMS::ReplicationInstance":                   databaseMigrationServiceReplicationInstance,
+	"AWS::DMS::ReplicationSubnetGroup":                databaseMigrationServiceReplicationSubnetGroup,
+	"AWS::DMS::ReplicationTask":                       databaseMigrationServiceReplicationTask,
 	"AWS::DataPipeline::Pipeline":                     dataPipelinePipeline,
 	"AWS::Detective::Graph":                           detectiveGraph,
 	"AWS::Detective::MemberInvitation":                detectiveInvitation,
@@ -613,11 +613,11 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::ElasticLoadBalancingV2::ListenerRule":       elasticLoadBalancingV2ListenerRule,
 	"AWS::ElasticLoadBalancingV2::LoadBalancer":       elasticLoadBalancingV2LoadBalancer,
 	"AWS::ElasticLoadBalancingV2::TargetGroup":        elasticLoadBalancingV2TargetGroup,
-	"AWS::Elasticsearch::Domain":                      elasticsearchDomain,
-	"AWS::EventSchemas::Discoverer":                   eventSchemasDiscoverer,
-	"AWS::EventSchemas::Registry":                     eventSchemasRegistry,
-	"AWS::Events::EventBus":                           eventsEventBus,
-	"AWS::Events::Rule":                               eventsRule,
+	"AWS::Elasticsearch::Domain":                      elasticSearchServiceDomain,
+	"AWS::EventSchemas::Discoverer":                   schemasDiscoverer,
+	"AWS::EventSchemas::Registry":                     schemasRegistry,
+	"AWS::Events::EventBus":                           cloudWatchEventsEventBus,
+	"AWS::Events::Rule":                               cloudWatchEventsRule,
 	"AWS::FSx::FileSystem":                            fsxFileSystem,
 	"AWS::GameLift::Alias":                            gameLiftAlias,
 	"AWS::GameLift::Build":                            gameLiftBuild,
@@ -671,8 +671,8 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::ImageBuilder::InfrastructureConfiguration":  imageBuilderInfrastructureConfiguration,
 	"AWS::Inspector::AssessmentTarget":                inspectorAssessmentTarget,
 	"AWS::Inspector::AssessmentTemplate":              inspectorAssessmentTemplate,
-	"AWS::IoT1Click::Device":                          ioT1ClickDevice,
-	"AWS::IoT1Click::Project":                         ioT1ClickProject,
+	"AWS::IoT1Click::Device":                          ioT1ClickDevicesServiceDevice,
+	"AWS::IoT1Click::Project":                         ioT1ClickProjectsProject,
 	"AWS::IoT::Certificate":                           ioTCertificate,
 	"AWS::IoT::Policy":                                ioTPolicy,
 	"AWS::IoT::Thing":                                 ioTThing,
@@ -690,16 +690,16 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::Kinesis::StreamConsumer":                    kinesisStreamConsumer,
 	"AWS::KinesisAnalytics::Application":              kinesisAnalyticsApplication,
 	"AWS::KinesisAnalyticsV2::Application":            kinesisAnalyticsV2Application,
-	"AWS::KinesisFirehose::DeliveryStream":            kinesisFirehoseDeliveryStream,
+	"AWS::KinesisFirehose::DeliveryStream":            firehoseDeliveryStream,
 	"AWS::LakeFormation::Resource":                    lakeFormationResource,
 	"AWS::Lambda::Alias":                              lambdaAlias,
 	"AWS::Lambda::Function":                           lambdaFunction,
 	"AWS::Lambda::LayerVersion":                       lambdaLayerVersion,
-	"AWS::Logs::Destination":                          logsDestination,
-	"AWS::Logs::LogGroup":                             logsLogGroup,
-	"AWS::Logs::MetricFilter":                         logsMetricFilter,
-	"AWS::Logs::SubscriptionFilter":                   logsSubscriptionFilter,
-	"AWS::MSK::Cluster":                               mskCluster,
+	"AWS::Logs::Destination":                          cloudwatchLogsDestination,
+	"AWS::Logs::LogGroup":                             cloudwatchLogsLogGroup,
+	"AWS::Logs::MetricFilter":                         cloudwatchLogsMetricFilter,
+	"AWS::Logs::SubscriptionFilter":                   cloudwatchLogsSubscriptionFilter,
+	"AWS::MSK::Cluster":                               kafkaCluster,
 	"AWS::MediaConvert::JobTemplate":                  mediaConvertJobTemplate,
 	"AWS::MediaConvert::Preset":                       mediaConvertPreset,
 	"AWS::MediaConvert::Queue":                        mediaConvertQueue,
@@ -750,9 +750,9 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::Route53Resolver::ResolverEndpoint":          route53ResolverResolverEndpoint,
 	"AWS::Route53Resolver::ResolverRule":              route53ResolverResolverRule,
 	"AWS::Route53Resolver::ResolverRuleAssociation":   route53ResolverResolverRuleAssociation,
-	"AWS::S3::AccessPoint":                            s3AccessPoint,
+	"AWS::S3::AccessPoint":                            s3ControlAccessPoint,
 	"AWS::S3::Bucket":                                 s3Bucket,
-	"AWS::SDB::Domain":                                sdbDomain,
+	"AWS::SDB::Domain":                                simpleDBDomain,
 	"AWS::SES::ConfigurationSet":                      sesConfigurationSet,
 	"AWS::SES::ReceiptFilter":                         sesReceiptFilter,
 	"AWS::SES::ReceiptRuleSet":                        sesReceiptRuleSet,
@@ -780,8 +780,8 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::ServiceDiscovery::PrivateDnsNamespace":      serviceDiscoveryPrivateDNSNamespace,
 	"AWS::ServiceDiscovery::PublicDnsNamespace":       serviceDiscoveryPublicDNSNamespace,
 	"AWS::ServiceDiscovery::Service":                  serviceDiscoveryService,
-	"AWS::StepFunctions::Activity":                    stepFunctionsActivity,
-	"AWS::StepFunctions::StateMachine":                stepFunctionsStateMachine,
+	"AWS::StepFunctions::Activity":                    sfnActivity,
+	"AWS::StepFunctions::StateMachine":                sfnStateMachine,
 	"AWS::Transfer::Server":                           transferServer,
 	"AWS::Transfer::User":                             transferUser,
 	"AWS::WAF::ByteMatchSet":                          wafByteMatchSet,
@@ -806,7 +806,7 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::WAFv2::RuleGroup":                           wafv2RuleGroup,
 	"AWS::WAFv2::WebACL":                              wafv2WebACL,
 	"AWS::WorkSpaces::Workspace":                      workSpacesWorkspace,
-	"Alexa::ASK::Skill":                               alexaAskSkill,
+	"Alexa::ASK::Skill":                               alexaForBusinessSkill,
 }
 
 func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
@@ -816,7 +816,7 @@ func fromCloudFormationType(cloudFormationType string) (resourceType, bool) {
 
 var terraformTypeMap = map[string]resourceType{
 	"aws_accessanalyzer_analyzer":                             accessAnalyzerAnalyzer,
-	"aws_acm_certificate":                                     certificateManagerCertificate,
+	"aws_acm_certificate":                                     acmCertificate,
 	"aws_acmpca_certificate_authority":                        acmpcaCertificateAuthority,
 	"aws_ami":                                                 ec2Image,
 	"aws_ami_copy":                                            ec2Image,
@@ -852,13 +852,13 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_cloudhsm_v2_hsm":                                     cloudHSMV2HSM,
 	"aws_cloudtrail":                                          cloudTrailTrail,
 	"aws_cloudwatch_dashboard":                                cloudWatchDashboard,
-	"aws_cloudwatch_event_rule":                               eventsRule,
-	"aws_cloudwatch_event_target":                             eventsTarget,
-	"aws_cloudwatch_log_destination":                          logsDestination,
-	"aws_cloudwatch_log_group":                                logsLogGroup,
-	"aws_cloudwatch_log_metric_filter":                        logsMetricFilter,
-	"aws_cloudwatch_log_resource_policy":                      logsResourcePolicy,
-	"aws_cloudwatch_log_subscription_filter":                  logsSubscriptionFilter,
+	"aws_cloudwatch_event_rule":                               cloudWatchEventsRule,
+	"aws_cloudwatch_event_target":                             cloudWatchEventsTarget,
+	"aws_cloudwatch_log_destination":                          cloudwatchLogsDestination,
+	"aws_cloudwatch_log_group":                                cloudwatchLogsLogGroup,
+	"aws_cloudwatch_log_metric_filter":                        cloudwatchLogsMetricFilter,
+	"aws_cloudwatch_log_resource_policy":                      cloudwatchLogsResourcePolicy,
+	"aws_cloudwatch_log_subscription_filter":                  cloudwatchLogsSubscriptionFilter,
 	"aws_cloudwatch_metric_alarm":                             cloudWatchAlarm,
 	"aws_codebuild_project":                                   codeBuildProject,
 	"aws_codebuild_source_credential":                         codeBuildSourceCredential,
@@ -870,18 +870,18 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_codepipeline":                                        codePipelinePipeline,
 	"aws_codepipeline_webhook":                                codePipelineWebhook,
 	"aws_cognito_identity_pool":                               cognitoIdentityPool,
-	"aws_cognito_identity_provider":                           cognitoUserPoolIdentityProvider,
-	"aws_cognito_resource_server":                             cognitoUserPoolResourceServer,
-	"aws_cognito_user_group":                                  cognitoUserPoolGroup,
-	"aws_cognito_user_pool":                                   cognitoUserPool,
-	"aws_cognito_user_pool_client":                            cognitoUserPoolClient,
-	"aws_config_aggregate_authorization":                      configAggregationAuthorization,
-	"aws_config_config_rule":                                  configConfigRule,
-	"aws_config_configuration_aggregator":                     configConfigurationAggregator,
-	"aws_config_configuration_recorder":                       configConfigurationRecorder,
-	"aws_config_delivery_channel":                             configDeliveryChannel,
-	"aws_config_organization_custom_rule":                     configOrganizationConfigRule,
-	"aws_config_organization_managed_rule":                    configOrganizationConfigRule,
+	"aws_cognito_identity_provider":                           cognitoIdentityProviderUserPoolIdentityProvider,
+	"aws_cognito_resource_server":                             cognitoIdentityProviderUserPoolResourceServer,
+	"aws_cognito_user_group":                                  cognitoIdentityProviderUserPoolGroup,
+	"aws_cognito_user_pool":                                   cognitoIdentityProviderUserPool,
+	"aws_cognito_user_pool_client":                            cognitoIdentityProviderUserPoolClient,
+	"aws_config_aggregate_authorization":                      configServiceAggregationAuthorization,
+	"aws_config_config_rule":                                  configServiceConfigRule,
+	"aws_config_configuration_aggregator":                     configServiceConfigurationAggregator,
+	"aws_config_configuration_recorder":                       configServiceConfigurationRecorder,
+	"aws_config_delivery_channel":                             configServiceDeliveryChannel,
+	"aws_config_organization_custom_rule":                     configServiceOrganizationConfigRule,
+	"aws_config_organization_managed_rule":                    configServiceOrganizationConfigRule,
 	"aws_cur_report_definition":                               costAndUsageReportServiceReportDefinition,
 	"aws_customer_gateway":                                    ec2CustomerGateway,
 	"aws_datapipeline_pipeline":                               dataPipelinePipeline,
@@ -905,12 +905,12 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_devicefarm_project":                                  deviceFarmProject,
 	"aws_directory_service_directory":                         directoryServiceDirectory,
 	"aws_dlm_lifecycle_policy":                                dlmLifecyclePolicy,
-	"aws_dms_certificate":                                     dmsCertificate,
-	"aws_dms_endpoint":                                        dmsEndpoint,
-	"aws_dms_event_subscription":                              dmsEventSubscription,
-	"aws_dms_replication_instance":                            dmsReplicationInstance,
-	"aws_dms_replication_subnet_group":                        dmsReplicationSubnetGroup,
-	"aws_dms_replication_task":                                dmsReplicationTask,
+	"aws_dms_certificate":                                     databaseMigrationServiceCertificate,
+	"aws_dms_endpoint":                                        databaseMigrationServiceEndpoint,
+	"aws_dms_event_subscription":                              databaseMigrationServiceEventSubscription,
+	"aws_dms_replication_instance":                            databaseMigrationServiceReplicationInstance,
+	"aws_dms_replication_subnet_group":                        databaseMigrationServiceReplicationSubnetGroup,
+	"aws_dms_replication_task":                                databaseMigrationServiceReplicationTask,
 	"aws_docdb_cluster":                                       docDBDBCluster,
 	"aws_docdb_cluster_instance":                              docDBDBInstance,
 	"aws_docdb_cluster_parameter_group":                       docDBDBClusterParameterGroup,
@@ -964,7 +964,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_elasticache_replication_group":                       elastiCacheReplicationGroup,
 	"aws_elasticache_security_group":                          elastiCacheSecurityGroup,
 	"aws_elasticache_subnet_group":                            elastiCacheSubnetGroup,
-	"aws_elasticsearch_domain":                                elasticsearchDomain,
+	"aws_elasticsearch_domain":                                elasticSearchServiceDomain,
 	"aws_elastictranscoder_pipeline":                          elasticTranscoderPipeline,
 	"aws_elastictranscoder_preset":                            elasticTranscoderPreset,
 	"aws_elb":                                                 elasticLoadBalancingLoadBalancer,
@@ -1018,7 +1018,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_iot_topic_rule":                                      ioTTopicRule,
 	"aws_key_pair":                                            ec2KeyPair,
 	"aws_kinesis_analytics_application":                       kinesisAnalyticsApplication,
-	"aws_kinesis_firehose_delivery_stream":                    kinesisFirehoseDeliveryStream,
+	"aws_kinesis_firehose_delivery_stream":                    firehoseDeliveryStream,
 	"aws_kinesis_stream":                                      kinesisStream,
 	"aws_kinesis_video_stream":                                kinesisVideoStream,
 	"aws_kms_alias":                                           kmsAlias,
@@ -1045,10 +1045,10 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_media_convert_queue":                                 mediaConvertQueue,
 	"aws_media_package_channel":                               mediaLiveChannel,
 	"aws_media_store_container":                               mediaStoreContainer,
-	"aws_mq_broker":                                           amazonMQBroker,
-	"aws_mq_configuration":                                    amazonMQConfiguration,
-	"aws_msk_cluster":                                         mskCluster,
-	"aws_msk_configuration":                                   mskConfiguration,
+	"aws_mq_broker":                                           mqBroker,
+	"aws_mq_configuration":                                    mqConfiguration,
+	"aws_msk_cluster":                                         kafkaCluster,
+	"aws_msk_configuration":                                   kafkaConfiguration,
 	"aws_nat_gateway":                                         ec2NatGateway,
 	"aws_neptune_cluster":                                     neptuneDBCluster,
 	"aws_neptune_cluster_instance":                            neptuneDBInstance,
@@ -1071,7 +1071,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_opsworks_nodejs_app_layer":                           opsWorksLayer,
 	"aws_opsworks_php_app_layer":                              opsWorksLayer,
 	"aws_opsworks_rails_app_layer":                            opsWorksLayer,
-	"aws_opsworks_rds_db_instance":                            opsWorkRdsDbInstance,
+	"aws_opsworks_rds_db_instance":                            opsWorksRdsDbInstance,
 	"aws_opsworks_stack":                                      opsWorksStack,
 	"aws_opsworks_static_web_layer":                           opsWorksLayer,
 	"aws_opsworks_user_profile":                               opsWorksUserProfile,
@@ -1107,7 +1107,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_route53_zone":                                        route53HostedZone,
 	"aws_route_table":                                         ec2RouteTable,
 	"aws_route_table_association":                             ec2RouteTableSubnetAssociation,
-	"aws_s3_access_point":                                     s3AccessPoint,
+	"aws_s3_access_point":                                     s3ControlAccessPoint,
 	"aws_s3_bucket":                                           s3Bucket,
 	"aws_sagemaker_endpoint":                                  sageMakerEndpoint,
 	"aws_sagemaker_endpoint_configuration":                    sageMakerEndpointConfig,
@@ -1128,10 +1128,10 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_ses_receipt_filter":                                  sesReceiptFilter,
 	"aws_ses_receipt_rule_set":                                sesReceiptRuleSet,
 	"aws_ses_template":                                        sesTemplate,
-	"aws_sfn_activity":                                        stepFunctionsActivity,
-	"aws_sfn_state_machine":                                   stepFunctionsStateMachine,
+	"aws_sfn_activity":                                        sfnActivity,
+	"aws_sfn_state_machine":                                   sfnStateMachine,
 	"aws_shield_protection":                                   shieldProtection,
-	"aws_simpledb_domain":                                     sdbDomain,
+	"aws_simpledb_domain":                                     simpleDBDomain,
 	"aws_sns_platform_application":                            snsPlatformApplication,
 	"aws_sns_topic":                                           snsTopic,
 	"aws_sns_topic_subscription":                              snsSubscription,
@@ -1201,358 +1201,358 @@ func fromTerraformType(terraformType string) (resourceType, bool) {
 }
 
 var terraformPhysicalResourceIDs = map[resourceType]string{
-	accessAnalyzerAnalyzer:                    "analyzer_name",
-	acmpcaCertificateAuthority:                "arn",
-	amazonMQBroker:                            "id",
-	amazonMQConfiguration:                     "id",
-	apiGatewayAPIKey:                          "id",
-	apiGatewayClientCertificate:               "id",
-	apiGatewayDomainName:                      "domain_name",
-	apiGatewayRestAPI:                         "id",
-	apiGatewayUsagePlan:                       "id",
-	apiGatewayV2Api:                           "id",
-	apiGatewayVpcLink:                         "id",
-	appMeshMesh:                               "name",
-	appSyncFunctions:                          "function_id",
-	appSyncGraphQLApi:                         "id",
-	applicationAutoScalingScheduledAction:     "name",
-	athenaNamedQuery:                          "name",
-	athenaWorkGroup:                           "name",
-	autoScalingAutoScalingGroup:               "name",
-	autoScalingLaunchConfiguration:            "name",
-	autoScalingScalingPolicy:                  "name",
-	autoScalingScheduledAction:                "scheduled_action_name",
-	backupBackupPlan:                          "id",
-	backupBackupSelection:                     "id",
-	backupBackupVault:                         "id",
-	batchComputeEnvironment:                   "compute_environment_name",
-	batchJobDefinition:                        "arn",
-	batchJobQueue:                             "arn",
-	certificateManagerCertificate:             "arn",
-	cloud9EnvironmentEC2:                      "id",
-	cloudFrontCloudFrontOriginAccessIdentity:  "id",
-	cloudFrontDistribution:                    "id",
-	cloudFrontPublicKey:                       "id",
-	cloudHSMV2Cluster:                         "cluster_id",
-	cloudHSMV2HSM:                             "hsm_id",
-	cloudTrailTrail:                           "name",
-	cloudWatchAlarm:                           "alarm_name",
-	cloudWatchDashboard:                       "dashboard_name",
-	codeBuildProject:                          "name",
-	codeBuildSourceCredential:                 "arn",
-	codeCommitRepository:                      "repository_name",
-	codeCommitTrigger:                         "name",
-	codeDeployApplication:                     "name",
-	codeDeployDeploymentConfig:                "deployment_config_name",
-	codeDeployDeploymentGroup:                 "app_name",
-	codePipelinePipeline:                      "name",
-	codePipelineWebhook:                       "id",
-	cognitoIdentityPool:                       "identity_pool_name",
-	cognitoUserPool:                           "id",
-	cognitoUserPoolClient:                     "name",
-	cognitoUserPoolGroup:                      "name",
-	cognitoUserPoolIdentityProvider:           "provider_name",
-	cognitoUserPoolResourceServer:             "name",
-	configAggregationAuthorization:            "arn",
-	configConfigRule:                          "name",
-	configConfigurationAggregator:             "name",
-	configConfigurationRecorder:               "name",
-	configDeliveryChannel:                     "name",
-	configOrganizationConfigRule:              "name",
-	costAndUsageReportServiceReportDefinition: "report_name",
-	dataPipelinePipeline:                      "id",
-	dataSyncAgent:                             "name",
-	dataSyncLocation:                          "arn",
-	dataSyncTask:                              "arn",
-	daxCluster:                                "cluster_name",
-	daxParameterGroup:                         "name",
-	daxSubnetGroup:                            "name",
-	deviceFarmProject:                         "name",
-	directConnectConnection:                   "id",
-	directConnectGateway:                      "id",
-	directConnectGatewayAssociation:           "id",
-	directConnectGatewayAssociationProposal:   "id",
-	directConnectLAG:                          "id",
-	directConnectVirtualInterface:             "id",
-	directoryServiceDirectory:                 "id",
-	dlmLifecyclePolicy:                        "id",
-	dmsCertificate:                            "certificate_id",
-	dmsEndpoint:                               "endpoint_id",
-	dmsEventSubscription:                      "name",
-	dmsReplicationInstance:                    "replication_instance_id",
-	dmsReplicationSubnetGroup:                 "replication_subnet_group_id",
-	dmsReplicationTask:                        "replication_task_id",
-	docDBDBCluster:                            "cluster_identifier",
-	docDBDBClusterParameterGroup:              "name",
-	docDBDBClusterSnapshot:                    "db_cluster_snapshot_identifier",
-	docDBDBInstance:                           "identifier",
-	docDBDBSubnetGroup:                        "name",
-	dynamoDBGlobalTable:                       "name",
-	dynamoDBTable:                             "name",
-	ec2CapacityReservation:                    "id",
-	ec2ClientVpnEndpoint:                      "id",
-	ec2CustomerGateway:                        "id",
-	ec2DHCPOptions:                            "id",
-	ec2EC2Fleet:                               "id",
-	ec2EIP:                                    "id",
-	ec2EIPAssociation:                         "association_id",
-	ec2EgressOnlyInternetGateway:              "id",
-	ec2FlowLog:                                "id",
-	ec2Image:                                  "id",
-	ec2Instance:                               "id",
-	ec2InternetGateway:                        "id",
-	ec2KeyPair:                                "key_pair_id",
-	ec2LaunchTemplate:                         "id",
-	ec2NatGateway:                             "id",
-	ec2NetworkACL:                             "id",
-	ec2NetworkInterface:                       "id",
-	ec2NetworkInterfaceAttachment:             "attachment_id",
-	ec2PlacementGroup:                         "id",
-	ec2RouteTable:                             "id",
-	ec2RouteTableSubnetAssociation:            "id",
-	ec2SecurityGroup:                          "id",
-	ec2Snapshot:                               "id",
-	ec2SpotFleet:                              "id",
-	ec2SpotInstanceRequest:                    "id",
-	ec2Subnet:                                 "id",
-	ec2TrafficMirrorFilter:                    "id",
-	ec2TrafficMirrorFilterRule:                "id",
-	ec2TrafficMirrorSession:                   "id",
-	ec2TrafficMirrorTarget:                    "id",
-	ec2TransitGateway:                         "id",
-	ec2TransitGatewayAttachment:               "id",
-	ec2TransitGatewayRouteTable:               "id",
-	ec2VPC:                                    "id",
-	ec2VPCCidrBlock:                           "id",
-	ec2VPCEndpoint:                            "id",
-	ec2VPCEndpointConnectionNotification:      "id",
-	ec2VPCEndpointService:                     "id",
-	ec2VPCPeeringConnection:                   "id",
-	ec2VPNConnection:                          "id",
-	ec2VPNGateway:                             "id",
-	ec2Volume:                                 "id",
-	ecrRepository:                             "name",
-	ecsCapacityProvider:                       "arn",
-	ecsCluster:                                "arn",
-	ecsService:                                "id",
-	ecsTaskDefinition:                         "arn",
-	efsFileSystem:                             "id",
-	efsMountTarget:                            "id",
-	eksCluster:                                "name",
-	eksFargateProfile:                         "fargate_profile_name",
-	eksNodegroup:                              "node_group_name",
-	elastiCacheCacheCluster:                   "cluster_id",
-	elastiCacheParameterGroup:                 "name",
-	elastiCacheReplicationGroup:               "replication_group_id",
-	elastiCacheSecurityGroup:                  "name",
-	elastiCacheSubnetGroup:                    "name",
-	elasticBeanstalkApplication:               "name",
-	elasticBeanstalkApplicationVersion:        "arn",
-	elasticBeanstalkConfigurationTemplate:     "name",
-	elasticBeanstalkEnvironment:               "id",
-	elasticLoadBalancingLoadBalancer:          "name",
-	elasticLoadBalancingV2Listener:            "arn",
-	elasticLoadBalancingV2ListenerRule:        "arn",
-	elasticLoadBalancingV2LoadBalancer:        "arn",
-	elasticLoadBalancingV2TargetGroup:         "arn",
-	elasticTranscoderPipeline:                 "id",
-	elasticTranscoderPreset:                   "id",
-	elasticsearchDomain:                       "domain_name",
-	emrCluster:                                "name",
-	emrInstanceGroup:                          "name",
-	emrSecurityConfiguration:                  "name",
-	eventsRule:                                "name",
-	eventsTarget:                              "target_id",
-	fsxFileSystem:                             "id",
-	gameLiftAlias:                             "id",
-	gameLiftBuild:                             "id",
-	gameLiftFleet:                             "id",
-	gameLiftGameSessionQueue:                  "name",
-	glacierVault:                              "name",
-	globalAcceleratorAccelerator:              "arn",
-	globalAcceleratorEndpointGroup:            "arn",
-	globalAcceleratorListener:                 "arn",
-	glueConnection:                            "catalog_id",
-	glueCrawler:                               "name",
-	glueDatabase:                              "name",
-	glueJob:                                   "name",
-	glueSecurityConfiguration:                 "name",
-	glueTable:                                 "name",
-	glueTrigger:                               "name",
-	glueWorkflow:                              "name",
-	guardDutyDetector:                         "id",
-	iamAccessKey:                              "id",
-	iamAccountAlias:                           "account_alias",
-	iamGroup:                                  "name",
-	iamGroupPolicy:                            "name",
-	iamInstanceProfile:                        "name",
-	iamOpenidConnectProvider:                  "arn",
-	iamPolicy:                                 "name",
-	iamRole:                                   "name",
-	iamRolePolicy:                             "name",
-	iamSamlProvider:                           "arn",
-	iamServerCertificate:                      "name",
-	iamServiceLinkedRole:                      "name",
-	iamUser:                                   "name",
-	iamUserPolicy:                             "names",
-	iamUserSSHKey:                             "ssh_public_key_id",
-	inspectorAssessmentTarget:                 "arn",
-	inspectorAssessmentTemplate:               "arn",
-	ioTCertificate:                            "id",
-	ioTPolicy:                                 "name",
-	ioTThing:                                  "name",
-	ioTTopicRule:                              "name",
-	iotRoleAlias:                              "alias",
-	iotThingType:                              "name",
-	kinesisAnalyticsApplication:               "name",
-	kinesisFirehoseDeliveryStream:             "name",
-	kinesisStream:                             "arn",
-	kinesisVideoStream:                        "name",
-	kmsAlias:                                  "name",
-	kmsGrant:                                  "grant_id",
-	kmsKey:                                    "key_id",
-	lambdaAlias:                               "name",
-	lambdaEventSourceMapping:                  "uuid",
-	lambdaFunction:                            "function_name",
-	lambdaLayerVersion:                        "arn",
-	licenseManagerLicenseConfiguration:        "id",
-	lightsailDomain:                           "domain_name",
-	lightsailInstance:                         "name",
-	lightsailKeyPair:                          "name",
-	lightsailStaticIP:                         "name",
-	logsDestination:                           "name",
-	logsLogGroup:                              "name",
-	logsMetricFilter:                          "name",
-	logsResourcePolicy:                        "policy_name",
-	logsSubscriptionFilter:                    "name",
-	macieMemberAccountAssociation:             "member_account_id",
-	macieS3BucketAssociation:                  "bucket_name",
-	mediaConvertQueue:                         "name",
-	mediaLiveChannel:                          "channel_id",
-	mediaStoreContainer:                       "name",
-	mskCluster:                                "cluster_name",
-	mskConfiguration:                          "name",
-	neptuneDBCluster:                          "cluster_resource_id",
-	neptuneDBClusterParameterGroup:            "name",
-	neptuneDBClusterSnapshot:                  "db_cluster_snapshot_identifier",
-	neptuneDBEventSubscription:                "name",
-	neptuneDBInstance:                         "id",
-	neptuneDBParameterGroup:                   "name",
-	neptuneDBSubnetGroup:                      "name",
-	opsWorkRdsDbInstance:                      "rds_db_instance_arn",
-	opsWorksApp:                               "id",
-	opsWorksInstance:                          "id",
-	opsWorksLayer:                             "id",
-	opsWorksStack:                             "id",
-	opsWorksUserProfile:                       "user_arn",
-	organizationsAccount:                      "id",
-	organizationsOrganization:                 "id",
-	organizationsOrganizationalUnit:           "id",
-	organizationsPolicy:                       "id",
-	pinpointApp:                               "application_id",
-	qLDBLedger:                                "name",
-	quickSightGroup:                           "group_name",
-	quickSightUser:                            "user_name",
-	rdsDBCluster:                              "cluster_identifier",
-	rdsDBClusterEndpoint:                      "cluster_endpoint_identifier",
-	rdsDBClusterParameterGroup:                "name",
-	rdsDBClusterSnapshot:                      "db_cluster_snapshot_identifier",
-	rdsDBInstance:                             "identifier",
-	rdsDBParameterGroup:                       "name",
-	rdsDBSecurityGroup:                        "name",
-	rdsDBSnapshot:                             "db_snapshot_identifier",
-	rdsDBSubnetGroup:                          "name",
-	rdsEventSubscription:                      "name",
-	rdsGlobalCluster:                          "global_cluster_identifier",
-	rdsOptionGroup:                            "name",
-	redshiftCluster:                           "cluster_identifier",
-	redshiftClusterParameterGroup:             "name",
-	redshiftClusterSecurityGroup:              "name",
-	redshiftClusterSubnetGroup:                "name",
-	redshiftEventSubscription:                 "name",
-	redshiftSnapshotCopyGrant:                 "snapshot_copy_grant_name",
-	redshiftSnapshotSchedule:                  "identifier",
-	resourceGroupsGroup:                       "name",
-	route53DelegationSet:                      "id",
-	route53HealthCheck:                        "id",
-	route53HostedZone:                         "zone_id",
-	route53QueryLog:                           "id",
-	route53RecordSet:                          "name",
-	route53ResolverResolverEndpoint:           "id",
-	route53ResolverResolverRule:               "id",
-	route53ResolverResolverRuleAssociation:    "id",
-	s3AccessPoint:                             "name",
-	s3Bucket:                                  "bucket",
-	sageMakerEndpoint:                         "name",
-	sageMakerEndpointConfig:                   "name",
-	sageMakerModel:                            "name",
-	sageMakerNotebookInstance:                 "name",
-	sageMakerNotebookInstanceLifecycleConfig:  "name",
-	sdbDomain:                                 "name",
-	secretsManagerSecret:                      "name",
-	secretsManagerSecretVersion:               "version_id",
-	serviceDiscoveryHTTPNamespace:             "name",
-	serviceDiscoveryPrivateDNSNamespace:       "name",
-	serviceDiscoveryPublicDNSNamespace:        "name",
-	serviceDiscoveryService:                   "id",
-	sesConfigurationSet:                       "name",
-	sesDomainIdentity:                         "domain",
-	sesEmailIdentity:                          "email",
-	sesReceiptFilter:                          "name",
-	sesReceiptRuleSet:                         "rule_set_name",
-	sesTemplate:                               "name",
-	shieldProtection:                          "id",
-	snsPlatformApplication:                    "arn",
-	snsSubscription:                           "arn",
-	snsTopic:                                  "arn",
-	sqsQueue:                                  "id",
-	ssmActivation:                             "id",
-	ssmAssociation:                            "association_id",
-	ssmDocument:                               "name",
-	ssmMaintenanceWindow:                      "id",
-	ssmMaintenanceWindowTarget:                "id",
-	ssmMaintenanceWindowTask:                  "id",
-	ssmParameter:                              "name",
-	ssmPatchBaseline:                          "id",
-	ssmPatchGroup:                             "patch_group",
-	ssmResourceDataSync:                       "name",
-	stepFunctionsActivity:                     "name",
-	stepFunctionsStateMachine:                 "name",
-	storageGatewayCachedISCSIVolume:           "volume_id",
-	storageGatewayGateway:                     "gateway_id",
-	storageGatewayNFSFileShare:                "fileshare_id",
-	storageGatewaySMBFileShare:                "fileshare_id",
-	swfDomain:                                 "name",
-	transferServer:                            "id",
-	transferUser:                              "arn",
-	wafByteMatchSet:                           "id",
-	wafGeoMatchSet:                            "id",
-	wafIPSet:                                  "id",
-	wafRateBasedRule:                          "id",
-	wafRegexMatchSet:                          "id",
-	wafRegexPatternSet:                        "id",
-	wafRegionalByteMatchSet:                   "id",
-	wafRegionalGeoMatchSet:                    "id",
-	wafRegionalIPSet:                          "id",
-	wafRegionalRateBasedRule:                  "id",
-	wafRegionalRegexPatternSet:                "id",
-	wafRegionalRule:                           "id",
-	wafRegionalSQLInjectionMatchSet:           "id",
-	wafRegionalSizeConstraintSet:              "id",
-	wafRegionalWebACL:                         "id",
-	wafRegionalXSSMatchSet:                    "id",
-	wafRule:                                   "id",
-	wafRuleGroup:                              "id",
-	wafSQLInjectionMatchSet:                   "id",
-	wafSizeConstraintSet:                      "id",
-	wafWebACL:                                 "id",
-	wafXSSMatchSet:                            "id",
-	wafregionalRegexMatchSet:                  "id",
-	wafregionalRuleGroup:                      "id",
-	workLinkFleet:                             "display_name",
-	workSpacesDirectory:                       "id",
-	workspacesIPGroup:                         "id",
-	xraySamplingRule:                          "rule_name",
+	accessAnalyzerAnalyzer:                          "analyzer_name",
+	acmpcaCertificateAuthority:                      "arn",
+	mqBroker:                                        "id",
+	mqConfiguration:                                 "id",
+	apiGatewayAPIKey:                                "id",
+	apiGatewayClientCertificate:                     "id",
+	apiGatewayDomainName:                            "domain_name",
+	apiGatewayRestAPI:                               "id",
+	apiGatewayUsagePlan:                             "id",
+	apiGatewayV2Api:                                 "id",
+	apiGatewayVpcLink:                               "id",
+	appMeshMesh:                                     "name",
+	appSyncFunctions:                                "function_id",
+	appSyncGraphQLApi:                               "id",
+	applicationAutoScalingScheduledAction:           "name",
+	athenaNamedQuery:                                "name",
+	athenaWorkGroup:                                 "name",
+	autoScalingAutoScalingGroup:                     "name",
+	autoScalingLaunchConfiguration:                  "name",
+	autoScalingScalingPolicy:                        "name",
+	autoScalingScheduledAction:                      "scheduled_action_name",
+	backupBackupPlan:                                "id",
+	backupBackupSelection:                           "id",
+	backupBackupVault:                               "id",
+	batchComputeEnvironment:                         "compute_environment_name",
+	batchJobDefinition:                              "arn",
+	batchJobQueue:                                   "arn",
+	acmCertificate:                                  "arn",
+	cloud9EnvironmentEC2:                            "id",
+	cloudFrontCloudFrontOriginAccessIdentity:        "id",
+	cloudFrontDistribution:                          "id",
+	cloudFrontPublicKey:                             "id",
+	cloudHSMV2Cluster:                               "cluster_id",
+	cloudHSMV2HSM:                                   "hsm_id",
+	cloudTrailTrail:                                 "name",
+	cloudWatchAlarm:                                 "alarm_name",
+	cloudWatchDashboard:                             "dashboard_name",
+	codeBuildProject:                                "name",
+	codeBuildSourceCredential:                       "arn",
+	codeCommitRepository:                            "repository_name",
+	codeCommitTrigger:                               "name",
+	codeDeployApplication:                           "name",
+	codeDeployDeploymentConfig:                      "deployment_config_name",
+	codeDeployDeploymentGroup:                       "app_name",
+	codePipelinePipeline:                            "name",
+	codePipelineWebhook:                             "id",
+	cognitoIdentityPool:                             "identity_pool_name",
+	cognitoIdentityProviderUserPool:                 "id",
+	cognitoIdentityProviderUserPoolClient:           "name",
+	cognitoIdentityProviderUserPoolGroup:            "name",
+	cognitoIdentityProviderUserPoolIdentityProvider: "provider_name",
+	cognitoIdentityProviderUserPoolResourceServer:   "name",
+	configServiceAggregationAuthorization:           "arn",
+	configServiceConfigRule:                         "name",
+	configServiceConfigurationAggregator:            "name",
+	configServiceConfigurationRecorder:              "name",
+	configServiceDeliveryChannel:                    "name",
+	configServiceOrganizationConfigRule:             "name",
+	costAndUsageReportServiceReportDefinition:       "report_name",
+	dataPipelinePipeline:                            "id",
+	dataSyncAgent:                                   "name",
+	dataSyncLocation:                                "arn",
+	dataSyncTask:                                    "arn",
+	daxCluster:                                      "cluster_name",
+	daxParameterGroup:                               "name",
+	daxSubnetGroup:                                  "name",
+	deviceFarmProject:                               "name",
+	directConnectConnection:                         "id",
+	directConnectGateway:                            "id",
+	directConnectGatewayAssociation:                 "id",
+	directConnectGatewayAssociationProposal:         "id",
+	directConnectLAG:                                "id",
+	directConnectVirtualInterface:                   "id",
+	directoryServiceDirectory:                       "id",
+	dlmLifecyclePolicy:                              "id",
+	databaseMigrationServiceCertificate:             "certificate_id",
+	databaseMigrationServiceEndpoint:                "endpoint_id",
+	databaseMigrationServiceEventSubscription:       "name",
+	databaseMigrationServiceReplicationInstance:     "replication_instance_id",
+	databaseMigrationServiceReplicationSubnetGroup:  "replication_subnet_group_id",
+	databaseMigrationServiceReplicationTask:         "replication_task_id",
+	docDBDBCluster:                                  "cluster_identifier",
+	docDBDBClusterParameterGroup:                    "name",
+	docDBDBClusterSnapshot:                          "db_cluster_snapshot_identifier",
+	docDBDBInstance:                                 "identifier",
+	docDBDBSubnetGroup:                              "name",
+	dynamoDBGlobalTable:                             "name",
+	dynamoDBTable:                                   "name",
+	ec2CapacityReservation:                          "id",
+	ec2ClientVpnEndpoint:                            "id",
+	ec2CustomerGateway:                              "id",
+	ec2DHCPOptions:                                  "id",
+	ec2EC2Fleet:                                     "id",
+	ec2EIP:                                          "id",
+	ec2EIPAssociation:                               "association_id",
+	ec2EgressOnlyInternetGateway:                    "id",
+	ec2FlowLog:                                      "id",
+	ec2Image:                                        "id",
+	ec2Instance:                                     "id",
+	ec2InternetGateway:                              "id",
+	ec2KeyPair:                                      "key_pair_id",
+	ec2LaunchTemplate:                               "id",
+	ec2NatGateway:                                   "id",
+	ec2NetworkACL:                                   "id",
+	ec2NetworkInterface:                             "id",
+	ec2NetworkInterfaceAttachment:                   "attachment_id",
+	ec2PlacementGroup:                               "id",
+	ec2RouteTable:                                   "id",
+	ec2RouteTableSubnetAssociation:                  "id",
+	ec2SecurityGroup:                                "id",
+	ec2Snapshot:                                     "id",
+	ec2SpotFleet:                                    "id",
+	ec2SpotInstanceRequest:                          "id",
+	ec2Subnet:                                       "id",
+	ec2TrafficMirrorFilter:                          "id",
+	ec2TrafficMirrorFilterRule:                      "id",
+	ec2TrafficMirrorSession:                         "id",
+	ec2TrafficMirrorTarget:                          "id",
+	ec2TransitGateway:                               "id",
+	ec2TransitGatewayAttachment:                     "id",
+	ec2TransitGatewayRouteTable:                     "id",
+	ec2VPC:                                          "id",
+	ec2VPCCidrBlock:                                 "id",
+	ec2VPCEndpoint:                                  "id",
+	ec2VPCEndpointConnectionNotification:            "id",
+	ec2VPCEndpointService:                           "id",
+	ec2VPCPeeringConnection:                         "id",
+	ec2VPNConnection:                                "id",
+	ec2VPNGateway:                                   "id",
+	ec2Volume:                                       "id",
+	ecrRepository:                                   "name",
+	ecsCapacityProvider:                             "arn",
+	ecsCluster:                                      "arn",
+	ecsService:                                      "id",
+	ecsTaskDefinition:                               "arn",
+	efsFileSystem:                                   "id",
+	efsMountTarget:                                  "id",
+	eksCluster:                                      "name",
+	eksFargateProfile:                               "fargate_profile_name",
+	eksNodegroup:                                    "node_group_name",
+	elastiCacheCacheCluster:                         "cluster_id",
+	elastiCacheParameterGroup:                       "name",
+	elastiCacheReplicationGroup:                     "replication_group_id",
+	elastiCacheSecurityGroup:                        "name",
+	elastiCacheSubnetGroup:                          "name",
+	elasticBeanstalkApplication:                     "name",
+	elasticBeanstalkApplicationVersion:              "arn",
+	elasticBeanstalkConfigurationTemplate:           "name",
+	elasticBeanstalkEnvironment:                     "id",
+	elasticLoadBalancingLoadBalancer:                "name",
+	elasticLoadBalancingV2Listener:                  "arn",
+	elasticLoadBalancingV2ListenerRule:              "arn",
+	elasticLoadBalancingV2LoadBalancer:              "arn",
+	elasticLoadBalancingV2TargetGroup:               "arn",
+	elasticTranscoderPipeline:                       "id",
+	elasticTranscoderPreset:                         "id",
+	elasticSearchServiceDomain:                      "domain_name",
+	emrCluster:                                      "name",
+	emrInstanceGroup:                                "name",
+	emrSecurityConfiguration:                        "name",
+	cloudWatchEventsRule:                            "name",
+	cloudWatchEventsTarget:                          "target_id",
+	fsxFileSystem:                                   "id",
+	gameLiftAlias:                                   "id",
+	gameLiftBuild:                                   "id",
+	gameLiftFleet:                                   "id",
+	gameLiftGameSessionQueue:                        "name",
+	glacierVault:                                    "name",
+	globalAcceleratorAccelerator:                    "arn",
+	globalAcceleratorEndpointGroup:                  "arn",
+	globalAcceleratorListener:                       "arn",
+	glueConnection:                                  "catalog_id",
+	glueCrawler:                                     "name",
+	glueDatabase:                                    "name",
+	glueJob:                                         "name",
+	glueSecurityConfiguration:                       "name",
+	glueTable:                                       "name",
+	glueTrigger:                                     "name",
+	glueWorkflow:                                    "name",
+	guardDutyDetector:                               "id",
+	iamAccessKey:                                    "id",
+	iamAccountAlias:                                 "account_alias",
+	iamGroup:                                        "name",
+	iamGroupPolicy:                                  "name",
+	iamInstanceProfile:                              "name",
+	iamOpenidConnectProvider:                        "arn",
+	iamPolicy:                                       "name",
+	iamRole:                                         "name",
+	iamRolePolicy:                                   "name",
+	iamSamlProvider:                                 "arn",
+	iamServerCertificate:                            "name",
+	iamServiceLinkedRole:                            "name",
+	iamUser:                                         "name",
+	iamUserPolicy:                                   "names",
+	iamUserSSHKey:                                   "ssh_public_key_id",
+	inspectorAssessmentTarget:                       "arn",
+	inspectorAssessmentTemplate:                     "arn",
+	ioTCertificate:                                  "id",
+	ioTPolicy:                                       "name",
+	ioTThing:                                        "name",
+	ioTTopicRule:                                    "name",
+	iotRoleAlias:                                    "alias",
+	iotThingType:                                    "name",
+	kinesisAnalyticsApplication:                     "name",
+	firehoseDeliveryStream:                          "name",
+	kinesisStream:                                   "arn",
+	kinesisVideoStream:                              "name",
+	kmsAlias:                                        "name",
+	kmsGrant:                                        "grant_id",
+	kmsKey:                                          "key_id",
+	lambdaAlias:                                     "name",
+	lambdaEventSourceMapping:                        "uuid",
+	lambdaFunction:                                  "function_name",
+	lambdaLayerVersion:                              "arn",
+	licenseManagerLicenseConfiguration:              "id",
+	lightsailDomain:                                 "domain_name",
+	lightsailInstance:                               "name",
+	lightsailKeyPair:                                "name",
+	lightsailStaticIP:                               "name",
+	cloudwatchLogsDestination:                       "name",
+	cloudwatchLogsLogGroup:                          "name",
+	cloudwatchLogsMetricFilter:                      "name",
+	cloudwatchLogsResourcePolicy:                    "policy_name",
+	cloudwatchLogsSubscriptionFilter:                "name",
+	macieMemberAccountAssociation:                   "member_account_id",
+	macieS3BucketAssociation:                        "bucket_name",
+	mediaConvertQueue:                               "name",
+	mediaLiveChannel:                                "channel_id",
+	mediaStoreContainer:                             "name",
+	kafkaCluster:                                    "cluster_name",
+	kafkaConfiguration:                              "name",
+	neptuneDBCluster:                                "cluster_resource_id",
+	neptuneDBClusterParameterGroup:                  "name",
+	neptuneDBClusterSnapshot:                        "db_cluster_snapshot_identifier",
+	neptuneDBEventSubscription:                      "name",
+	neptuneDBInstance:                               "id",
+	neptuneDBParameterGroup:                         "name",
+	neptuneDBSubnetGroup:                            "name",
+	opsWorksRdsDbInstance:                           "rds_db_instance_arn",
+	opsWorksApp:                                     "id",
+	opsWorksInstance:                                "id",
+	opsWorksLayer:                                   "id",
+	opsWorksStack:                                   "id",
+	opsWorksUserProfile:                             "user_arn",
+	organizationsAccount:                            "id",
+	organizationsOrganization:                       "id",
+	organizationsOrganizationalUnit:                 "id",
+	organizationsPolicy:                             "id",
+	pinpointApp:                                     "application_id",
+	qLDBLedger:                                      "name",
+	quickSightGroup:                                 "group_name",
+	quickSightUser:                                  "user_name",
+	rdsDBCluster:                                    "cluster_identifier",
+	rdsDBClusterEndpoint:                            "cluster_endpoint_identifier",
+	rdsDBClusterParameterGroup:                      "name",
+	rdsDBClusterSnapshot:                            "db_cluster_snapshot_identifier",
+	rdsDBInstance:                                   "identifier",
+	rdsDBParameterGroup:                             "name",
+	rdsDBSecurityGroup:                              "name",
+	rdsDBSnapshot:                                   "db_snapshot_identifier",
+	rdsDBSubnetGroup:                                "name",
+	rdsEventSubscription:                            "name",
+	rdsGlobalCluster:                                "global_cluster_identifier",
+	rdsOptionGroup:                                  "name",
+	redshiftCluster:                                 "cluster_identifier",
+	redshiftClusterParameterGroup:                   "name",
+	redshiftClusterSecurityGroup:                    "name",
+	redshiftClusterSubnetGroup:                      "name",
+	redshiftEventSubscription:                       "name",
+	redshiftSnapshotCopyGrant:                       "snapshot_copy_grant_name",
+	redshiftSnapshotSchedule:                        "identifier",
+	resourceGroupsGroup:                             "name",
+	route53DelegationSet:                            "id",
+	route53HealthCheck:                              "id",
+	route53HostedZone:                               "zone_id",
+	route53QueryLog:                                 "id",
+	route53RecordSet:                                "name",
+	route53ResolverResolverEndpoint:                 "id",
+	route53ResolverResolverRule:                     "id",
+	route53ResolverResolverRuleAssociation:          "id",
+	s3ControlAccessPoint:                            "name",
+	s3Bucket:                                        "bucket",
+	sageMakerEndpoint:                               "name",
+	sageMakerEndpointConfig:                         "name",
+	sageMakerModel:                                  "name",
+	sageMakerNotebookInstance:                       "name",
+	sageMakerNotebookInstanceLifecycleConfig:        "name",
+	simpleDBDomain:                                  "name",
+	secretsManagerSecret:                            "name",
+	secretsManagerSecretVersion:                     "version_id",
+	serviceDiscoveryHTTPNamespace:                   "name",
+	serviceDiscoveryPrivateDNSNamespace:             "name",
+	serviceDiscoveryPublicDNSNamespace:              "name",
+	serviceDiscoveryService:                         "id",
+	sesConfigurationSet:                             "name",
+	sesDomainIdentity:                               "domain",
+	sesEmailIdentity:                                "email",
+	sesReceiptFilter:                                "name",
+	sesReceiptRuleSet:                               "rule_set_name",
+	sesTemplate:                                     "name",
+	shieldProtection:                                "id",
+	snsPlatformApplication:                          "arn",
+	snsSubscription:                                 "arn",
+	snsTopic:                                        "arn",
+	sqsQueue:                                        "id",
+	ssmActivation:                                   "id",
+	ssmAssociation:                                  "association_id",
+	ssmDocument:                                     "name",
+	ssmMaintenanceWindow:                            "id",
+	ssmMaintenanceWindowTarget:                      "id",
+	ssmMaintenanceWindowTask:                        "id",
+	ssmParameter:                                    "name",
+	ssmPatchBaseline:                                "id",
+	ssmPatchGroup:                                   "patch_group",
+	ssmResourceDataSync:                             "name",
+	sfnActivity:                                     "name",
+	sfnStateMachine:                                 "name",
+	storageGatewayCachedISCSIVolume:                 "volume_id",
+	storageGatewayGateway:                           "gateway_id",
+	storageGatewayNFSFileShare:                      "fileshare_id",
+	storageGatewaySMBFileShare:                      "fileshare_id",
+	swfDomain:                                       "name",
+	transferServer:                                  "id",
+	transferUser:                                    "arn",
+	wafByteMatchSet:                                 "id",
+	wafGeoMatchSet:                                  "id",
+	wafIPSet:                                        "id",
+	wafRateBasedRule:                                "id",
+	wafRegexMatchSet:                                "id",
+	wafRegexPatternSet:                              "id",
+	wafRegionalByteMatchSet:                         "id",
+	wafRegionalGeoMatchSet:                          "id",
+	wafRegionalIPSet:                                "id",
+	wafRegionalRateBasedRule:                        "id",
+	wafRegionalRegexPatternSet:                      "id",
+	wafRegionalRule:                                 "id",
+	wafRegionalSQLInjectionMatchSet:                 "id",
+	wafRegionalSizeConstraintSet:                    "id",
+	wafRegionalWebACL:                               "id",
+	wafRegionalXSSMatchSet:                          "id",
+	wafRule:                                         "id",
+	wafRuleGroup:                                    "id",
+	wafSQLInjectionMatchSet:                         "id",
+	wafSizeConstraintSet:                            "id",
+	wafWebACL:                                       "id",
+	wafXSSMatchSet:                                  "id",
+	wafregionalRegexMatchSet:                        "id",
+	wafregionalRuleGroup:                            "id",
+	workLinkFleet:                                   "display_name",
+	workSpacesDirectory:                             "id",
+	workspacesIPGroup:                               "id",
+	xraySamplingRule:                                "rule_name",
 }
 
 func (rType resourceType) physicalResourceIDTerraform() (string, bool) {

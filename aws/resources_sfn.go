@@ -10,17 +10,17 @@ import (
 func getSfn(config aws.Config) (resources awsResourceMap) {
 	client := sfn.New(config)
 
-	stepFunctionsActivityNames := getStepFunctionsActivityNames(client)
-	stepFunctionsStateMachineNames := getStepFunctionsStateMachineNames(client)
+	sfnActivityNames := getSfnActivityNames(client)
+	sfnStateMachineNames := getSfnStateMachineNames(client)
 
 	resources = awsResourceMap{
-		stepFunctionsActivity:     stepFunctionsActivityNames,
-		stepFunctionsStateMachine: stepFunctionsStateMachineNames,
+		sfnActivity:     sfnActivityNames,
+		sfnStateMachine: sfnStateMachineNames,
 	}
 	return
 }
 
-func getStepFunctionsActivityNames(client *sfn.Client) (resources []string) {
+func getSfnActivityNames(client *sfn.Client) (resources []string) {
 	req := client.ListActivitiesRequest(&sfn.ListActivitiesInput{})
 	p := sfn.NewListActivitiesPaginator(req)
 	for p.Next(context.Background()) {
@@ -36,7 +36,7 @@ func getStepFunctionsActivityNames(client *sfn.Client) (resources []string) {
 	return
 }
 
-func getStepFunctionsStateMachineNames(client *sfn.Client) (resources []string) {
+func getSfnStateMachineNames(client *sfn.Client) (resources []string) {
 	req := client.ListStateMachinesRequest(&sfn.ListStateMachinesInput{})
 	p := sfn.NewListStateMachinesPaginator(req)
 	for p.Next(context.Background()) {

@@ -10,15 +10,15 @@ import (
 func getIoT1ClickProjects(config aws.Config) (resources awsResourceMap) {
 	client := iot1clickprojects.New(config)
 
-	ioT1ClickProjectNames := getIoT1ClickProjectNames(client)
+	ioT1ClickProjectsProjectNames := getIoT1ClickProjectsProjectNames(client)
 
 	resources = awsResourceMap{
-		ioT1ClickProject: ioT1ClickProjectNames,
+		ioT1ClickProjectsProject: ioT1ClickProjectsProjectNames,
 	}
 	return
 }
 
-func getIoT1ClickProjectNames(client *iot1clickprojects.Client) (resources []string) {
+func getIoT1ClickProjectsProjectNames(client *iot1clickprojects.Client) (resources []string) {
 	req := client.ListProjectsRequest(&iot1clickprojects.ListProjectsInput{})
 	p := iot1clickprojects.NewListProjectsPaginator(req)
 	for p.Next(context.Background()) {

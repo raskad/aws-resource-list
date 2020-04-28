@@ -10,23 +10,23 @@ import (
 func getCloudwatchLogs(config aws.Config) (resources awsResourceMap) {
 	client := cloudwatchlogs.New(config)
 
-	logsLogGroupNames := getLogsLogGroupNames(client)
-	logsDestinationNames := getLogsDestinationNames(client)
-	logsMetricFilterNames := getLogsMetricFilterNames(client)
-	logsSubscriptionFilterNames := getLogsSubscriptionFilterNames(client, logsLogGroupNames)
-	logsResourcePolicyNames := getLogsResourcePolicyNames(client)
+	cloudwatchLogsLogGroupNames := getCloudwatchLogsLogGroupNames(client)
+	cloudwatchLogsDestinationNames := getCloudwatchLogsDestinationNames(client)
+	cloudwatchLogsMetricFilterNames := getCloudwatchLogsMetricFilterNames(client)
+	cloudwatchLogsSubscriptionFilterNames := getCloudwatchLogsSubscriptionFilterNames(client, cloudwatchLogsLogGroupNames)
+	cloudwatchLogsResourcePolicyNames := getCloudwatchLogsResourcePolicyNames(client)
 
 	resources = awsResourceMap{
-		logsLogGroup:           logsLogGroupNames,
-		logsDestination:        logsDestinationNames,
-		logsMetricFilter:       logsMetricFilterNames,
-		logsSubscriptionFilter: logsSubscriptionFilterNames,
-		logsResourcePolicy:     logsResourcePolicyNames,
+		cloudwatchLogsLogGroup:           cloudwatchLogsLogGroupNames,
+		cloudwatchLogsDestination:        cloudwatchLogsDestinationNames,
+		cloudwatchLogsMetricFilter:       cloudwatchLogsMetricFilterNames,
+		cloudwatchLogsSubscriptionFilter: cloudwatchLogsSubscriptionFilterNames,
+		cloudwatchLogsResourcePolicy:     cloudwatchLogsResourcePolicyNames,
 	}
 	return
 }
 
-func getLogsDestinationNames(client *cloudwatchlogs.Client) (resources []string) {
+func getCloudwatchLogsDestinationNames(client *cloudwatchlogs.Client) (resources []string) {
 	req := client.DescribeDestinationsRequest(&cloudwatchlogs.DescribeDestinationsInput{})
 	p := cloudwatchlogs.NewDescribeDestinationsPaginator(req)
 	for p.Next(context.Background()) {
@@ -42,7 +42,7 @@ func getLogsDestinationNames(client *cloudwatchlogs.Client) (resources []string)
 	return
 }
 
-func getLogsLogGroupNames(client *cloudwatchlogs.Client) (resources []string) {
+func getCloudwatchLogsLogGroupNames(client *cloudwatchlogs.Client) (resources []string) {
 	req := client.DescribeLogGroupsRequest(&cloudwatchlogs.DescribeLogGroupsInput{})
 	p := cloudwatchlogs.NewDescribeLogGroupsPaginator(req)
 	for p.Next(context.Background()) {
@@ -58,7 +58,7 @@ func getLogsLogGroupNames(client *cloudwatchlogs.Client) (resources []string) {
 	return
 }
 
-func getLogsMetricFilterNames(client *cloudwatchlogs.Client) (resources []string) {
+func getCloudwatchLogsMetricFilterNames(client *cloudwatchlogs.Client) (resources []string) {
 	req := client.DescribeMetricFiltersRequest(&cloudwatchlogs.DescribeMetricFiltersInput{})
 	p := cloudwatchlogs.NewDescribeMetricFiltersPaginator(req)
 	for p.Next(context.Background()) {
@@ -74,7 +74,7 @@ func getLogsMetricFilterNames(client *cloudwatchlogs.Client) (resources []string
 	return
 }
 
-func getLogsSubscriptionFilterNames(client *cloudwatchlogs.Client, logGroupNames []string) (resources []string) {
+func getCloudwatchLogsSubscriptionFilterNames(client *cloudwatchlogs.Client, logGroupNames []string) (resources []string) {
 	for _, logGroupName := range logGroupNames {
 		req := client.DescribeSubscriptionFiltersRequest(&cloudwatchlogs.DescribeSubscriptionFiltersInput{
 			LogGroupName: aws.String(logGroupName),
@@ -94,7 +94,7 @@ func getLogsSubscriptionFilterNames(client *cloudwatchlogs.Client, logGroupNames
 	return
 }
 
-func getLogsResourcePolicyNames(client *cloudwatchlogs.Client) (resources []string) {
+func getCloudwatchLogsResourcePolicyNames(client *cloudwatchlogs.Client) (resources []string) {
 	input := cloudwatchlogs.DescribeResourcePoliciesInput{}
 	for {
 		page, err := client.DescribeResourcePoliciesRequest(&input).Send(context.Background())

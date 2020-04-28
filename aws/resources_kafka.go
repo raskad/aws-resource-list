@@ -7,20 +7,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kafka"
 )
 
-func getMsk(config aws.Config) (resources awsResourceMap) {
+func getKafka(config aws.Config) (resources awsResourceMap) {
 	client := kafka.New(config)
 
-	mskClusterNames := getMskClusterNames(client)
-	mskConfigurationNames := getMskConfigurationNames(client)
+	kafkaClusterNames := getKafkaClusterNames(client)
+	kafkaConfigurationNames := getKafkaConfigurationNames(client)
 
 	resources = awsResourceMap{
-		mskCluster:       mskClusterNames,
-		mskConfiguration: mskConfigurationNames,
+		kafkaCluster:       kafkaClusterNames,
+		kafkaConfiguration: kafkaConfigurationNames,
 	}
 	return
 }
 
-func getMskClusterNames(client *kafka.Client) (resources []string) {
+func getKafkaClusterNames(client *kafka.Client) (resources []string) {
 	req := client.ListClustersRequest(&kafka.ListClustersInput{})
 	p := kafka.NewListClustersPaginator(req)
 	for p.Next(context.Background()) {
@@ -36,7 +36,7 @@ func getMskClusterNames(client *kafka.Client) (resources []string) {
 	return
 }
 
-func getMskConfigurationNames(client *kafka.Client) (resources []string) {
+func getKafkaConfigurationNames(client *kafka.Client) (resources []string) {
 	req := client.ListConfigurationsRequest(&kafka.ListConfigurationsInput{})
 	p := kafka.NewListConfigurationsPaginator(req)
 	for p.Next(context.Background()) {

@@ -10,15 +10,15 @@ import (
 func getS3Control(config aws.Config) (resources awsResourceMap) {
 	client := s3control.New(config)
 
-	s3AccessPointNames := getS3AccessPointNames(client)
+	s3ControlAccessPointNames := getS3ControlAccessPointNames(client)
 
 	resources = awsResourceMap{
-		s3AccessPoint: s3AccessPointNames,
+		s3ControlAccessPoint: s3ControlAccessPointNames,
 	}
 	return
 }
 
-func getS3AccessPointNames(client *s3control.Client) (resources []string) {
+func getS3ControlAccessPointNames(client *s3control.Client) (resources []string) {
 	req := client.ListAccessPointsRequest(&s3control.ListAccessPointsInput{})
 	p := s3control.NewListAccessPointsPaginator(req)
 	for p.Next(context.Background()) {

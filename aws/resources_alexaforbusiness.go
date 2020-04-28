@@ -10,15 +10,15 @@ import (
 func getAlexaForBusiness(config aws.Config) (resources awsResourceMap) {
 	client := alexaforbusiness.New(config)
 
-	alexaAskSkillNames := getAlexaAskSkillNames(client)
+	alexaForBusinessSkillNames := getAlexaForBusinessSkillNames(client)
 
 	resources = awsResourceMap{
-		alexaAskSkill: alexaAskSkillNames,
+		alexaForBusinessSkill: alexaForBusinessSkillNames,
 	}
 	return
 }
 
-func getAlexaAskSkillNames(client *alexaforbusiness.Client) (resources []string) {
+func getAlexaForBusinessSkillNames(client *alexaforbusiness.Client) (resources []string) {
 	req := client.ListSkillsRequest(&alexaforbusiness.ListSkillsInput{})
 	p := alexaforbusiness.NewListSkillsPaginator(req)
 	for p.Next(context.Background()) {

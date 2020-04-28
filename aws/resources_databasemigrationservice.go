@@ -7,28 +7,28 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/databasemigrationservice"
 )
 
-func getDms(config aws.Config) (resources awsResourceMap) {
+func getDatabaseMigrationService(config aws.Config) (resources awsResourceMap) {
 	client := databasemigrationservice.New(config)
 
-	dmsCertificateIDs := getDmsCertificateIDs(client)
-	dmsEndpointIDs := getDmsEndpointIDs(client)
-	dmsEventSubscriptionIDs := getDmsEventSubscriptionIDs(client)
-	dmsReplicationInstanceIDs := getDmsReplicationInstanceIDs(client)
-	dmsReplicationSubnetGroupIDs := getDmsReplicationSubnetGroupIDs(client)
-	dmsReplicationTaskIDs := getDmsReplicationTaskIDs(client)
+	databaseMigrationServiceCertificateIDs := getDatabaseMigrationServiceCertificateIDs(client)
+	databaseMigrationServiceEndpointIDs := getDatabaseMigrationServiceEndpointIDs(client)
+	databaseMigrationServiceEventSubscriptionIDs := getDatabaseMigrationServiceEventSubscriptionIDs(client)
+	databaseMigrationServiceReplicationInstanceIDs := getDatabaseMigrationServiceReplicationInstanceIDs(client)
+	databaseMigrationServiceReplicationSubnetGroupIDs := getDatabaseMigrationServiceReplicationSubnetGroupIDs(client)
+	databaseMigrationServiceReplicationTaskIDs := getDatabaseMigrationServiceReplicationTaskIDs(client)
 
 	resources = awsResourceMap{
-		dmsCertificate:            dmsCertificateIDs,
-		dmsEndpoint:               dmsEndpointIDs,
-		dmsEventSubscription:      dmsEventSubscriptionIDs,
-		dmsReplicationInstance:    dmsReplicationInstanceIDs,
-		dmsReplicationSubnetGroup: dmsReplicationSubnetGroupIDs,
-		dmsReplicationTask:        dmsReplicationTaskIDs,
+		databaseMigrationServiceCertificate:            databaseMigrationServiceCertificateIDs,
+		databaseMigrationServiceEndpoint:               databaseMigrationServiceEndpointIDs,
+		databaseMigrationServiceEventSubscription:      databaseMigrationServiceEventSubscriptionIDs,
+		databaseMigrationServiceReplicationInstance:    databaseMigrationServiceReplicationInstanceIDs,
+		databaseMigrationServiceReplicationSubnetGroup: databaseMigrationServiceReplicationSubnetGroupIDs,
+		databaseMigrationServiceReplicationTask:        databaseMigrationServiceReplicationTaskIDs,
 	}
 	return
 }
 
-func getDmsCertificateIDs(client *databasemigrationservice.Client) (resources []string) {
+func getDatabaseMigrationServiceCertificateIDs(client *databasemigrationservice.Client) (resources []string) {
 	req := client.DescribeCertificatesRequest(&databasemigrationservice.DescribeCertificatesInput{})
 	p := databasemigrationservice.NewDescribeCertificatesPaginator(req)
 	for p.Next(context.Background()) {
@@ -44,7 +44,7 @@ func getDmsCertificateIDs(client *databasemigrationservice.Client) (resources []
 	return
 }
 
-func getDmsEndpointIDs(client *databasemigrationservice.Client) (resources []string) {
+func getDatabaseMigrationServiceEndpointIDs(client *databasemigrationservice.Client) (resources []string) {
 	req := client.DescribeEndpointsRequest(&databasemigrationservice.DescribeEndpointsInput{})
 	p := databasemigrationservice.NewDescribeEndpointsPaginator(req)
 	for p.Next(context.Background()) {
@@ -60,7 +60,7 @@ func getDmsEndpointIDs(client *databasemigrationservice.Client) (resources []str
 	return
 }
 
-func getDmsEventSubscriptionIDs(client *databasemigrationservice.Client) (resources []string) {
+func getDatabaseMigrationServiceEventSubscriptionIDs(client *databasemigrationservice.Client) (resources []string) {
 	req := client.DescribeEventSubscriptionsRequest(&databasemigrationservice.DescribeEventSubscriptionsInput{})
 	p := databasemigrationservice.NewDescribeEventSubscriptionsPaginator(req)
 	for p.Next(context.Background()) {
@@ -76,7 +76,7 @@ func getDmsEventSubscriptionIDs(client *databasemigrationservice.Client) (resour
 	return
 }
 
-func getDmsReplicationInstanceIDs(client *databasemigrationservice.Client) (resources []string) {
+func getDatabaseMigrationServiceReplicationInstanceIDs(client *databasemigrationservice.Client) (resources []string) {
 	req := client.DescribeReplicationInstancesRequest(&databasemigrationservice.DescribeReplicationInstancesInput{})
 	p := databasemigrationservice.NewDescribeReplicationInstancesPaginator(req)
 	for p.Next(context.Background()) {
@@ -92,7 +92,7 @@ func getDmsReplicationInstanceIDs(client *databasemigrationservice.Client) (reso
 	return
 }
 
-func getDmsReplicationSubnetGroupIDs(client *databasemigrationservice.Client) (resources []string) {
+func getDatabaseMigrationServiceReplicationSubnetGroupIDs(client *databasemigrationservice.Client) (resources []string) {
 	req := client.DescribeReplicationSubnetGroupsRequest(&databasemigrationservice.DescribeReplicationSubnetGroupsInput{})
 	p := databasemigrationservice.NewDescribeReplicationSubnetGroupsPaginator(req)
 	for p.Next(context.Background()) {
@@ -108,7 +108,7 @@ func getDmsReplicationSubnetGroupIDs(client *databasemigrationservice.Client) (r
 	return
 }
 
-func getDmsReplicationTaskIDs(client *databasemigrationservice.Client) (resources []string) {
+func getDatabaseMigrationServiceReplicationTaskIDs(client *databasemigrationservice.Client) (resources []string) {
 	req := client.DescribeReplicationTasksRequest(&databasemigrationservice.DescribeReplicationTasksInput{})
 	p := databasemigrationservice.NewDescribeReplicationTasksPaginator(req)
 	for p.Next(context.Background()) {

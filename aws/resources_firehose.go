@@ -10,15 +10,15 @@ import (
 func getFirehose(config aws.Config) (resources awsResourceMap) {
 	client := firehose.New(config)
 
-	kinesisFirehoseDeliveryStreamNames := getKinesisFirehoseDeliveryStreamNames(client)
+	firehoseDeliveryStreamNames := getFirehoseDeliveryStreamNames(client)
 
 	resources = awsResourceMap{
-		kinesisFirehoseDeliveryStream: kinesisFirehoseDeliveryStreamNames,
+		firehoseDeliveryStream: firehoseDeliveryStreamNames,
 	}
 	return
 }
 
-func getKinesisFirehoseDeliveryStreamNames(client *firehose.Client) (resources []string) {
+func getFirehoseDeliveryStreamNames(client *firehose.Client) (resources []string) {
 	page, err := client.ListDeliveryStreamsRequest(&firehose.ListDeliveryStreamsInput{}).Send(context.Background())
 	if err != nil {
 		logErr(err)

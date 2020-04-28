@@ -10,19 +10,19 @@ import (
 func getCloudWatchEvents(config aws.Config) (resources awsResourceMap) {
 	client := cloudwatchevents.New(config)
 
-	eventsEventBusNames := getEventsEventBusNames(client)
-	eventsRuleNames := getEventsRuleNames(client)
-	eventsTargetIDs := getEventsTargetIDs(client, eventsRuleNames)
+	cloudWatchEventsEventBusNames := getCloudWatchEventsEventBusNames(client)
+	cloudWatchEventsRuleNames := getCloudWatchEventsRuleNames(client)
+	cloudWatchEventsTargetIDs := getCloudWatchEventsTargetIDs(client, cloudWatchEventsRuleNames)
 
 	resources = awsResourceMap{
-		eventsEventBus: eventsEventBusNames,
-		eventsRule:     eventsRuleNames,
-		eventsTarget:   eventsTargetIDs,
+		cloudWatchEventsEventBus: cloudWatchEventsEventBusNames,
+		cloudWatchEventsRule:     cloudWatchEventsRuleNames,
+		cloudWatchEventsTarget:   cloudWatchEventsTargetIDs,
 	}
 	return
 }
 
-func getEventsEventBusNames(client *cloudwatchevents.Client) (resources []string) {
+func getCloudWatchEventsEventBusNames(client *cloudwatchevents.Client) (resources []string) {
 	input := cloudwatchevents.ListEventBusesInput{}
 	for {
 		page, err := client.ListEventBusesRequest(&input).Send(context.Background())
@@ -40,7 +40,7 @@ func getEventsEventBusNames(client *cloudwatchevents.Client) (resources []string
 	}
 }
 
-func getEventsRuleNames(client *cloudwatchevents.Client) (resources []string) {
+func getCloudWatchEventsRuleNames(client *cloudwatchevents.Client) (resources []string) {
 	input := cloudwatchevents.ListRulesInput{}
 	for {
 		page, err := client.ListRulesRequest(&input).Send(context.Background())
@@ -58,7 +58,7 @@ func getEventsRuleNames(client *cloudwatchevents.Client) (resources []string) {
 	}
 }
 
-func getEventsTargetIDs(client *cloudwatchevents.Client, eventsRuleNames []string) (resources []string) {
+func getCloudWatchEventsTargetIDs(client *cloudwatchevents.Client, eventsRuleNames []string) (resources []string) {
 	for _, eventsRuleName := range eventsRuleNames {
 		input := cloudwatchevents.ListTargetsByRuleInput{
 			Rule: &eventsRuleName,

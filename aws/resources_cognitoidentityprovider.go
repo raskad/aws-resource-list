@@ -10,25 +10,25 @@ import (
 func getCognitoIdentityProvider(config aws.Config) (resources awsResourceMap) {
 	client := cognitoidentityprovider.New(config)
 
-	cognitoUserPoolIDs := getCognitoUserPoolIDs(client)
-	cognitoUserPoolClientNames := getCognitoUserPoolClientNames(client, cognitoUserPoolIDs)
-	cognitoUserPoolGroupNames := getCognitoUserPoolGroupNames(client, cognitoUserPoolIDs)
-	cognitoUserPoolIdentityProviderNames := getCognitoUserPoolIdentityProviderNames(client, cognitoUserPoolIDs)
-	cognitoUserPoolResourceServerNames := getCognitoUserPoolResourceServerNames(client, cognitoUserPoolIDs)
-	cognitoUserPoolUserNames := getCognitoUserPoolUserNames(client, cognitoUserPoolIDs)
+	cognitoIdentityProviderUserPoolIDs := getCognitoIdentityProviderUserPoolIDs(client)
+	cognitoIdentityProviderUserPoolClientNames := getCognitoIdentityProviderUserPoolClientNames(client, cognitoIdentityProviderUserPoolIDs)
+	cognitoIdentityProviderUserPoolGroupNames := getCognitoIdentityProviderUserPoolGroupNames(client, cognitoIdentityProviderUserPoolIDs)
+	cognitoIdentityProviderUserPoolIdentityProviderNames := getCognitoIdentityProviderUserPoolIdentityProviderNames(client, cognitoIdentityProviderUserPoolIDs)
+	cognitoIdentityProviderUserPoolResourceServerNames := getCognitoIdentityProviderUserPoolResourceServerNames(client, cognitoIdentityProviderUserPoolIDs)
+	cognitoIdentityProviderUserPoolUserNames := getCognitoIdentityProviderUserPoolUserNames(client, cognitoIdentityProviderUserPoolIDs)
 
 	resources = awsResourceMap{
-		cognitoUserPool:                 cognitoUserPoolIDs,
-		cognitoUserPoolClient:           cognitoUserPoolClientNames,
-		cognitoUserPoolGroup:            cognitoUserPoolGroupNames,
-		cognitoUserPoolIdentityProvider: cognitoUserPoolIdentityProviderNames,
-		cognitoUserPoolResourceServer:   cognitoUserPoolResourceServerNames,
-		cognitoUserPoolUser:             cognitoUserPoolUserNames,
+		cognitoIdentityProviderUserPool:                 cognitoIdentityProviderUserPoolIDs,
+		cognitoIdentityProviderUserPoolClient:           cognitoIdentityProviderUserPoolClientNames,
+		cognitoIdentityProviderUserPoolGroup:            cognitoIdentityProviderUserPoolGroupNames,
+		cognitoIdentityProviderUserPoolIdentityProvider: cognitoIdentityProviderUserPoolIdentityProviderNames,
+		cognitoIdentityProviderUserPoolResourceServer:   cognitoIdentityProviderUserPoolResourceServerNames,
+		cognitoIdentityProviderUserPoolUser:             cognitoIdentityProviderUserPoolUserNames,
 	}
 	return
 }
 
-func getCognitoUserPoolIDs(client *cognitoidentityprovider.Client) (resources []string) {
+func getCognitoIdentityProviderUserPoolIDs(client *cognitoidentityprovider.Client) (resources []string) {
 	req := client.ListUserPoolsRequest(&cognitoidentityprovider.ListUserPoolsInput{
 		MaxResults: aws.Int64(16),
 	})
@@ -46,7 +46,7 @@ func getCognitoUserPoolIDs(client *cognitoidentityprovider.Client) (resources []
 	return
 }
 
-func getCognitoUserPoolClientNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
+func getCognitoIdentityProviderUserPoolClientNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
 	for _, useruserPoolID := range userPoolIDs {
 		req := client.ListUserPoolClientsRequest(&cognitoidentityprovider.ListUserPoolClientsInput{
 			UserPoolId: aws.String(useruserPoolID),
@@ -66,7 +66,7 @@ func getCognitoUserPoolClientNames(client *cognitoidentityprovider.Client, userP
 	return
 }
 
-func getCognitoUserPoolGroupNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
+func getCognitoIdentityProviderUserPoolGroupNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
 	for _, useruserPoolID := range userPoolIDs {
 		req := client.ListGroupsRequest(&cognitoidentityprovider.ListGroupsInput{
 			UserPoolId: aws.String(useruserPoolID),
@@ -86,7 +86,7 @@ func getCognitoUserPoolGroupNames(client *cognitoidentityprovider.Client, userPo
 	return
 }
 
-func getCognitoUserPoolIdentityProviderNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
+func getCognitoIdentityProviderUserPoolIdentityProviderNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
 	for _, useruserPoolID := range userPoolIDs {
 		req := client.ListIdentityProvidersRequest(&cognitoidentityprovider.ListIdentityProvidersInput{
 			UserPoolId: aws.String(useruserPoolID),
@@ -106,7 +106,7 @@ func getCognitoUserPoolIdentityProviderNames(client *cognitoidentityprovider.Cli
 	return
 }
 
-func getCognitoUserPoolResourceServerNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
+func getCognitoIdentityProviderUserPoolResourceServerNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
 	for _, useruserPoolID := range userPoolIDs {
 		req := client.ListResourceServersRequest(&cognitoidentityprovider.ListResourceServersInput{
 			UserPoolId: aws.String(useruserPoolID),
@@ -126,7 +126,7 @@ func getCognitoUserPoolResourceServerNames(client *cognitoidentityprovider.Clien
 	return
 }
 
-func getCognitoUserPoolUserNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
+func getCognitoIdentityProviderUserPoolUserNames(client *cognitoidentityprovider.Client, userPoolIDs []string) (resources []string) {
 	for _, useruserPoolID := range userPoolIDs {
 		req := client.ListUsersRequest(&cognitoidentityprovider.ListUsersInput{
 			UserPoolId: aws.String(useruserPoolID),

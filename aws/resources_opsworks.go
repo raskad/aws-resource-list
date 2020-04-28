@@ -14,18 +14,18 @@ func getOpsWorks(config aws.Config) (resources awsResourceMap) {
 	opsWorksAppIDs := getOpsWorksAppIDs(client, opsWorksStackIDs)
 	opsWorksInstanceIDs := getOpsWorksInstanceIDs(client, opsWorksStackIDs)
 	opsWorksLayerIDs := getOpsWorksLayerIDs(client, opsWorksStackIDs)
-	opsWorkRdsDbInstanceARNs := getOpsWorkRdsDbInstanceARNs(client, opsWorksStackIDs)
+	opsWorksRdsDbInstanceARNs := getOpsWorksRdsDbInstanceARNs(client, opsWorksStackIDs)
 	opsWorksUserProfileARNs := getOpsWorksUserProfileARNs(client)
 	opsWorksVolumeIDs := getOpsWorksVolumeIDs(client, opsWorksStackIDs)
 
 	resources = awsResourceMap{
-		opsWorksApp:          opsWorksAppIDs,
-		opsWorksInstance:     opsWorksInstanceIDs,
-		opsWorksLayer:        opsWorksLayerIDs,
-		opsWorkRdsDbInstance: opsWorkRdsDbInstanceARNs,
-		opsWorksStack:        opsWorksStackIDs,
-		opsWorksUserProfile:  opsWorksUserProfileARNs,
-		opsWorksVolume:       opsWorksVolumeIDs,
+		opsWorksApp:           opsWorksAppIDs,
+		opsWorksInstance:      opsWorksInstanceIDs,
+		opsWorksLayer:         opsWorksLayerIDs,
+		opsWorksRdsDbInstance: opsWorksRdsDbInstanceARNs,
+		opsWorksStack:         opsWorksStackIDs,
+		opsWorksUserProfile:   opsWorksUserProfileARNs,
+		opsWorksVolume:        opsWorksVolumeIDs,
 	}
 	return
 }
@@ -78,7 +78,7 @@ func getOpsWorksLayerIDs(client *opsworks.Client, stackIDs []string) (resources 
 	return
 }
 
-func getOpsWorkRdsDbInstanceARNs(client *opsworks.Client, stackIDs []string) (resources []string) {
+func getOpsWorksRdsDbInstanceARNs(client *opsworks.Client, stackIDs []string) (resources []string) {
 	for _, stackID := range stackIDs {
 		page, err := client.DescribeRdsDbInstancesRequest(&opsworks.DescribeRdsDbInstancesInput{
 			StackId: aws.String(stackID),

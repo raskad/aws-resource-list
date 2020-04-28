@@ -7,34 +7,34 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/configservice"
 )
 
-func getConfig(config aws.Config) (resources awsResourceMap) {
+func getConfigService(config aws.Config) (resources awsResourceMap) {
 	client := configservice.New(config)
 
-	configConfigRuleNames := getConfigConfigRuleNames(client)
-	configAggregationAuthorizationARNs := getConfigAggregationAuthorizationARNs(client)
-	configConfigurationAggregatorNames := getConfigConfigurationAggregatorNames(client)
-	configConfigurationRecorderNames := getConfigConfigurationRecorderNames(client)
-	configConformancePackNames := getConfigConformancePackNames(client)
-	configDeliveryChannelNames := getConfigDeliveryChannelNames(client)
-	configOrganizationConfigRuleNames := getConfigOrganizationConfigRuleNames(client)
-	configOrganizationConformancePackNames := getConfigOrganizationConformancePackNames(client)
-	configRemediationConfigurationNames := getConfigRemediationConfigurationNames(client, configConfigRuleNames)
+	configServiceConfigRuleNames := getConfigServiceConfigRuleNames(client)
+	configServiceAggregationAuthorizationARNs := getConfigServiceAggregationAuthorizationARNs(client)
+	configServiceConfigurationAggregatorNames := getConfigServiceConfigurationAggregatorNames(client)
+	configServiceConfigurationRecorderNames := getConfigServiceConfigurationRecorderNames(client)
+	configServiceConformancePackNames := getConfigServiceConformancePackNames(client)
+	configServiceDeliveryChannelNames := getConfigServiceDeliveryChannelNames(client)
+	configServiceOrganizationConfigRuleNames := getConfigServiceOrganizationConfigRuleNames(client)
+	configServiceOrganizationConformancePackNames := getConfigServiceOrganizationConformancePackNames(client)
+	configServiceRemediationConfigurationNames := getConfigServiceRemediationConfigurationNames(client, configServiceConfigRuleNames)
 
 	resources = awsResourceMap{
-		configConfigRule:                  configConfigRuleNames,
-		configAggregationAuthorization:    configAggregationAuthorizationARNs,
-		configConfigurationAggregator:     configConfigurationAggregatorNames,
-		configConfigurationRecorder:       configConfigurationRecorderNames,
-		configConformancePack:             configConformancePackNames,
-		configDeliveryChannel:             configDeliveryChannelNames,
-		configOrganizationConfigRule:      configOrganizationConfigRuleNames,
-		configOrganizationConformancePack: configOrganizationConformancePackNames,
-		configRemediationConfiguration:    configRemediationConfigurationNames,
+		configServiceConfigRule:                  configServiceConfigRuleNames,
+		configServiceAggregationAuthorization:    configServiceAggregationAuthorizationARNs,
+		configServiceConfigurationAggregator:     configServiceConfigurationAggregatorNames,
+		configServiceConfigurationRecorder:       configServiceConfigurationRecorderNames,
+		configServiceConformancePack:             configServiceConformancePackNames,
+		configServiceDeliveryChannel:             configServiceDeliveryChannelNames,
+		configServiceOrganizationConfigRule:      configServiceOrganizationConfigRuleNames,
+		configServiceOrganizationConformancePack: configServiceOrganizationConformancePackNames,
+		configServiceRemediationConfiguration:    configServiceRemediationConfigurationNames,
 	}
 	return
 }
 
-func getConfigAggregationAuthorizationARNs(client *configservice.Client) (resources []string) {
+func getConfigServiceAggregationAuthorizationARNs(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeAggregationAuthorizationsInput{}
 	for {
 		page, err := client.DescribeAggregationAuthorizationsRequest(&input).Send(context.Background())
@@ -52,7 +52,7 @@ func getConfigAggregationAuthorizationARNs(client *configservice.Client) (resour
 	}
 }
 
-func getConfigConfigRuleNames(client *configservice.Client) (resources []string) {
+func getConfigServiceConfigRuleNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeConfigRulesInput{}
 	for {
 		page, err := client.DescribeConfigRulesRequest(&input).Send(context.Background())
@@ -70,7 +70,7 @@ func getConfigConfigRuleNames(client *configservice.Client) (resources []string)
 	}
 }
 
-func getConfigConfigurationAggregatorNames(client *configservice.Client) (resources []string) {
+func getConfigServiceConfigurationAggregatorNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeConfigurationAggregatorsInput{}
 	for {
 		page, err := client.DescribeConfigurationAggregatorsRequest(&input).Send(context.Background())
@@ -88,7 +88,7 @@ func getConfigConfigurationAggregatorNames(client *configservice.Client) (resour
 	}
 }
 
-func getConfigConfigurationRecorderNames(client *configservice.Client) (resources []string) {
+func getConfigServiceConfigurationRecorderNames(client *configservice.Client) (resources []string) {
 	page, err := client.DescribeConfigurationRecordersRequest(&configservice.DescribeConfigurationRecordersInput{}).Send(context.Background())
 	if err != nil {
 		logErr(err)
@@ -100,7 +100,7 @@ func getConfigConfigurationRecorderNames(client *configservice.Client) (resource
 	return
 }
 
-func getConfigConformancePackNames(client *configservice.Client) (resources []string) {
+func getConfigServiceConformancePackNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeConformancePacksInput{}
 	for {
 		page, err := client.DescribeConformancePacksRequest(&input).Send(context.Background())
@@ -118,7 +118,7 @@ func getConfigConformancePackNames(client *configservice.Client) (resources []st
 	}
 }
 
-func getConfigDeliveryChannelNames(client *configservice.Client) (resources []string) {
+func getConfigServiceDeliveryChannelNames(client *configservice.Client) (resources []string) {
 	page, err := client.DescribeDeliveryChannelsRequest(&configservice.DescribeDeliveryChannelsInput{}).Send(context.Background())
 	if err != nil {
 		logErr(err)
@@ -130,7 +130,7 @@ func getConfigDeliveryChannelNames(client *configservice.Client) (resources []st
 	return
 }
 
-func getConfigOrganizationConfigRuleNames(client *configservice.Client) (resources []string) {
+func getConfigServiceOrganizationConfigRuleNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeOrganizationConfigRulesInput{}
 	for {
 		page, err := client.DescribeOrganizationConfigRulesRequest(&input).Send(context.Background())
@@ -148,7 +148,7 @@ func getConfigOrganizationConfigRuleNames(client *configservice.Client) (resourc
 	}
 }
 
-func getConfigOrganizationConformancePackNames(client *configservice.Client) (resources []string) {
+func getConfigServiceOrganizationConformancePackNames(client *configservice.Client) (resources []string) {
 	input := configservice.DescribeOrganizationConformancePacksInput{}
 	for {
 		page, err := client.DescribeOrganizationConformancePacksRequest(&input).Send(context.Background())
@@ -166,7 +166,7 @@ func getConfigOrganizationConformancePackNames(client *configservice.Client) (re
 	}
 }
 
-func getConfigRemediationConfigurationNames(client *configservice.Client, configRuleNames []string) (resources []string) {
+func getConfigServiceRemediationConfigurationNames(client *configservice.Client, configRuleNames []string) (resources []string) {
 	page, err := client.DescribeRemediationConfigurationsRequest(&configservice.DescribeRemediationConfigurationsInput{
 		ConfigRuleNames: configRuleNames,
 	}).Send(context.Background())

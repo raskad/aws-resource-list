@@ -10,15 +10,15 @@ import (
 func getAcm(config aws.Config) (resources awsResourceMap) {
 	client := acm.New(config)
 
-	certificateManagerCertificateArns := getCertificateManagerCertificateArns(client)
+	acmCertificateArns := getAcmCertificateArns(client)
 
 	resources = awsResourceMap{
-		certificateManagerCertificate: certificateManagerCertificateArns,
+		acmCertificate: acmCertificateArns,
 	}
 	return
 }
 
-func getCertificateManagerCertificateArns(client *acm.Client) (resources []string) {
+func getAcmCertificateArns(client *acm.Client) (resources []string) {
 	req := client.ListCertificatesRequest(&acm.ListCertificatesInput{})
 	p := acm.NewListCertificatesPaginator(req)
 	for p.Next(context.Background()) {

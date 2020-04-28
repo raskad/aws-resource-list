@@ -7,20 +7,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/mq"
 )
 
-func getMq(config aws.Config) (resources awsResourceMap) {
+func getMQ(config aws.Config) (resources awsResourceMap) {
 	client := mq.New(config)
 
-	amazonMQBrokerIDs := getAmazonMQBrokerIDs(client)
-	amazonMQConfigurationIDs := getAmazonMQConfigurationIDs(client)
+	mqBrokerIDs := getMQBrokerIDs(client)
+	mqConfigurationIDs := getMQConfigurationIDs(client)
 
 	resources = awsResourceMap{
-		amazonMQBroker:        amazonMQBrokerIDs,
-		amazonMQConfiguration: amazonMQConfigurationIDs,
+		mqBroker:        mqBrokerIDs,
+		mqConfiguration: mqConfigurationIDs,
 	}
 	return
 }
 
-func getAmazonMQBrokerIDs(client *mq.Client) (resources []string) {
+func getMQBrokerIDs(client *mq.Client) (resources []string) {
 	input := mq.ListBrokersInput{}
 	for {
 		page, err := client.ListBrokersRequest(&input).Send(context.Background())
@@ -38,7 +38,7 @@ func getAmazonMQBrokerIDs(client *mq.Client) (resources []string) {
 	}
 }
 
-func getAmazonMQConfigurationIDs(client *mq.Client) (resources []string) {
+func getMQConfigurationIDs(client *mq.Client) (resources []string) {
 	input := mq.ListConfigurationsInput{}
 	for {
 		page, err := client.ListConfigurationsRequest(&input).Send(context.Background())
