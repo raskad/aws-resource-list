@@ -10,18 +10,36 @@ import (
 func getImageBuilder(config aws.Config) (resources awsResourceMap) {
 	client := imagebuilder.New(config)
 
-	imageBuilderDistributionConfigurationNames := getImageBuilderDistributionConfigurationNames(client)
 	imageBuilderComponentNames := getImageBuilderComponentNames(client)
-	imageBuilderInfrastructureConfigurationNames := getImageBuilderInfrastructureConfigurationNames(client)
-	imageBuilderImageRecipeNames := getImageBuilderImageRecipeNames(client)
+	imageBuilderDistributionConfigurationNames := getImageBuilderDistributionConfigurationNames(client)
+	imageBuilderImageARNs := getImageBuilderImageARNs(client)
 	imageBuilderImagePipelineNames := getImageBuilderImagePipelineNames(client)
+	imageBuilderImageRecipeNames := getImageBuilderImageRecipeNames(client)
+	imageBuilderInfrastructureConfigurationNames := getImageBuilderInfrastructureConfigurationNames(client)
 
 	resources = awsResourceMap{
-		imageBuilderDistributionConfiguration:   imageBuilderDistributionConfigurationNames,
 		imageBuilderComponent:                   imageBuilderComponentNames,
-		imageBuilderInfrastructureConfiguration: imageBuilderInfrastructureConfigurationNames,
-		imageBuilderImageRecipe:                 imageBuilderImageRecipeNames,
+		imageBuilderDistributionConfiguration:   imageBuilderDistributionConfigurationNames,
+		imageBuilderImage:                       imageBuilderImageARNs,
 		imageBuilderImagePipeline:               imageBuilderImagePipelineNames,
+		imageBuilderImageRecipe:                 imageBuilderImageRecipeNames,
+		imageBuilderInfrastructureConfiguration: imageBuilderInfrastructureConfigurationNames,
+	}
+	return
+}
+
+func getImageBuilderComponentNames(client *imagebuilder.Client) (resources []string) {
+	req := client.ListComponentsRequest(&imagebuilder.ListComponentsInput{})
+	p := imagebuilder.NewListComponentsPaginator(req)
+	for p.Next(context.Background()) {
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
+		page := p.CurrentPage()
+		for _, resource := range page.ComponentVersionList {
+			resources = append(resources, *resource.Name)
+		}
 	}
 	return
 }
@@ -42,17 +60,17 @@ func getImageBuilderDistributionConfigurationNames(client *imagebuilder.Client) 
 	return
 }
 
-func getImageBuilderComponentNames(client *imagebuilder.Client) (resources []string) {
-	req := client.ListComponentsRequest(&imagebuilder.ListComponentsInput{})
-	p := imagebuilder.NewListComponentsPaginator(req)
+func getImageBuilderImageARNs(client *imagebuilder.Client) (resources []string) {
+	req := client.ListImagesRequest(&imagebuilder.ListImagesInput{})
+	p := imagebuilder.NewListImagesPaginator(req)
 	for p.Next(context.Background()) {
 		if p.Err() != nil {
 			logErr(p.Err())
 			return
 		}
 		page := p.CurrentPage()
-		for _, resource := range page.ComponentVersionList {
-			resources = append(resources, *resource.Name)
+		for _, resource := range page.ImageVersionList {
+			resources = append(resources, *resource.Arn)
 		}
 	}
 	return

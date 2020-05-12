@@ -44,6 +44,7 @@ func getEc2(config aws.Config) (resources awsResourceMap) {
 	ec2TransitGatewayIDs := getEc2TransitGatewayIDs(client)
 	ec2TransitGatewayAttachmentIDs := getEc2TransitGatewayAttachmentIDs(client)
 	ec2TransitGatewayRouteTableIDs := getEc2TransitGatewayRouteTableIDs(client)
+	ec2TransitGatewayPeeringAttachmentIDs := getEc2TransitGatewayPeeringAttachmentIDs(client)
 	ec2VolumeIDs := getEc2VolumeIDs(client)
 	ec2VPCIDs := getEc2VPCIDs(client)
 	ec2VPCCidrBlockIDs := getEc2VPCCidrBlockIDs(client)
@@ -91,6 +92,7 @@ func getEc2(config aws.Config) (resources awsResourceMap) {
 		ec2TransitGateway:                    ec2TransitGatewayIDs,
 		ec2TransitGatewayAttachment:          ec2TransitGatewayAttachmentIDs,
 		ec2TransitGatewayRouteTable:          ec2TransitGatewayRouteTableIDs,
+		ec2TransitGatewayPeeringAttachment:   ec2TransitGatewayPeeringAttachmentIDs,
 		ec2Volume:                            ec2VolumeIDs,
 		ec2VPC:                               ec2VPCIDs,
 		ec2VPCCidrBlock:                      ec2VPCCidrBlockIDs,
@@ -644,6 +646,22 @@ func getEc2TransitGatewayRouteTableIDs(client *ec2.Client) (resources []string) 
 		page := p.CurrentPage()
 		for _, resource := range page.TransitGatewayRouteTables {
 			resources = append(resources, *resource.TransitGatewayRouteTableId)
+		}
+	}
+	return
+}
+
+func getEc2TransitGatewayPeeringAttachmentIDs(client *ec2.Client) (resources []string) {
+	req := client.DescribeTransitGatewayPeeringAttachmentsRequest(&ec2.DescribeTransitGatewayPeeringAttachmentsInput{})
+	p := ec2.NewDescribeTransitGatewayPeeringAttachmentsPaginator(req)
+	for p.Next(context.Background()) {
+		if p.Err() != nil {
+			logErr(p.Err())
+			return
+		}
+		page := p.CurrentPage()
+		for _, resource := range page.TransitGatewayPeeringAttachments {
+			resources = append(resources, *resource.TransitGatewayAttachmentId)
 		}
 	}
 	return

@@ -159,6 +159,7 @@ const (
 	ec2TransitGateway                               resourceType = "ec2TransitGateway"
 	ec2TransitGatewayAttachment                     resourceType = "ec2TransitGatewayAttachment"
 	ec2TransitGatewayRouteTable                     resourceType = "ec2TransitGatewayRouteTable"
+	ec2TransitGatewayPeeringAttachment              resourceType = "ec2TransitGatewayPeeringAttachment"
 	ec2VPC                                          resourceType = "ec2VPC"
 	ec2VPCCidrBlock                                 resourceType = "ec2VPCCidrBlock"
 	ec2VPCEndpoint                                  resourceType = "ec2VPCEndpoint"
@@ -241,6 +242,7 @@ const (
 	groundStationDataflowEndpointGroup              resourceType = "groundStationDataflowEndpointGroup"
 	groundStationMissionProfile                     resourceType = "groundStationMissionProfile"
 	guardDutyDetector                               resourceType = "guardDutyDetector"
+	guardDutyOrganizationAdminAccount               resourceType = "guardDutyOrganizationAdminAccount"
 	iamAccessKey                                    resourceType = "iamAccessKey"
 	iamAccountAlias                                 resourceType = "iamAccountAlias"
 	iamGroup                                        resourceType = "iamGroup"
@@ -258,6 +260,7 @@ const (
 	iamUserSSHKey                                   resourceType = "iamUserSSHKey"
 	imageBuilderComponent                           resourceType = "imageBuilderComponent"
 	imageBuilderDistributionConfiguration           resourceType = "imageBuilderDistributionConfiguration"
+	imageBuilderImage                               resourceType = "imageBuilderImage"
 	imageBuilderImagePipeline                       resourceType = "imageBuilderImagePipeline"
 	imageBuilderImageRecipe                         resourceType = "imageBuilderImageRecipe"
 	imageBuilderInfrastructureConfiguration         resourceType = "imageBuilderInfrastructureConfiguration"
@@ -666,6 +669,7 @@ var cloudformationTypeMap = map[string]resourceType{
 	"AWS::IAM::User":                                  iamUser,
 	"AWS::ImageBuilder::Component":                    imageBuilderComponent,
 	"AWS::ImageBuilder::DistributionConfiguration":    imageBuilderDistributionConfiguration,
+	"AWS::ImageBuilder::Image":                        imageBuilderImage,
 	"AWS::ImageBuilder::ImagePipeline":                imageBuilderImagePipeline,
 	"AWS::ImageBuilder::ImageRecipe":                  imageBuilderImageRecipe,
 	"AWS::ImageBuilder::InfrastructureConfiguration":  imageBuilderInfrastructureConfiguration,
@@ -941,6 +945,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_ec2_traffic_mirror_target":                           ec2TrafficMirrorTarget,
 	"aws_ec2_transit_gateway":                                 ec2TransitGateway,
 	"aws_ec2_transit_gateway_route_table":                     ec2TransitGatewayRouteTable,
+	"aws_ec2_transit_gateway_peering_attachment":              ec2TransitGatewayPeeringAttachment,
 	"aws_ec2_transit_gateway_vpc_attachment":                  ec2TransitGatewayAttachment,
 	"aws_ecr_repository":                                      ecrRepository,
 	"aws_ecs_capacity_provider":                               ecsCapacityProvider,
@@ -991,6 +996,7 @@ var terraformTypeMap = map[string]resourceType{
 	"aws_glue_trigger":                                        glueTrigger,
 	"aws_glue_workflow":                                       glueWorkflow,
 	"aws_guardduty_detector":                                  guardDutyDetector,
+	"aws_guardduty_organization_admin_account":                guardDutyOrganizationAdminAccount,
 	"aws_iam_access_key":                                      iamAccessKey,
 	"aws_iam_account_alias":                                   iamAccountAlias,
 	"aws_iam_group":                                           iamGroup,
@@ -1322,6 +1328,7 @@ var terraformPhysicalResourceIDs = map[resourceType]string{
 	ec2TransitGateway:                               "id",
 	ec2TransitGatewayAttachment:                     "id",
 	ec2TransitGatewayRouteTable:                     "id",
+	ec2TransitGatewayPeeringAttachment:              "id",
 	ec2VPC:                                          "id",
 	ec2VPCCidrBlock:                                 "id",
 	ec2VPCEndpoint:                                  "id",
@@ -1381,6 +1388,7 @@ var terraformPhysicalResourceIDs = map[resourceType]string{
 	glueTrigger:                                     "name",
 	glueWorkflow:                                    "name",
 	guardDutyDetector:                               "id",
+	guardDutyOrganizationAdminAccount:               "id",
 	iamAccessKey:                                    "id",
 	iamAccountAlias:                                 "account_alias",
 	iamGroup:                                        "name",
@@ -1573,6 +1581,7 @@ var resourceBlacklistMap = map[string][]string{
 		"aws_dx_hosted_private_virtual_interface_accepter",
 		"aws_dx_hosted_public_virtual_interface_accepter",
 		"aws_dx_hosted_transit_virtual_interface_accepter",
+		"aws_ec2_transit_gateway_peering_attachment_accepter",
 		"aws_ec2_transit_gateway_vpc_attachment_accepter",
 		"aws_guardduty_invite_accepter",
 		"aws_ram_resource_share_accepter",
@@ -1661,6 +1670,7 @@ var resourceBlacklistMap = map[string][]string{
 		"AWS::EMR::Step",
 		"AWS::ElastiCache::SecurityGroupIngress",
 		"AWS::ElasticLoadBalancingV2::ListenerCertificate",
+		"AWS::EventSchemas::RegistryPolicy",
 		"AWS::EventSchemas::Schema",
 		"AWS::Events::EventBusPolicy",
 		"AWS::FMS::NotificationChannel",
@@ -1806,6 +1816,7 @@ var resourceBlacklistMap = map[string][]string{
 		"aws_glue_classifier",
 		"aws_guardduty_ipset",
 		"aws_guardduty_member",
+		"aws_guardduty_organization_configuration",
 		"aws_guardduty_threatintelset",
 		"aws_iam_account_password_policy",
 		"aws_iam_group_membership",
